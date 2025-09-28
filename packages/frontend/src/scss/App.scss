@@ -3,26 +3,105 @@
   grid-template-rows: auto 1fr auto;
   height: 100dvh;
 
-  .date-picker-wrapper {
+  .date-picker-section {
     grid-row: 1/2;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
-    .picker-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    .date-picker-wrapper {
+      position: relative;
 
-      display: grid;
+      .picker-wrapper {
+        // 위치 설정
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
 
-      z-index: 1;
+        display: grid;
+        grid-template-rows: repeat(3, auto);
+        gap: 8px;
 
-      &.hide {
-        display: none;
+        padding: 16px;
+        margin: 16px 0;
+
+        border-radius: 16px;
+        border: 1px solid #212a4a;
+        box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.2);
+
+        div {
+          display: flex;
+          justify-content: center;
+        }
+
+        .picker-type {
+          .button {
+            background-color: #ffffff;
+            border: 1px solid #212a4a;
+            padding: 8px 20px;
+
+            &:first-child {
+              border-radius: 8px 0px 0px 8px;
+            }
+
+            &:nth-child(2) {
+              border-radius: 0px 8px 8px 0px;
+            }
+
+            &.active {
+              background-color: #304278;
+              color: #ffffff;
+            }
+          }
+        }
+
+        .picker {
+          display: grid;
+          max-width: 300px;
+
+          &.month {
+            grid-template-columns: repeat(4, minmax(50px, 1fr));
+            gap: 6px;
+          }
+
+          &.date {
+            grid-template-columns: repeat(4, minmax(50px, 1fr));
+            gap: 6px;
+          }
+
+          &.hide {
+            display: none;
+          }
+
+          .button {
+            background-color: #e0eaf8;
+            cursor: pointer;
+            user-select: none;
+            padding: 8px 8px;
+            border-radius: 8px;
+            font-size: 16px;
+
+            &.active {
+              background-color: #7aa7e0;
+            }
+
+            &.deactivate {
+              background-color: #e0eaf880;
+              color: rgba(0, 0, 0, 0.5);
+            }
+
+            &.hover {
+              background-color: #c9dbf4;
+            }
+          }
+        }
+
+        &.hide {
+          display: none;
+        }
       }
     }
   }
