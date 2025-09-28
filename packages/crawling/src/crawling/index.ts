@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import * as cheerio from "cheerio";
 import { createSongInfo } from "./vocaDBApi";
-import { connectDatabase, Song, PV } from "@vocaloid-birthday/database";
+import { Song, PV } from "@vocaloid-birthday/database";
 import dayjs from "dayjs";
 import path from "path";
 import { exec } from "child_process";
@@ -23,7 +23,7 @@ export async function crawlingFromVocaDB({ debug }: { debug: boolean }) {
   searchPage.searchParams.set("songType", "Original");
   searchPage.searchParams.set("minScore", "30");
 
-  let currentPage = 200; // 실행이 멈춰서 중간부터 다시 시작
+  let currentPage = 1;
   do {
     try {
       // 페이지 로드 대기
