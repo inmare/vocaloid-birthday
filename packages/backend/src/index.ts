@@ -55,24 +55,12 @@ app.post("/api/birthday", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/api/greet", (req: Request, res: Response) => {
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ message: "이름을 보내주세요" });
-  }
-
-  console.log(`클라이언트로부터 받은 이름: ${name}`);
-  const message = `안녕하세요, ${name}님! 서버에서 보낸 메세지입니다.`;
-  res.status(200).json({ responseMessage: message });
-});
-
 app.listen(app.get("port"), () => {
   console.log(app.get("port"), "번 포트에서 대기 중!");
 });
 
 const startServer = async () => {
-  await connectDatabase({ debug: true });
+  await connectDatabase({ debug: false });
   app.listen(port, () => {
     console.log(`서버가 포트 ${port}에서 시작되었습니다.`);
   });
