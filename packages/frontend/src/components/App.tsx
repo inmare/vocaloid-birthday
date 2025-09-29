@@ -1,66 +1,41 @@
-import { useState, useEffect } from "react";
-import dayjs from "dayjs";
+import { useRef, useState } from "react";
 import "@scss/App.scss";
 import DatePicker from "./DatePicker";
+import dayjs from "dayjs";
 
 function App() {
-  const [month, setMonth] = useState<number>(-1);
-  const [date, setDate] = useState<number>(-1);
-  const [maxDate, setMaxDate] = useState<number>(-1);
-  const [dateString, setDateString] = useState<string>();
+  const initMonth = dayjs().month() + 1;
+  const initDate = dayjs().date();
 
-  useEffect(() => {
-    const current = dayjs();
-    setMonth(current.month() + 1);
-    setDate(current.date());
-    setMaxDate(current.daysInMonth());
-  }, []);
+  const [month, setMonth] = useState<number>(initMonth);
+  const [date, setDate] = useState<number>(initDate);
+  const initMonthRef = useRef<number>(initMonth);
+  const initDateRef = useRef<number>(initDate);
 
-  useEffect(() => {
-    const monthString = String(month);
-    const dateString = date === 0 ? "전체" : String(date) + "일";
-    const str = `${monthString}월 ${dateString}의 곡`;
-    setDateString(str);
-  }, [month, date]);
+  const dateString = date === 0 ? "전체" : date + "일";
+  const pageTitle = `${month}월 ${dateString}의 보카로 곡은?`;
+  document.title = pageTitle;
 
-  const [selectMode, setSelectMode] = useState<"month" | "date">("month");
-
-  const monthNumber = Array.from({ length: 12 }, (_, i) => i + 1);
-  const dateNumber = Array.from({ length: 31 }, (_, i) => i + 1);
-
-  const [isPickingDate, setIsPickingDate] = useState(!false);
-
-  const handlePickingType = () => {
-    setIsPickingDate(!isPickingDate);
-  };
-
-  const handleMonthClick = (value: number) => {
-    setMonth(value);
-    const maxDate = dayjs()
-      .set("month", value - 1)
-      .daysInMonth();
-    setMaxDate(maxDate);
-    if (date > maxDate) {
-      setDate(maxDate);
-    }
-  };
-
-  const handleDateClick = (value: number) => {
-    if (maxDate === -1 || value > maxDate) {
-      return;
-    }
-
-    setDate(value);
+  const handleDate = (month: number, date: number) => {
+    setMonth(month);
+    setDate(date);
+    console.log(
+      `Selected date: ${month}월 ${date === 0 ? "전체" : date + "일"}`
+    );
   };
 
   return (
     <>
       <div className="wrapper">
         <div className="date-picker-section">
-          <DatePicker month={month} date={date} />
+          <DatePicker
+            initMonth={initMonthRef.current}
+            initDate={initDateRef.current}
+            handleDate={handleDate}
+          />
         </div>
         <div className="song-display-section">
-          <p>{dateString}</p>
+          <p>곡 정보</p>
         </div>
         <div className="song-info-section">곡 정보</div>
       </div>
