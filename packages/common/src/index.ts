@@ -26,4 +26,5 @@ export interface PVAttributes {
   songId: number;
   pvId: string;
   service: string;
+  publishDate: Date;
 }
