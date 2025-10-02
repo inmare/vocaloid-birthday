@@ -3,8 +3,7 @@ import * as cheerio from "cheerio";
 import { createSongInfo } from "./vocaDBApi";
 import { Song, PV } from "@vocaloid-birthday/database";
 import dayjs from "dayjs";
-import path from "path";
-import { exec } from "child_process";
+import miku from "../miku";
 
 export async function crawlingFromVocaDB({ debug }: { debug: boolean }) {
   const debugSetting = {
@@ -71,6 +70,7 @@ export async function crawlingFromVocaDB({ debug }: { debug: boolean }) {
               pvId: pv.pvId,
               service: pv.service,
               songId: song.id,
+              publishDate: new Date(pv.publishDate),
             });
           }
         } catch (error) {
@@ -105,21 +105,7 @@ export async function crawlingFromVocaDB({ debug }: { debug: boolean }) {
 
   await browser.close();
 
-  if (process.platform === "win32") {
-    const fileDir = path.join(__dirname, "../../Miku-Ringtone.mp3");
-    const command = `start ${fileDir}`;
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error("명령어 실행 중 오류 발생:", error.message);
-        return;
-      }
-      if (stderr) {
-        console.error("stderr:", stderr);
-        return;
-      }
-    });
-  }
-
+  miku();
   console.log("크롤링 작업이 완료되었습니다.");
 }
 
