@@ -6,6 +6,7 @@ export class PV extends Model<PVAttributes> implements PVAttributes {
   declare songId: number;
   declare pvId: string;
   declare service: string;
+  declare publishDate: Date;
 }
 
 export const InitPVModel = (sequelize: Sequelize) => {
@@ -26,6 +27,10 @@ export const InitPVModel = (sequelize: Sequelize) => {
       },
       service: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      publishDate: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
     },
