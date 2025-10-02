@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "crawl": "pnpm ts-node src/index.ts"
+    "crawl": "pnpm ts-node src/index.ts",
+    "hotfix:pv-time": "pnpm ts-node src/scripts/hotfix-pv-time.ts"
   },
   "keywords": [],
   "author": "",
