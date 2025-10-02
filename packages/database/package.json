@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.5.2",
+    "sequelize-cli": "^6.6.3",
     "typescript": "^5.9.2"
   }
 }
