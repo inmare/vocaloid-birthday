@@ -22,12 +22,14 @@ app.post("/api/songs", async (req: Request, res: Response) => {
   const { month, date } = req.body;
   const monthString = String(month).padStart(2, "0");
   const condition = [
-    where(fn("strftime", "%m", col("publishDate")), monthString),
+    where(fn("strftime", "%m", col("Song.publishDate")), monthString),
   ];
 
   if (date !== 0) {
     const dateString = String(date).padStart(2, "0");
-    condition.push(where(fn("strftime", "%d", col("publishDate")), dateString));
+    condition.push(
+      where(fn("strftime", "%d", col("Song.publishDate")), dateString)
+    );
   }
 
   try {
