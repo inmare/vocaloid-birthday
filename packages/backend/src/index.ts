@@ -33,7 +33,7 @@ app.post("/api/songs", async (req: Request, res: Response) => {
   }
 
   try {
-    const songList = await Song.findAll({
+    const dbResult = await Song.findAll({
       where: {
         [Op.and]: condition,
       },
@@ -47,7 +47,7 @@ app.post("/api/songs", async (req: Request, res: Response) => {
       order: [["vocaDBRating", "DESC"]],
     });
 
-    res.status(200).json(songList);
+    res.status(200).json(dbResult);
   } catch (error) {
     console.error("데이터를 검색하던 중 에러가 발생했습니다.");
     console.error(error);
