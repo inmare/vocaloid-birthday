@@ -5,6 +5,7 @@ import SongTable from "./SongTable";
 import dayjs from "dayjs";
 import { type SongAttributes } from "@vocaloid-birthday/common";
 import styled from "styled-components";
+import SvgViewer from "./SvgViewer";
 
 const API_ENDPOINT = "http://localhost:3000/api";
 
@@ -12,13 +13,40 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100dvh;
+  max-width: 1200px;
+  margin: auto;
 
-  .song-display-section {
-    overflow-y: auto;
+  .date-picker-section {
+    grid-row: 1 / 2;
+  }
+
+  main {
+    grid-row: 2 / 3;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+
+    .song-display-section {
+      grid-column: 1 / 2;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .svg-viewer {
+      grid-column: 2 / 3;
+      overflow-y: auto;
+      min-height: 0;
+    }
   }
 
   .song-info-section {
+    grid-row: 3 / 4;
     overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
   }
 `;
 
@@ -89,13 +117,19 @@ function App() {
             handleDate={handleDate}
           />
         </div>
-        <div className="song-display-section">
-          <SongListDisplayer
-            dateString={dateString}
-            songList={songList}
-            handleSong={handleSong}
-          />
-        </div>
+        <main>
+          <div className="song-display-section">
+            <SongListDisplayer
+              dateString={dateString}
+              songList={songList}
+              currentSong={currentSong}
+              handleSong={handleSong}
+            />
+          </div>
+          <div className="svg-viewer">
+            <SvgViewer song={currentSong} />
+          </div>
+        </main>
         <div className="song-info-section">
           {currentSong ? (
             <SongTable song={currentSong} />
