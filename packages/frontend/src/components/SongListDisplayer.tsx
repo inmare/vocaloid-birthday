@@ -19,7 +19,7 @@ const SongList = styled.div`
 
     &:hover,
     &:active,
-    .selected {
+    &.selected {
       background: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 10%,
@@ -36,10 +36,12 @@ const SongList = styled.div`
 export default function SongListDisplayer({
   dateString,
   songList,
+  currentSong,
   handleSong,
 }: {
   dateString: string;
   songList: SongAttributes[];
+  currentSong: SongAttributes | null;
   handleSong: (song: SongAttributes) => void;
 }) {
   return (
@@ -53,6 +55,7 @@ export default function SongListDisplayer({
               onClick={() => {
                 handleSong(song);
               }}
+              className={currentSong?.id === song.id ? "selected" : undefined}
             >
               {song.title}
             </p>
