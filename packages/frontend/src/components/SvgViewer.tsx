@@ -1,25 +1,242 @@
-import type { SongAttributes } from "@vocaloid-birthday/common";
-import { SVG, type Svg } from "@svgdotjs/svg.js";
-import { useEffect, useRef } from "react";
+import { type SongWithPVs } from "@vocaloid-birthday/common";
+import {
+  SVG,
+  type Svg,
+  type Text,
+  type Line,
+  type Rect,
+} from "@svgdotjs/svg.js";
+import "@svgdotjs/svg.filter.js";
+import { useEffect, useRef, type ChangeEvent } from "react";
+import { styled } from "styled-components";
+import { css } from "@emotion/css";
 
-class CalendarSVG {
-  private svg: Svg | null = null;
+import sampleImage from "../assets/lustorus-sample.jpg";
+import sampleQrCode from "../assets/qr-code-example.svg";
 
-  init(svgElement: SVGSVGElement) {
-    this.svg = SVG(svgElement);
-    this.svg.rect(100, 100).fill("#f06");
+const DATE_FONT_FAMILY = "AbrilFatface-Regular, 'Abril Fatface'";
+
+class Vec2 {
+  public x: number;
+  public y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
+  get array(): [number, number] {
+    return [this.x, this.y];
   }
 }
 
-const calendarSVG = new CalendarSVG();
+class CalendarSvg {
+  private svg: Svg | null = null;
+  private svgSize: Vec2 = new Vec2(106 * 5, 156 * 5);
+  private dateColor = {
+    sat: "#ff5555",
+    sun: "#5555ff",
+    normal: "#000000",
+  };
+  public accentColor = "#18298a";
+  public components: {
+    mainDate: Text | null;
+    dividerLine: Line | null;
+    shadowRect: Rect | null;
+  } = {
+    mainDate: null,
+    dividerLine: null,
+    shadowRect: null,
+  };
 
-export default function SvgViewer({ song }: { song: SongAttributes | null }) {
+  init(svgElement: SVGSVGElement) {
+    this.svg = SVG(svgElement);
+    this.svg.clear();
+
+    // Set svg size
+    this.svg.viewbox(0, 0, ...this.svgSize.array);
+
+    // Add guideline
+    const guidePad = 3 * 5;
+    this.guideline(new Vec2(0, guidePad), new Vec2(this.svgSize.x, guidePad));
+    this.guideline(
+      new Vec2(0, this.svgSize.y - guidePad),
+      new Vec2(this.svgSize.x, this.svgSize.y - guidePad)
+    );
+    this.guideline(new Vec2(guidePad, 0), new Vec2(guidePad, this.svgSize.y));
+    this.guideline(
+      new Vec2(this.svgSize.x - guidePad, 0),
+      new Vec2(this.svgSize.x - guidePad, this.svgSize.y)
+    );
+
+    // Add top text
+    const topDate = this.svg
+      .text("06.27 FRI")
+      .fill(this.dateColor.normal)
+      .font({
+        family: DATE_FONT_FAMILY,
+        size: 36,
+        anchor: "middle",
+      });
+    this.moveElement(topDate, "center", 60);
+
+    // Add clip path
+    const clipRectSize = 250;
+    const clipRect = this.svg
+      .rect(clipRectSize, clipRectSize)
+      .radius(20)
+      .center(this.svgSize.x / 2, 230);
+
+    this.components.shadowRect = this.svg
+      .rect(clipRectSize, clipRectSize)
+      .center(this.svgSize.x / 2, 230)
+      .radius(20)
+      .fill(this.accentColor)
+      .opacity(0.5);
+    this.components.shadowRect.filterWith(function (add) {
+      add.gaussianBlur(10, 10);
+    });
+
+    // Add thumbnail
+    const g = this.svg.group();
+    const thumbnail = g.image(sampleImage);
+    thumbnail.scale(0.35).translate(40, 105);
+    g.clipWith(clipRect);
+
+    // Add main date
+    this.components.mainDate = this.svg.text("27").fill(this.accentColor).font({
+      family: DATE_FONT_FAMILY,
+      size: 160,
+      anchor: "middle",
+    });
+    this.moveElement(this.components.mainDate, "center", 395);
+
+    // Add sample lyrics string
+    const lyricsText = this.svg
+      .text("아아, 하늘은 이런 색이었구나")
+      .fill(this.dateColor.normal)
+      .font({
+        family: "BookkMyungjo-Lt, 'Bookk Myungjo'",
+        size: 20,
+        anchor: "middle",
+      });
+    this.moveElement(lyricsText, "center", 540);
+
+    // Add divider line
+    const dividerPad = 90;
+    const dviderY = 580;
+    const dividerStart = new Vec2(dividerPad, dviderY).array;
+    const dividerEnd = new Vec2(this.svgSize.x - dividerPad, dviderY).array;
+    this.components.dividerLine = this.svg
+      .line(...dividerStart, ...dividerEnd)
+      .stroke({ width: 1, color: this.accentColor });
+
+    // Add caption
+    const caption = this.svg.text("러스트러스, *Luna").fill("#000000").font({
+      family: "Pretendard Variable JP",
+      size: 12,
+      weight: 200,
+      anchor: "middle",
+    });
+    caption.translate(this.svgSize.x / 2, 600);
+
+    // Add composer and title
+    const composer = this.svg.text("*Luna").fill("#000000").font({
+      family: "LINE Seed JP",
+      size: 36,
+      weight: 400,
+      anchor: "start",
+    });
+    composer.translate(30, this.svgSize.y - 40 - 64);
+
+    const title = this.svg.text("ラストラス").font({
+      family: "LINE Seed JP",
+      size: 64,
+      weight: 700,
+      anchor: "start",
+      "letter-spacing": "-.1em",
+    });
+    title.translate(30, this.svgSize.y - 40);
+
+    // Add qr code
+    const qrCode = this.svg.image(sampleQrCode);
+    qrCode.translate(this.svgSize.x - 120, this.svgSize.y - 120).scale(0.6);
+  }
+
+  redrawAccentColor(color: string) {
+    this.accentColor = color;
+    // console.log(this.accentColor);
+    const dividerLine = this.components.dividerLine;
+    if (dividerLine) {
+      dividerLine.stroke(this.accentColor);
+      console.log(dividerLine.fill);
+    }
+    const mainDate = this.components.mainDate;
+    if (mainDate) {
+      mainDate.fill(this.accentColor);
+    }
+    const shadowRect = this.components.shadowRect;
+    if (shadowRect) {
+      shadowRect.fill(this.accentColor);
+    }
+  }
+
+  private guideline(start: Vec2, end: Vec2) {
+    if (this.svg == null) return;
+    this.svg
+      .line(...start.array, ...end.array)
+      .stroke({ width: 2, color: "#cccccc" });
+  }
+
+  private moveElement(element: Text, x: number | "center", y: number) {
+    const bbox = element.bbox();
+    const newX = x === "center" ? this.svgSize.x / 2 : x;
+    const newY = y + bbox.height / 2;
+    element.transform({
+      translate: [newX, newY],
+    });
+  }
+}
+
+const SvgWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  svg {
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.4);
+    scale: 0.75;
+  }
+`;
+
+export default function SvgViewer({ song }: { song: SongWithPVs | null }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
+
+  const calendarSVG = new CalendarSvg();
 
   useEffect(() => {
     if (svgRef.current == null) return;
     calendarSVG.init(svgRef.current);
   }, []);
 
-  return <svg ref={svgRef}></svg>;
+  return (
+    <>
+      <SvgWrapper>
+        <svg ref={svgRef}></svg>
+        <input
+          type="color"
+          name=""
+          id=""
+          onChange={(event: ChangeEvent) => {
+            const target = event.target as HTMLInputElement;
+            const value = target.value;
+            // if (svgRef.current) calendarSVG.init(svgRef.current);
+            // calendarSVG.redrawAccentColor(value);
+          }}
+        />
+      </SvgWrapper>
+    </>
+  );
 }
