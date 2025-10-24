@@ -1,20 +1,12 @@
 import { type SongWithPVs } from "@vocaloid-birthday/common";
-// import {
-//   SVG,
-//   type Svg,
-//   type Text,
-//   type Line,
-//   type Rect,
-// } from "@svgdotjs/svg.js";
-// import "@svgdotjs/svg.filter.js";
 import { useState, useRef, type ChangeEvent, useEffect } from "react";
 import { styled } from "styled-components";
-// import { css } from "@emotion/css";
 import { Vec2 } from "./utils";
 import dayjs from "dayjs";
 
+import QRCode from "qrcode-svg";
+
 import sampleImage from "../assets/lustorus-sample.jpg";
-import sampleQrCode from "../assets/qr-code-example.svg";
 import Guideline from "./Guideline";
 
 const DATE_FONT_FAMILY = "AbrilFatface-Regular, 'Abril Fatface'";
@@ -266,6 +258,47 @@ export default function SvgViewer({ song }: { song: SongWithPVs | null }) {
           >
             <tspan>아아, 하늘은 이런 색이었구나</tspan>
           </text>
+          <line
+            width={2}
+            stroke={accentColor}
+            x1={120}
+            y1={460}
+            x2={svgSize.x - 120}
+            y2={460}
+          ></line>
+          <g transform={`translate(35, 670)`}>
+            <text
+              // transform={`translate(0, 10)`}
+              color="#000000"
+              fontFamily="LINE Seed JP"
+              textAnchor="start"
+              fontSize={36}
+            >
+              <tspan>*Luna</tspan>
+            </text>
+            <text
+              transform={`translate(0, 70)`}
+              color="#000000"
+              fontFamily="LINE Seed JP"
+              textAnchor="start"
+              fontSize={70}
+              fontWeight={700}
+              letterSpacing={"-.1em"}
+            >
+              <tspan>ラストラス</tspan>
+            </text>
+          </g>
+          <g
+            dangerouslySetInnerHTML={{
+              __html: new QRCode({
+                content: "https://example.com",
+                padding: 1,
+                join: true,
+                container: "none",
+              }).svg(),
+            }}
+            transform={`translate(${100}, 100) scale(0.6)`}
+          ></g>
         </svg>
         <input
           type="color"
