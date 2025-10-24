@@ -1,5 +1,5 @@
 import { type SongWithPVs } from "@vocaloid-birthday/common";
-import { useState, useRef, type ChangeEvent, useEffect } from "react";
+import { useState, useRef, type ChangeEvent } from "react";
 import { styled } from "styled-components";
 import { Vec2 } from "./utils";
 import dayjs from "dayjs";
@@ -182,13 +182,13 @@ const DATE_FONT_FAMILY = "AbrilFatface-Regular, 'Abril Fatface'";
 const SvgWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   height: 100%;
 
   svg {
     box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.4);
-    scale: 0.75;
+    /* scale: 0.75; */
   }
 `;
 
@@ -209,109 +209,113 @@ export default function SvgViewer({ song }: { song: SongWithPVs | null }) {
   return (
     <>
       <SvgWrapper>
-        <svg ref={svgRef} viewBox={Vec2.toStyle([new Vec2(0, 0), svgSize])}>
-          <clipPath id="thumbnail-clip">
-            <rect
-              x={(svgSize.x - 250) / 2}
-              y={105}
-              width={250}
-              height={250}
-              rx={20}
-              ry={20}
-            ></rect>
-          </clipPath>
-          <Guideline factor={5} svgSize={svgSize} visible={true} />
-          <text
-            textAnchor="middle"
-            fontFamily={DATE_FONT_FAMILY}
-            fill="#000000"
-            fontSize={36}
-            transform={`translate(${svgSize.x / 2}, 60)`}
-          >
-            {dateString}
-          </text>
-          <g
-            style={{
-              clipPath: "url(#thumbnail-clip)",
-            }}
-          >
-            <image
-              href={sampleImage}
-              transform={`translate(${
-                svgSize.x / 2 - (1280 * 0.4) / 2
-              }, 80) scale(0.4)`}
-            ></image>
-          </g>
-          <text
-            textAnchor="middle"
-            fontFamily={DATE_FONT_FAMILY}
-            fill={accentColor}
-            fontSize={160}
-            transform={`translate(${svgSize.x / 2}, 450)`}
-          >
-            <tspan>{publishDate.get("date")}</tspan>
-          </text>
-          <text
-            transform={`translate(${svgSize.x / 2}, 500)`}
-            textAnchor="middle"
-            fontFamily="BookkMyungjo"
-          >
-            <tspan>아아, 하늘은 이런 색이었구나</tspan>
-          </text>
-          <line
-            width={2}
-            stroke={accentColor}
-            x1={120}
-            y1={460}
-            x2={svgSize.x - 120}
-            y2={460}
-          ></line>
-          <g transform={`translate(35, 670)`}>
+        <div style={{ width: "100%" }}>
+          <svg ref={svgRef} viewBox={Vec2.toStyle([new Vec2(0, 0), svgSize])}>
+            <clipPath id="thumbnail-clip">
+              <rect
+                x={(svgSize.x - 250) / 2}
+                y={105}
+                width={250}
+                height={250}
+                rx={20}
+                ry={20}
+              ></rect>
+            </clipPath>
+            <Guideline factor={5} svgSize={svgSize} visible={true} />
             <text
-              // transform={`translate(0, 10)`}
-              color="#000000"
-              fontFamily="LINE Seed JP"
-              textAnchor="start"
+              textAnchor="middle"
+              fontFamily={DATE_FONT_FAMILY}
+              fill="#000000"
               fontSize={36}
+              transform={`translate(${svgSize.x / 2}, 60)`}
             >
-              <tspan>*Luna</tspan>
+              {dateString}
+            </text>
+            <g
+              style={{
+                clipPath: "url(#thumbnail-clip)",
+              }}
+            >
+              <image
+                href={sampleImage}
+                transform={`translate(${
+                  svgSize.x / 2 - (1280 * 0.4) / 2
+                }, 80) scale(0.4)`}
+              ></image>
+            </g>
+            <text
+              textAnchor="middle"
+              fontFamily={DATE_FONT_FAMILY}
+              fill={accentColor}
+              fontSize={160}
+              transform={`translate(${svgSize.x / 2}, 450)`}
+            >
+              <tspan>{publishDate.get("date")}</tspan>
             </text>
             <text
-              transform={`translate(0, 70)`}
-              color="#000000"
-              fontFamily="LINE Seed JP"
-              textAnchor="start"
-              fontSize={70}
-              fontWeight={700}
-              letterSpacing={"-.1em"}
+              transform={`translate(${svgSize.x / 2}, 500)`}
+              textAnchor="middle"
+              fontFamily="BookkMyungjo"
             >
-              <tspan>ラストラス</tspan>
+              <tspan>아아, 하늘은 이런 색이었구나</tspan>
             </text>
-          </g>
-          <g
-            dangerouslySetInnerHTML={{
-              __html: new QRCode({
-                content: "https://example.com",
-                padding: 1,
-                join: true,
-                container: "none",
-              }).svg(),
+            <line
+              width={2}
+              stroke={accentColor}
+              x1={120}
+              y1={460}
+              x2={svgSize.x - 120}
+              y2={460}
+            ></line>
+            <g transform={`translate(35, 670)`}>
+              <text
+                // transform={`translate(0, 10)`}
+                color="#000000"
+                fontFamily="LINE Seed JP"
+                textAnchor="start"
+                fontSize={36}
+              >
+                <tspan>*Luna</tspan>
+              </text>
+              <text
+                transform={`translate(0, 70)`}
+                color="#000000"
+                fontFamily="LINE Seed JP"
+                textAnchor="start"
+                fontSize={70}
+                fontWeight={700}
+                letterSpacing={"-.1em"}
+              >
+                <tspan>ラストラス</tspan>
+              </text>
+            </g>
+            <g
+              dangerouslySetInnerHTML={{
+                __html: new QRCode({
+                  content: "https://example.com",
+                  padding: 1,
+                  join: true,
+                  container: "none",
+                }).svg(),
+              }}
+              transform={`translate(${100}, 100) scale(0.6)`}
+            ></g>
+          </svg>
+        </div>
+        <div>
+          <input
+            type="color"
+            name=""
+            id=""
+            onChange={(event: ChangeEvent) => {
+              const target = event.target as HTMLInputElement;
+              const value = target.value;
+              setAccentColor(value);
+              // if (svgRef.current) calendarSVG.init(svgRef.current);
+              // calendarSVG.redrawAccentColor(value);
             }}
-            transform={`translate(${100}, 100) scale(0.6)`}
-          ></g>
-        </svg>
-        <input
-          type="color"
-          name=""
-          id=""
-          onChange={(event: ChangeEvent) => {
-            const target = event.target as HTMLInputElement;
-            const value = target.value;
-            setAccentColor(value);
-            // if (svgRef.current) calendarSVG.init(svgRef.current);
-            // calendarSVG.redrawAccentColor(value);
-          }}
-        />
+          />
+        </div>
       </SvgWrapper>
     </>
   );
