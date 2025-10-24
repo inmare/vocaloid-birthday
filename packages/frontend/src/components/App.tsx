@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   main {
     grid-row: 2 / 3;
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 3fr;
     width: 100%;
     height: 100%;
     min-height: 0;
