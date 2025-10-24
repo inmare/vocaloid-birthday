@@ -28,3 +28,7 @@ export interface PVAttributes {
   service: string;
   publishDate: Date;
 }
+
+export interface SongWithPVs extends SongAttributes {
+  PVs: PVAttributes[];
+}
