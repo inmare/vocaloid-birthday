@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDatabase, Song, PV } from "@vocaloid-birthday/database";
 import { Op, fn, col, where } from "sequelize";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -54,6 +56,15 @@ app.post("/api/songs", async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ message: "데이터를 검색하던 중 에러가 발생했습니다." });
+  }
+});
+
+app.post("/api/admin", async (req: Request, res: Response) => {
+  const { password } = req.body;
+  const hashedPassword = process.env.ADMIN_PASSWORD;
+  const isMatch = await bcrypt.compare(password, hashedPassword!);
+
+  if (isMatch) {
   }
 });
 
