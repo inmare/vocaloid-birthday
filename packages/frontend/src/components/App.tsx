@@ -5,7 +5,7 @@ import SongTable from "./SongTable";
 import dayjs from "dayjs";
 import { type SongWithPVs } from "@vocaloid-birthday/common";
 import styled from "styled-components";
-import SvgViewer from "./SvgViewer";
+import { NavLink } from "react-router";
 
 const API_ENDPOINT = "http://localhost:3000/api";
 
@@ -23,19 +23,12 @@ const Wrapper = styled.div`
   main {
     grid-row: 2 / 3;
     display: grid;
-    grid-template-columns: 1fr 3fr;
     width: 100%;
     height: 100%;
     min-height: 0;
 
     .song-display-section {
       grid-column: 1 / 2;
-      overflow-y: auto;
-      min-height: 0;
-    }
-
-    .svg-viewer {
-      grid-column: 2 / 3;
       overflow-y: auto;
       min-height: 0;
     }
@@ -110,13 +103,18 @@ function App() {
   return (
     <>
       <Wrapper>
-        <div className="date-picker-section">
-          <DatePicker
-            initMonth={initMonthRef.current}
-            initDate={initDateRef.current}
-            handleDate={handleDate}
-          />
-        </div>
+        <header className="date-picker-section">
+          <div>
+            <DatePicker
+              initMonth={initMonthRef.current}
+              initDate={initDateRef.current}
+              handleDate={handleDate}
+            />
+          </div>
+          <NavLink to="/about">About</NavLink>
+          <NavLink to="/progress">Progress</NavLink>
+        </header>
+
         <main>
           <div className="song-display-section">
             <SongListDisplayer
@@ -126,10 +124,8 @@ function App() {
               handleSong={handleSong}
             />
           </div>
-          <div className="svg-viewer">
-            <SvgViewer song={currentSong} />
-          </div>
         </main>
+
         <div className="song-info-section">
           {currentSong ? (
             <SongTable song={currentSong} />
