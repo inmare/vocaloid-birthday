@@ -1,8 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-
 import { createGlobalStyle } from "styled-components";
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+import App from "./App.tsx";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -12,9 +13,28 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: App,
+  },
+  {
+    path: "/admin",
+    element: <div>Admin Page</div>,
+  },
+  {
+    path: "/about",
+    element: <div>About Page</div>,
+  },
+  {
+    path: "/progress",
+    element: <div>Progress Page</div>,
+  },
+]);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <GlobalStyle />
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>
 );
