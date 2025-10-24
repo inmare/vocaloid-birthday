@@ -1,7 +1,4 @@
-import {
-  type PVAttributes,
-  type SongAttributes,
-} from "@vocaloid-birthday/common";
+import { type PVAttributes, type SongWithPVs } from "@vocaloid-birthday/common";
 import styled from "styled-components";
 
 const MainTable = styled.table`
@@ -16,10 +13,6 @@ const MainTable = styled.table`
     padding: 5px 10px;
   }
 `;
-
-interface SongWithPVs extends SongAttributes {
-  PVs: PVAttributes[];
-}
 
 export default function SongTable({ song }: { song: SongWithPVs }) {
   const createPVLink = (pvList: PVAttributes[]) => {

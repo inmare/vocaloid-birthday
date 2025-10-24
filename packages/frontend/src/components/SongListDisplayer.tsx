@@ -1,4 +1,4 @@
-import { type SongAttributes } from "@vocaloid-birthday/common";
+import { type SongWithPVs } from "@vocaloid-birthday/common";
 import styled from "styled-components";
 import { uiColor, whiteColor } from "./component.type";
 
@@ -40,9 +40,9 @@ export default function SongListDisplayer({
   handleSong,
 }: {
   dateString: string;
-  songList: SongAttributes[];
-  currentSong: SongAttributes | null;
-  handleSong: (song: SongAttributes) => void;
+  songList: SongWithPVs[];
+  currentSong: SongWithPVs | null;
+  handleSong: (song: SongWithPVs) => void;
 }) {
   return (
     <>

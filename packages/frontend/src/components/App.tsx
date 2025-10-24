@@ -3,7 +3,7 @@ import DatePicker from "./DatePicker";
 import SongListDisplayer from "./SongListDisplayer";
 import SongTable from "./SongTable";
 import dayjs from "dayjs";
-import { type SongAttributes } from "@vocaloid-birthday/common";
+import { type SongWithPVs } from "@vocaloid-birthday/common";
 import styled from "styled-components";
 import SvgViewer from "./SvgViewer";
 
@@ -56,8 +56,8 @@ function App() {
 
   const [month, setMonth] = useState<number>(initMonth);
   const [date, setDate] = useState<number>(initDate);
-  const [songList, setSongList] = useState<SongAttributes[]>([]);
-  const [currentSong, setCurrentSong] = useState<SongAttributes | null>(null);
+  const [songList, setSongList] = useState<SongWithPVs[]>([]);
+  const [currentSong, setCurrentSong] = useState<SongWithPVs | null>(null);
 
   // 초기값을 ref에 저장 (DatePicker가 리렌더링 될 때마다 initMonth, initDate가 바뀌는 것을 방지)
   const initMonthRef = useRef<number>(initMonth);
@@ -89,7 +89,7 @@ function App() {
           json.message || "데이터를 불러오던 중 에러가 발생했습니다."
         );
       } else {
-        const songList: SongAttributes[] = json;
+        const songList: SongWithPVs[] = json;
         setSongList(songList);
 
         // console.log(songList);
@@ -99,7 +99,7 @@ function App() {
     }
   };
 
-  const handleSong = (song: SongAttributes) => {
+  const handleSong = (song: SongWithPVs) => {
     setCurrentSong(song);
   };
 
