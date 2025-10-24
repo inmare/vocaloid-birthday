@@ -12,3 +12,21 @@ export function getMaxDate(month: number): number {
   // 윤년으로 설정해서 2월 29일을 반환할 수 있게 함
   return date.daysInMonth();
 }
+
+export class Vec2 {
+  public x: number;
+  public y: number;
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+
+  static toStyle(vectors: Vec2[]): string {
+    let str = "";
+    for (const vec of vectors) {
+      str += `${vec.x},${vec.y} `;
+    }
+
+    return str.trim();
+  }
+}
