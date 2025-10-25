@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^3.28.0",
     "@types/qrcode-svg": "^1.1.5",
+    "@uiw/react-color-colorful": "^2.9.1",
+    "axios": "^1.12.2",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
     "qrcode-svg": "^1.1.0",
