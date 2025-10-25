@@ -6,8 +6,7 @@ import dayjs from "dayjs";
 import { type SongWithPVs } from "@vocaloid-birthday/common";
 import styled from "styled-components";
 import { NavLink } from "react-router";
-
-const API_ENDPOINT = "http://localhost:3000/api";
+import api from "../api";
 
 const Wrapper = styled.div`
   display: grid;
@@ -67,17 +66,10 @@ function App() {
     setCurrentSong(null);
 
     try {
-      const response = await fetch(API_ENDPOINT + "/songs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ month, date }),
-      });
+      const response = await api.post("/api/songs", { month, date });
+      const json = response.data;
 
-      const json = await response.json();
-
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error(
           json.message || "데이터를 불러오던 중 에러가 발생했습니다."
         );
