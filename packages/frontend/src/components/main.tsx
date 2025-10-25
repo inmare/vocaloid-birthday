@@ -8,6 +8,8 @@ import { RouterProvider } from "react-router/dom";
 import App from "./App.tsx";
 import OtherPageLayout from "./OtherPageLayout.tsx";
 import Progress from "./Progress.tsx";
+import Admin from "./Admin.tsx";
+import { AuthProvider } from "./AuthProvider.tsx";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/admin",
-        element: <div>Admin Page</div>,
+        Component: Admin,
       },
       {
         path: "/about",
@@ -43,7 +45,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <GlobalStyle />
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <GlobalStyle />
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
