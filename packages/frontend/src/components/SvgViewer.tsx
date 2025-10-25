@@ -1,8 +1,9 @@
 import { type SongWithPVs } from "@vocaloid-birthday/common";
-import { useState, useRef, type ChangeEvent } from "react";
+import { useState, useRef } from "react";
 import { styled } from "styled-components";
 import { Vec2 } from "./utils";
 import dayjs from "dayjs";
+import Colorful from "@uiw/react-color-colorful";
 
 import QRCode from "qrcode-svg";
 
@@ -192,7 +193,13 @@ const SvgWrapper = styled.div`
   }
 `;
 
-export default function SvgViewer({ song }: { song: SongWithPVs | null }) {
+export default function SvgViewer({
+  song,
+  isAdmin,
+}: {
+  song: SongWithPVs | null;
+  isAdmin: boolean;
+}) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   // const calendarSVG = new CalendarSvg();
@@ -205,6 +212,8 @@ export default function SvgViewer({ song }: { song: SongWithPVs | null }) {
   const dateString = publishDate.format("MM.DD ddd").toUpperCase();
 
   const [accentColor, setAccentColor] = useState<string>("#000000");
+
+  // const [pickColor, setPickColor] = useState(false);
 
   return (
     <>
@@ -302,20 +311,17 @@ export default function SvgViewer({ song }: { song: SongWithPVs | null }) {
             ></g>
           </svg>
         </div>
-        <div>
-          <input
-            type="color"
-            name=""
-            id=""
-            onChange={(event: ChangeEvent) => {
-              const target = event.target as HTMLInputElement;
-              const value = target.value;
-              setAccentColor(value);
-              // if (svgRef.current) calendarSVG.init(svgRef.current);
-              // calendarSVG.redrawAccentColor(value);
-            }}
-          />
-        </div>
+        {isAdmin && (
+          <>
+            <Colorful
+              color={accentColor}
+              disableAlpha={true}
+              onChange={(color) => {
+                setAccentColor(color.hex);
+              }}
+            />
+          </>
+        )}
       </SvgWrapper>
     </>
   );
