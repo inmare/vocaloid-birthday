@@ -1,6 +1,6 @@
+import api, { setAccessToken as setApiAccessToken } from "@/api";
+import { AuthContext } from "@components/AuthContext";
 import { useEffect, useState, type ReactNode } from "react";
-import { AuthContext } from "./AuthContext";
-import api, { setAccessToken as setApiAccessToken } from "../api";
 
 /**
  * AuthContext를 사용할 수 있게 해주는 react component
