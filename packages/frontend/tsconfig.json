@@ -8,10 +8,10 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      // "@/*": ["src/*"],
-      "@scss/*": ["src/scss/*"],
-      "@components/*": ["src/components/*"],
-      "@assets/*": ["src/assets/*"]
+      "@/*": ["./src/*"],
+      "@scss/*": ["./src/scss/*"],
+      "@components/*": ["./src/components/*"],
+      "@assets/*": ["./src/assets/*"]
     }
   }
 }
