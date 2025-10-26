@@ -1,23 +1,15 @@
+import "@/fonts.css";
+import "@/index.css";
+import { AuthProvider } from "@components/AuthProvider";
+import About from "@components/ui/pages/About.tsx";
+import Admin from "@components/ui/pages/Admin.tsx";
+import App from "@components/ui/pages/App";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "../fonts.css";
-
-import { createGlobalStyle } from "styled-components";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import App from "./App.tsx";
-import OtherPageLayout from "./OtherPageLayout.tsx";
-import Progress from "./Progress.tsx";
-import Admin from "./Admin.tsx";
-import { AuthProvider } from "./AuthProvider.tsx";
-
-const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-`;
+import OtherPageLayout from "./ui/pages/OtherPageLayout.tsx";
+import Progress from "./ui/pages/Progress.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <div>About Page</div>,
+        Component: About,
       },
       {
         path: "/progress",
@@ -46,8 +38,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <GlobalStyle />
       <RouterProvider router={router} />
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );
