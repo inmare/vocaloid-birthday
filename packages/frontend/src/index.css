@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --default-font-family: "Pretendard JP Variable";
+  /* --default-font-family: "Pretendard JP Variable"; */
+  --font-sans: "Pretendard JP Variable";
+  --font-monospace: "JetBrains Mono";
+}
+
+@layer base {
+  body {
+    @apply m-0 box-border bg-zinc-900 text-zinc-50;
+  }
 }
