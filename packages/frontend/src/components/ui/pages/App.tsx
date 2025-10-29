@@ -3,10 +3,10 @@ import CustomNavLink from "@/components/ui/fragments/CustomNavLink";
 import SongListDisplayer from "@/components/ui/fragments/SongListDisplayer";
 import DatePicker from "@components/ui/datePicker/DatePicker";
 import DateString from "@components/ui/fragments/DateString";
+import SongTable from "@components/ui/fragments/SongTable";
 import { type SongWithPVs } from "@vocaloid-birthday/common";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
-import SongTable from "../fragments/SongTable";
 
 function App() {
   const initMonth = dayjs().month() + 1;
@@ -58,7 +58,7 @@ function App() {
 
   return (
     <>
-      <div className="grid h-dvh w-full max-w-7xl grid-rows-[auto_1fr_auto]">
+      <div className="grid h-dvh w-full grid-rows-[auto_1fr_auto]">
         <header className="relavite z-10">
           <div>
             <DatePicker setMonth={setMonth} setDate={setDate} />
@@ -69,11 +69,11 @@ function App() {
           </div>
         </header>
 
-        <main className="flex min-h-0 flex-col">
+        <main className="flex min-h-0 flex-col ">
           <DateString month={month} date={date} />
           <hr className="mx-[20%] my-3 max-w-full" />
           <div className="relative min-h-0 flex-1 bg-zinc-800">
-            <div className="h-full content-center justify-center overflow-y-auto">
+            <div className="h-full content-center justify-center overflow-y-auto w-full">
               <SongListDisplayer
                 songList={songList}
                 currentSong={currentSong}
@@ -87,7 +87,7 @@ function App() {
           <hr className="mx-[20%] my-3 max-w-full" />
         </main>
 
-        <div className="m-4 flex content-center justify-center">
+        <div className="p-5 m-auto max-w-[500px] flex content-center justify-center">
           {currentSong ? (
             <SongTable song={currentSong} />
           ) : (
