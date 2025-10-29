@@ -9,10 +9,7 @@ interface SongItemProps extends HTMLAttributes<HTMLParagraphElement> {
 
 function SongItem({ currentSong, song, children, ...rest }: SongItemProps) {
   const activeClass = "bg-linear-to-r text-lg font-bold";
-  const hoverClass = activeClass
-    .split(" ")
-    .map((value) => `hover:${value}`)
-    .join(" ");
+  const hoverClass = "hover:bg-linear-to-r hover:text-lg hover:font-bold";
 
   return (
     <p
