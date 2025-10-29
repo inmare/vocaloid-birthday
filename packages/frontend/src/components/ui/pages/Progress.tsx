@@ -1,21 +1,12 @@
 import api from "@/api";
-import SongListDisplayer from "@/components/ui/fragments/SongListDisplayer";
 import { useAuth } from "@components/AuthContext";
+import Calendar from "@components/ui/fragments/Calendar";
+import DateString from "@components/ui/fragments/DateString";
+import SongListDisplayer from "@components/ui/fragments/SongListDisplayer";
 import SvgViewer from "@components/ui/svg/SvgViewer";
 import type { SongWithPVs } from "@vocaloid-birthday/common";
-import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
-const Calendar = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-`;
+import SongTable from "../fragments/SongTable";
 
 export default function Progress() {
   const { accessToken } = useAuth();
@@ -23,14 +14,12 @@ export default function Progress() {
 
   const [month, setMonth] = useState<number>(1);
   const [date, setDate] = useState<number>(1);
-  const [dateArray, setDateArray] = useState<(number | null)[]>([]);
 
   const [currentSong, setCurrentSong] = useState<SongWithPVs | null>(null);
   const [songList, setSongList] = useState<SongWithPVs[]>([]);
 
   useEffect(() => {
     document.title = "Progress";
-    updateMonthArray(1);
   }, []);
 
   useEffect(() => {
@@ -57,86 +46,24 @@ export default function Progress() {
     getSongData();
   }, [month, date]);
 
-  const updateMonthArray = (month: number) => {
-    const month2026 = dayjs("2026").set("month", month - 1);
-    const daysInMonth = month2026.daysInMonth();
-    const dateArray: (number | null)[] = [];
-    for (let i = 1; i <= daysInMonth; i++) {
-      dateArray.push(i);
-    }
-    const startDay = month2026.startOf("month").day();
-    for (let i = 0; i < startDay; i++) {
-      dateArray.unshift(null);
-    }
-    while (dateArray.length % 7 !== 0) {
-      dateArray.push(null);
-    }
-    setDateArray(dateArray);
-  };
-
-  const handleDate = (direction: "back" | "forth") => {
-    let newMonth = month;
-    if (direction === "back") {
-      newMonth = Math.max(1, month - 1);
-    } else if (direction === "forth") {
-      newMonth = Math.min(12, month + 1);
-    }
-
-    setMonth(newMonth);
-    updateMonthArray(newMonth);
-  };
-
-  const handleClickDate = (date: number | null) => {
-    if (date === null) return;
-    setDate(date);
-  };
-
   const handleSong = (song: SongWithPVs) => {
     setCurrentSong(song);
   };
 
   return (
     <>
-      <Wrapper>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <button
-            onClick={() => {
-              handleDate("back");
-            }}
-          >
-            {"<"}
-          </button>
-          <p style={{ display: "inline-block" }}>{month}월</p>
-          <button
-            onClick={() => {
-              handleDate("forth");
-            }}
-          >
-            {">"}
-          </button>
-        </div>
-        <Calendar>
-          {dateArray.map((value, index) => {
-            return (
-              <button key={index} onClick={() => handleClickDate(value)}>
-                {value !== null ? value : ""}
-              </button>
-            );
-          })}
-        </Calendar>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 2fr",
-            height: "100%",
-          }}
-        >
+      <div className="h-full grid grid-cols-2">
+        <div className="grid grid-rows-[auto_auto_1fr_auto] min-h-0">
           <div>
+            <Calendar
+              month={month}
+              setMonth={setMonth}
+              setDate={setDate}
+              setCurrentSong={setCurrentSong}
+            />
+          </div>
+          <DateString month={month} date={date} />
+          <div className="overflow-y-auto">
             <SongListDisplayer
               currentSong={currentSong}
               songList={songList}
@@ -144,11 +71,23 @@ export default function Progress() {
               pad={false}
             />
           </div>
-          <div>
-            <SvgViewer song={currentSong} isAdmin={isAdmin} />
+          <div className="p-5 text-center">
+            {currentSong !== null ? (
+              <SongTable song={currentSong} />
+            ) : (
+              "곡을 선택해주세요"
+            )}
           </div>
         </div>
-      </Wrapper>
+        <div className="min-h-0">
+          <SvgViewer
+            month={month}
+            date={date}
+            song={currentSong}
+            isAdmin={isAdmin}
+          />
+        </div>
+      </div>
     </>
   );
 }
