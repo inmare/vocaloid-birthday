@@ -1,18 +1,48 @@
 import { type PVAttributes, type SongWithPVs } from "@vocaloid-birthday/common";
-import styled from "styled-components";
+import type {
+  AnchorHTMLAttributes,
+  TdHTMLAttributes,
+  ThHTMLAttributes,
+} from "react";
 
-const MainTable = styled.table`
-  border-collapse: collapse;
-  th {
-    border: 1px solid black;
-    padding: 5px 10px;
-  }
+function TableA({
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement>) {
+  return (
+    <a {...props} className="underline text-cyan-700">
+      {children}
+    </a>
+  );
+}
 
-  td {
-    border: 1px solid black;
-    padding: 5px 10px;
-  }
-`;
+function TableTh({
+  children,
+  ...props
+}: ThHTMLAttributes<HTMLTableCellElement>) {
+  return (
+    <th
+      className="m-1 px-2 py-1 bg-cyan-700 w-30 truncate text-ellipsis"
+      {...props}
+    >
+      {children}
+    </th>
+  );
+}
+
+function TableTd({
+  children,
+  ...props
+}: TdHTMLAttributes<HTMLTableCellElement>) {
+  return (
+    <th
+      className="m-1 px-2 py-1 bg-cyan-100 text-zinc-950 font-medium text-start truncate text-ellipsis"
+      {...props}
+    >
+      {children}
+    </th>
+  );
+}
 
 export default function SongTable({ song }: { song: SongWithPVs }) {
   const createPVLink = (pvList: PVAttributes[]) => {
@@ -32,9 +62,9 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
             link = "#";
           }
           return (
-            <a key={index} href={link}>
+            <TableA key={index} href={link}>
               {service}
-            </a>
+            </TableA>
           );
         })}
       </>
@@ -43,40 +73,40 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
   const vocaDBLink = `https://vocadb.net/s/${song.vocaDBId}`;
   return (
     <>
-      <MainTable>
+      <table className="border-collapse table-fixed w-full">
         <tbody>
           <tr>
-            <th>제목</th>
-            <td>{song.title}</td>
+            <TableTh>제목</TableTh>
+            <TableTd>{song.title}</TableTd>
           </tr>
           <tr>
-            <th>제목(한국어)</th>
-            <td>{song.titleKr ?? ""}</td>
+            <TableTh>제목(한국어)</TableTh>
+            <TableTd>{song.titleKr ?? ""}</TableTd>
           </tr>
           <tr>
-            <th>작곡가</th>
-            <td>{song.composer}</td>
+            <TableTh>작곡가</TableTh>
+            <TableTd>{song.composer}</TableTd>
           </tr>
           <tr>
-            <th>작곡가(한국어)</th>
-            <td>{song.composerKr ?? ""}</td>
+            <TableTh>작곡가(한국어)</TableTh>
+            <TableTd>{song.composerKr ?? ""}</TableTd>
           </tr>
           <tr>
-            <th>업로드 날짜</th>
-            <td>{song.publishDate.toString()}</td>
+            <TableTh>업로드 날짜</TableTh>
+            <TableTd>{song.publishDate.toString()}</TableTd>
           </tr>
           <tr>
-            <th>VocaDB</th>
-            <td>
-              <a href={vocaDBLink}>{song.vocaDBId}</a>
-            </td>
+            <TableTh>VocaDB</TableTh>
+            <TableTd>
+              <TableA href={vocaDBLink}>{song.vocaDBId}</TableA>
+            </TableTd>
           </tr>
           <tr>
-            <th>PV</th>
-            <td>{createPVLink(song.PVs)}</td>
+            <TableTh>PV</TableTh>
+            <TableTd>{createPVLink(song.PVs)}</TableTd>
           </tr>
         </tbody>
-      </MainTable>
+      </table>
     </>
   );
 }
