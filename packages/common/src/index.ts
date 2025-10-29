@@ -1,11 +1,3 @@
-// 모델의 속성 정의
-export interface VideoAttributes {
-  id?: number;
-  url: string;
-  uploadDate: string;
-  videoId: string;
-}
-
 const DB_FILE_NAME = "db.sqlite";
 export { DB_FILE_NAME };
 
