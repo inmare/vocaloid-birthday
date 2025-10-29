@@ -1,4 +1,4 @@
-import { Vec2 } from "./utils";
+import { Vec2 } from "@components/utils";
 
 export default function Guideline({
   visible = true,
