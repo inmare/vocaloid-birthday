@@ -1,5 +1,32 @@
 import { type SongWithPVs } from "@vocaloid-birthday/common";
 import clsx from "clsx";
+import { type HTMLAttributes } from "react";
+
+interface SongItemProps extends HTMLAttributes<HTMLParagraphElement> {
+  currentSong: SongWithPVs | null;
+  song: SongWithPVs;
+}
+
+function SongItem({ currentSong, song, children, ...rest }: SongItemProps) {
+  const activeClass = "bg-linear-to-r text-lg font-bold";
+  const hoverClass = activeClass
+    .split(" ")
+    .map((value) => `hover:${value}`)
+    .join(" ");
+
+  return (
+    <p
+      className={clsx(
+        "cursor-pointer from-transparent via-cyan-900 to-transparent text-center transition-all duration-100 select-none truncate text-ellipsis",
+        hoverClass,
+        { [activeClass]: currentSong && currentSong.id === song.id },
+      )}
+      {...rest}
+    >
+      {children}
+    </p>
+  );
+}
 
 export default function SongListDisplayer({
   songList,
@@ -12,34 +39,26 @@ export default function SongListDisplayer({
   handleSong: (song: SongWithPVs) => void;
   pad: boolean;
 }) {
-  const activeClass = "bg-linear-to-r text-lg font-bold";
-  const hoverClass = activeClass
-    .split(" ")
-    .map((value) => `hover:${value}`)
-    .join(" ");
   const padClass = "py-20";
   return (
     <>
       <div
-        className={clsx({
+        className={clsx("px-10", {
           [padClass]: pad,
         })}
       >
         {songList.map((song, index) => {
           return (
-            <p
+            <SongItem
               key={index}
+              currentSong={currentSong}
+              song={song}
               onClick={() => {
                 handleSong(song);
               }}
-              className={clsx(
-                "cursor-pointer from-transparent via-cyan-900 to-transparent text-center transition-all duration-100 select-none",
-                hoverClass,
-                { [activeClass]: currentSong && currentSong.id === song.id },
-              )}
             >
               {song.title}
-            </p>
+            </SongItem>
           );
         })}
       </div>
