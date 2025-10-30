@@ -52,8 +52,8 @@ export default function Progress() {
 
   return (
     <>
-      <div className="h-full grid grid-cols-2">
-        <div className="grid grid-rows-[auto_auto_1fr_auto] min-h-0">
+      <div className="grid h-full grid-cols-2">
+        <div className="grid min-h-0 grid-rows-[auto_auto_1fr_auto]">
           <div>
             <Calendar
               month={month}

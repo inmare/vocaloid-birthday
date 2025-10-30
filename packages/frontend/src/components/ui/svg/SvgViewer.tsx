@@ -142,11 +142,11 @@ export default function SvgViewer({
           </svg>
         </div>
         {isAdmin && (
-          <div className="w-full grid gap-1 py-1">
-            <textarea className="bg-cyan-50 py-2 px-3 rounded-lg text-zinc-950" />
-            <textarea className="bg-cyan-50 py-2 px-3 rounded-lg text-zinc-950" />
-            <textarea className="bg-cyan-50 py-2 px-3 rounded-lg text-zinc-950" />
-            <textarea className="bg-cyan-50 py-2 px-3 rounded-lg text-zinc-950" />
+          <div className="grid w-full gap-1 py-1">
+            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
+            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
+            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
+            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
 
             <Colorful
               color={accentColor}

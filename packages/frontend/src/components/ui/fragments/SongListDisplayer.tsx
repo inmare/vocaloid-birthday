@@ -14,7 +14,7 @@ function SongItem({ currentSong, song, children, ...rest }: SongItemProps) {
   return (
     <p
       className={clsx(
-        "cursor-pointer from-transparent via-cyan-900 to-transparent text-center transition-all duration-100 select-none truncate text-ellipsis",
+        "cursor-pointer truncate from-transparent via-cyan-900 to-transparent text-center text-ellipsis transition-all duration-100 select-none",
         hoverClass,
         { [activeClass]: currentSong && currentSong.id === song.id },
       )}

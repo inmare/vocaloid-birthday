@@ -69,11 +69,11 @@ function App() {
           </div>
         </header>
 
-        <main className="flex min-h-0 flex-col ">
+        <main className="flex min-h-0 flex-col">
           <DateString month={month} date={date} />
           <hr className="mx-[20%] my-3 max-w-full" />
           <div className="relative min-h-0 flex-1 bg-zinc-800">
-            <div className="h-full content-center justify-center overflow-y-auto w-full">
+            <div className="h-full w-full content-center justify-center overflow-y-auto">
               <SongListDisplayer
                 songList={songList}
                 currentSong={currentSong}
@@ -87,7 +87,7 @@ function App() {
           <hr className="mx-[20%] my-3 max-w-full" />
         </main>
 
-        <div className="p-5 m-auto max-w-[500px] flex content-center justify-center">
+        <div className="m-auto flex max-w-[500px] content-center justify-center p-5">
           {currentSong ? (
             <SongTable song={currentSong} />
           ) : (

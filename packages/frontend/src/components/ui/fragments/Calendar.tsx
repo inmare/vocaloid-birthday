@@ -13,7 +13,7 @@ function MonthMoveBtn({ mode, className, ...rest }: MonthMoveBtnProps) {
   return (
     <button
       {...rest}
-      className={clsx("bg-cyan-900 rounded-lg p-1 aspect-square", className)}
+      className={clsx("aspect-square rounded-lg bg-cyan-900 p-1", className)}
     >
       {mode === "left" ? <ChevronLeft /> : <ChevronRight />}
     </button>
@@ -71,13 +71,13 @@ export default function Calendar({
 
   return (
     <>
-      <div className="max-w-80 m-auto">
-        <div className="flex flex-row justify-center content-center">
+      <div className="m-auto max-w-80">
+        <div className="flex flex-row content-center justify-center">
           <MonthMoveBtn mode="left" onClick={() => handleMonth("left")} />
-          <p className="font-bold text-2xl m-auto mx-3">{month}월</p>
+          <p className="m-auto mx-3 text-2xl font-bold">{month}월</p>
           <MonthMoveBtn mode="right" onClick={() => handleMonth("right")} />
         </div>
-        <div className="grid grid-cols-7 bg-zinc-800 m-3 p-2 rounded-xl gap-0.5">
+        <div className="m-3 grid grid-cols-7 gap-0.5 rounded-xl bg-zinc-800 p-2">
           {dateArray.map((value, index) => {
             return (
               <button
@@ -87,7 +87,7 @@ export default function Calendar({
                   setDate(value);
                   setCurrentSong(null);
                 }}
-                className="font-monospace bg-cyan-900 p-1 min-h-10 rounded-lg"
+                className="font-monospace min-h-10 rounded-lg bg-cyan-900 p-1"
               >
                 {value !== null ? value : ""}
               </button>

@@ -5,7 +5,7 @@ export default function CustomNavLink(props: NavLinkProps) {
   return (
     <NavLink
       className={clsx(
-        "font-monospace text-cyan- text-xl font-bold text-cyan-600 underline transition duration-100",
+        "font-monospace text-xl font-bold text-cyan-600 underline transition duration-100",
         "hover:text-cyan-500",
       )}
       {...props}

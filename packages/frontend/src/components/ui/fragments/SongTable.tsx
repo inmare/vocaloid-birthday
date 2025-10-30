@@ -10,7 +10,7 @@ function TableA({
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a {...props} className="underline text-cyan-700">
+    <a {...props} className="text-cyan-700 underline">
       {children}
     </a>
   );
@@ -22,7 +22,7 @@ function TableTh({
 }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className="m-1 px-2 py-1 bg-cyan-700 w-30 truncate text-ellipsis"
+      className="m-1 w-30 truncate bg-cyan-700 px-2 py-1 text-ellipsis"
       {...props}
     >
       {children}
@@ -36,7 +36,7 @@ function TableTd({
 }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className="m-1 px-2 py-1 bg-cyan-100 text-zinc-950 font-medium text-start truncate text-ellipsis"
+      className="m-1 truncate bg-cyan-100 px-2 py-1 text-start font-medium text-ellipsis text-zinc-950"
       {...props}
     >
       {children}
@@ -73,7 +73,7 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
   const vocaDBLink = `https://vocadb.net/s/${song.vocaDBId}`;
   return (
     <>
-      <table className="border-collapse table-fixed w-full">
+      <table className="w-full table-fixed border-collapse">
         <tbody>
           <tr>
             <TableTh>제목</TableTh>
