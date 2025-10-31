@@ -6,7 +6,7 @@ import { type SongWithPVs } from "@vocaloid-birthday/common";
 import dayjs from "dayjs";
 import QRCode from "qrcode-svg";
 import { useRef, useState } from "react";
-const DATE_FONT_FAMILY = "AbrilFatface-Regular, 'Abril Fatface'";
+const DATE_FONT_FAMILY = "AbrilFatface, 'Abril Fatface'";
 
 export default function SvgViewer({
   month,

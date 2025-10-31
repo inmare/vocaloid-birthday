@@ -4,12 +4,12 @@ import { AuthProvider } from "@components/AuthProvider";
 import About from "@components/ui/pages/About.tsx";
 import Admin from "@components/ui/pages/Admin.tsx";
 import App from "@components/ui/pages/App";
+import OtherPageLayout from "@components/ui/pages/OtherPageLayout";
+import Progress from "@components/ui/pages/Progress";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import OtherPageLayout from "./ui/pages/OtherPageLayout.tsx";
-import Progress from "./ui/pages/Progress.tsx";
 
 const router = createBrowserRouter([
   {
