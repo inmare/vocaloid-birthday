@@ -1,152 +1,265 @@
-import sampleImage from "@assets/lustorus-sample.jpg";
-import Guideline from "@components/ui/svg/Guideline";
-import { Vec2 } from "@components/utils";
+import {
+  DefaultTextTypo,
+  DefaultTitleConfig,
+  type LineConfig,
+  type TextItemConfig,
+  type TitleConfig,
+} from "@components/type";
+import Btn from "@components/ui/fragments/Btn";
+import TextBtn from "@components/ui/fragments/TextBtn";
+import CalendarSvg from "@components/ui/svg/CalendarSvg";
 import Colorful from "@uiw/react-color-colorful";
-import { type SongWithPVs } from "@vocaloid-birthday/common";
 import dayjs from "dayjs";
-import QRCode from "qrcode-svg";
-import { useRef, useState } from "react";
-const DATE_FONT_FAMILY = "AbrilFatface, 'Abril Fatface'";
+import { ListPlus, Plus } from "lucide-react";
+import { useEffect, useState, type ChangeEvent } from "react";
+import { useImmer, type Updater } from "use-immer";
+import TextInput from "../fragments/TextInput";
+
+function createEmptyItem(): TextItemConfig {
+  return {
+    id: dayjs().valueOf() + 1,
+    text: "",
+    typo: {
+      ...DefaultTextTypo,
+    },
+  };
+}
+
+function createEmptyLine(): LineConfig {
+  return {
+    item: [createEmptyItem()],
+  };
+}
+
+function TextList({
+  config,
+  lineIndex,
+  updateTitleConfig,
+  updateTextItem,
+  currentTextItem,
+}: {
+  config: LineConfig;
+  lineIndex: number;
+  updateTitleConfig: Updater<TitleConfig>;
+  updateTextItem: Updater<TextItemConfig | null>;
+  currentTextItem: TextItemConfig | null;
+}) {
+  const addItem = () => {
+    updateTitleConfig((draft) => {
+      draft.line.forEach((value, index) => {
+        if (index === lineIndex) {
+          value.item.push(createEmptyItem());
+        }
+      });
+    });
+  };
+
+  const deleteItem = (value: TextItemConfig) => {
+    updateTitleConfig((draft) => {
+      draft.line.forEach((line) => {
+        line.item = line.item.filter((item) => {
+          return item.id !== value.id;
+        });
+      });
+    });
+    updateTextItem(null);
+  };
+
+  return (
+    <div className="grid grid-cols-[1fr_auto]">
+      <div className="flex flex-row gap-1 overflow-x-auto whitespace-nowrap">
+        {config.item.map((value) => {
+          return (
+            <TextBtn
+              onDoubleClick={() => {
+                deleteItem(value);
+              }}
+              onClick={() => {
+                updateTextItem(value);
+              }}
+              toggled={currentTextItem?.id === value.id}
+            >
+              {value.text.replaceAll(" ", "\u00a0")}
+            </TextBtn>
+          );
+        })}
+      </div>
+      <Btn onClick={addItem} className="my-auto aspect-square rounded-full">
+        <Plus size={16} />
+      </Btn>
+    </div>
+  );
+}
+
+function TextViewer({
+  config,
+  updateTitleConfig,
+  updateTextItem,
+  currentTextItem,
+}: {
+  config: TitleConfig;
+  updateTitleConfig: Updater<TitleConfig>;
+  updateTextItem: Updater<TextItemConfig | null>;
+  currentTextItem: TextItemConfig | null;
+}) {
+  return (
+    <div>
+      <div className="grid-cols grid gap-2">
+        {config.line.map((value, index) => {
+          return (
+            <TextList
+              key={index}
+              lineIndex={index}
+              config={value}
+              updateTitleConfig={updateTitleConfig}
+              updateTextItem={updateTextItem}
+              currentTextItem={currentTextItem}
+            />
+          );
+        })}
+        <Btn
+          onClick={() => {
+            updateTitleConfig((draft) => {
+              draft.line.push(createEmptyLine());
+            });
+          }}
+          className="w-full rounded-lg"
+        >
+          <ListPlus className="mx-auto" />
+        </Btn>
+      </div>
+    </div>
+  );
+}
+
+function TextEditor({
+  textItem,
+  updateTextItem,
+}: {
+  textItem: TextItemConfig | null;
+  updateTextItem: Updater<TextItemConfig | null>;
+}) {
+  const labelClassName = "font-monospace pr-1";
+  const inputClassName =
+    "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none";
+
+  return (
+    <div>
+      <div className="grid grid-cols-[auto_1fr] gap-1">
+        <TextInput
+          disabled={!textItem}
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
+            updateTextItem((draft) => {
+              if (draft) draft.text = event.target.value;
+            });
+          }}
+          value={textItem ? textItem.text : ""}
+          className="col-span-2"
+        />
+        <label className={labelClassName} htmlFor="offset-x">
+          OffsetX
+        </label>
+        <input
+          className={inputClassName}
+          type="number"
+          name="offset-x"
+          step={0.1}
+        />
+        <label className={labelClassName} htmlFor="offset-y">
+          OffsetY
+        </label>
+        <input
+          className={inputClassName}
+          type="number"
+          name="offset-y"
+          step={0.1}
+        />
+        <label className={labelClassName} htmlFor="leading">
+          Leading
+        </label>
+        <input
+          className={inputClassName}
+          type="number"
+          name="leading"
+          step={0.1}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function SvgViewer({
   month,
   date,
-  song,
   isAdmin,
 }: {
   month: number;
   date: number;
-  song: SongWithPVs | null;
   isAdmin: boolean;
 }) {
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const factor = 5; // 좌표를 되도록 정수로 지정하기 위한 factor
-  const viewBoxX = 106 * factor;
-  const viewBoxY = 156 * factor;
-  const svgSize = new Vec2(viewBoxX, viewBoxY);
-
-  const publishDate = dayjs()
-    .set("year", 2026)
-    .set("month", month - 1)
-    .set("date", date);
-
-  const dateString = publishDate.format("MM.DD ddd").toUpperCase();
-
   const [accentColor, setAccentColor] = useState<string>("#000000");
+  const [titleConfig, updateTitleConfig] = useImmer<TitleConfig>({
+    ...DefaultTitleConfig,
+    line: [createEmptyLine()],
+  });
+  const [textItem, updateTextItem] = useImmer<TextItemConfig | null>(null);
 
-  // const [pickColor, setPickColor] = useState(false);
+  useEffect(() => {
+    if (!textItem) return;
+    updateTitleConfig((draft) => {
+      for (const line of draft.line) {
+        line.item.forEach((value) => {
+          if (value.id === textItem.id) {
+            value.text = textItem.text;
+            value.typo = textItem.typo;
+          }
+        });
+      }
+    });
+  }, [textItem]);
+
+  useEffect(() => {
+    updateTitleConfig((draft) => {
+      const hasEmptyLine = draft.line.some((value) => {
+        return value.item.length === 0;
+      });
+
+      if (hasEmptyLine) {
+        draft.line = draft.line.filter((value) => {
+          return value.item.length !== 0;
+        });
+      }
+    });
+  }, [titleConfig]);
 
   return (
     <>
       <div className="grid h-full overflow-auto p-5">
-        <div style={{ width: "100%" }}>
-          <svg
-            ref={svgRef}
-            viewBox={Vec2.toStyle([new Vec2(0, 0), svgSize])}
-            className="shadow-[0_0_5px] shadow-zinc-950"
-          >
-            <clipPath id="thumbnail-clip">
-              <rect
-                x={(svgSize.x - 250) / 2}
-                y={105}
-                width={250}
-                height={250}
-                rx={20}
-                ry={20}
-              ></rect>
-            </clipPath>
-            <rect width={svgSize.x} height={svgSize.y} fill="#ffffff" />
-            <Guideline factor={5} svgSize={svgSize} visible={true} />
-            <text
-              textAnchor="middle"
-              fontFamily={DATE_FONT_FAMILY}
-              fill="#000000"
-              fontSize={36}
-              transform={`translate(${svgSize.x / 2}, 60)`}
-            >
-              {dateString}
-            </text>
-            <g
-              style={{
-                clipPath: "url(#thumbnail-clip)",
-              }}
-            >
-              <image
-                href={sampleImage}
-                transform={`translate(${
-                  svgSize.x / 2 - (1280 * 0.4) / 2
-                }, 80) scale(0.4)`}
-              ></image>
-            </g>
-            <text
-              textAnchor="middle"
-              fontFamily={DATE_FONT_FAMILY}
-              fill={accentColor}
-              fontSize={160}
-              transform={`translate(${svgSize.x / 2}, 450)`}
-            >
-              <tspan>{publishDate.get("date")}</tspan>
-            </text>
-            <text
-              transform={`translate(${svgSize.x / 2}, 500)`}
-              textAnchor="middle"
-              fontFamily="BookkMyungjo"
-            >
-              <tspan>아아, 하늘은 이런 색이었구나</tspan>
-            </text>
-            <line
-              width={2}
-              stroke={accentColor}
-              x1={120}
-              y1={460}
-              x2={svgSize.x - 120}
-              y2={460}
-            ></line>
-            <g transform={`translate(35, 670)`}>
-              <text
-                // transform={`translate(0, 10)`}
-                color="#000000"
-                fontFamily="LINE Seed JP"
-                textAnchor="start"
-                fontSize={36}
-              >
-                <tspan>
-                  {song
-                    ? song.composer.split("feat.")[0].trim()
-                    : "Lorem Ipsum"}
-                </tspan>
-              </text>
-              <text
-                transform={`translate(0, 70)`}
-                color="#000000"
-                fontFamily="LINE Seed JP"
-                textAnchor="start"
-                fontSize={70}
-                fontWeight={700}
-                letterSpacing={"-.1em"}
-              >
-                <tspan>{song ? song.title : "Lorem Ipsum"}</tspan>
-              </text>
-            </g>
-            <g
-              dangerouslySetInnerHTML={{
-                __html: new QRCode({
-                  content: "https://example.com",
-                  padding: 1,
-                  join: true,
-                  container: "none",
-                }).svg(),
-              }}
-              transform={`translate(${100}, 100) scale(0.6)`}
-            ></g>
-          </svg>
+        <div className="m-auto flex content-center justify-center">
+          <CalendarSvg
+            month={month}
+            date={date}
+            accentColor={accentColor}
+            titleConfig={titleConfig}
+          />
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
-            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
-            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
-            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
-            <textarea className="rounded-lg bg-cyan-50 px-3 py-2 text-zinc-950" />
+            <div className="flex flex-col gap-1">
+              <label htmlFor="">제목</label>
+              <div className="grid grid-cols-2 gap-4">
+                <TextViewer
+                  config={titleConfig}
+                  updateTitleConfig={updateTitleConfig}
+                  updateTextItem={updateTextItem}
+                  currentTextItem={textItem}
+                />
+                <TextEditor
+                  textItem={textItem}
+                  updateTextItem={updateTextItem}
+                />
+              </div>
+            </div>
 
             <Colorful
               color={accentColor}
