@@ -26,7 +26,7 @@ app.use(cookieParser());
 
 app.set("port", process.env.PORT || port);
 
-const REFRESH_COOKIE_KEY = "vocaloidBirthdayRefreshToken";
+const REFRESH_COOKIE_KEY = "VocalendarRefreshToken";
 
 type RefreshTokenData = {
   refreshTokens: string[];
