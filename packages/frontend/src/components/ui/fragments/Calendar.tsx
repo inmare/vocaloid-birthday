@@ -87,7 +87,7 @@ export default function Calendar({
                   setDate(value);
                   setCurrentSong(null);
                 }}
-                className="font-monospace min-h-10 rounded-lg bg-cyan-900 p-1"
+                className="font-monospace rounded-lg bg-cyan-900 p-1"
               >
                 {value !== null ? value : ""}
               </button>
