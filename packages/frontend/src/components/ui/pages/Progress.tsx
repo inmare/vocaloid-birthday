@@ -80,12 +80,7 @@ export default function Progress() {
           </div>
         </div>
         <div className="min-h-0">
-          <SvgViewer
-            month={month}
-            date={date}
-            song={currentSong}
-            isAdmin={isAdmin}
-          />
+          <SvgViewer month={month} date={date} isAdmin={isAdmin} />
         </div>
       </div>
     </>
