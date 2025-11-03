@@ -22,7 +22,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
@@ -37,7 +37,7 @@ api.interceptors.response.use(
         const { data } = await api.post(
           "/refresh",
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
         setAccessToken(data.accessToken);
         originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
@@ -49,7 +49,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
