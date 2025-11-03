@@ -17,6 +17,7 @@ export default function Admin() {
     const formData = new FormData(target);
     const pwd = formData.get("pwd") as string;
     try {
+      console.log(pwd);
       const response = await api.post("/api/auth/login", { password: pwd });
       setAccessToken(response.data.accessToken);
       console.log("로그인에 성공했습니다!");
