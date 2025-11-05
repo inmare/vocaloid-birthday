@@ -1,6 +1,4 @@
 node_modules
-*.sqlite
-*.sqlite-journal
 dist
 .env
 test.*
