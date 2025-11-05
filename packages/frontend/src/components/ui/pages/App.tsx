@@ -29,7 +29,9 @@ function App() {
   useEffect(() => {
     try {
       const getData = async () => {
-        const response = await api.post("/api/songs", { month, date });
+        const response = await api.get("/api/songs", {
+          params: { month, date },
+        });
 
         if (response.status !== 200) {
           throw new Error(
