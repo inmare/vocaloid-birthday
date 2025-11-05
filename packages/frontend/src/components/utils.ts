@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { DefaultTextTypo, type TextItem } from "./type";
 
 export function rgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -29,4 +30,15 @@ export class Vec2 {
 
     return str.trim();
   }
+}
+
+export function createEmptyItem(): TextItem {
+  return {
+    id: dayjs().valueOf(),
+    text: "",
+    typo: {
+      ...DefaultTextTypo,
+    },
+    selected: false,
+  };
 }
