@@ -49,10 +49,6 @@ export const InitSongModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      lyrics: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
     },
     { sequelize }
   );

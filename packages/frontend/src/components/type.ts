@@ -1,3 +1,5 @@
+import type { Updater } from "use-immer";
+
 export type DateSelectMode = "month" | "date";
 export type VisibilityState = "show" | "hide";
 
@@ -6,25 +8,30 @@ export type TextTypo = {
   offsetY: number;
   leading: number;
 };
-export type TextItemConfig = {
-  id: number;
-  text: string;
-  typo: TextTypo;
-};
-export type LineConfig = {
-  item: TextItemConfig[];
-};
-export type TitleConfig = {
-  fontSize: number;
-  leading: number;
-  line: LineConfig[];
-};
 export const DefaultTextTypo: TextTypo = {
   offsetX: 0,
   offsetY: 0,
   leading: 0,
 } as const;
-export const DefaultTitleConfig = {
-  fontSize: 12,
-  leading: 0,
-} as const;
+
+export type TextItem = {
+  id: number;
+  text: string;
+  typo: TextTypo;
+  selected: boolean;
+};
+export type TextConfig = {
+  fontSize: number;
+  lineHeight: number;
+  items: TextItem[][];
+};
+export type SvgConfig = {
+  title: TextConfig;
+  composer: TextConfig;
+  updateTitle: Updater<TextConfig>;
+  updateComposer: Updater<TextConfig>;
+};
+export type DataConfig = {
+  data: TextConfig;
+  updateData: Updater<TextConfig>;
+};

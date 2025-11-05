@@ -10,7 +10,6 @@ export interface SongAttributes {
   vocaDBRating?: number;
   titleKr?: string;
   composerKr?: string;
-  lyrics?: string;
 }
 
 export interface PVAttributes {
