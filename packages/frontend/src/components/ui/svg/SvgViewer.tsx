@@ -1,3 +1,4 @@
+import api from "@/api";
 import {
   DefaultTextTypo,
   DefaultTitleConfig,
@@ -216,7 +217,7 @@ export default function SvgViewer({
         });
       }
     });
-  }, [textItem]);
+  }, [textItem, updateTitleConfig]);
 
   useEffect(() => {
     updateTitleConfig((draft) => {
@@ -230,7 +231,29 @@ export default function SvgViewer({
         });
       }
     });
-  }, [titleConfig]);
+  }, [titleConfig, updateTitleConfig]);
+
+  const sendSvgData = async () => {
+    const mockupData = {
+      title: "Title",
+      composer: "Composer",
+      titleKor: "타이틀",
+      composerKor: "작곡가",
+      publishDate: dayjs().toDate(),
+      calendarDate: dayjs(`2026-${month}-${date + 1}`).toDate(),
+      lyrics: "Lyrics",
+      svgConfig: {
+        accentColor,
+        titleConfig,
+      },
+      svgData: "<svg></svg>",
+      songId: 1,
+    };
+    const res = await api.post("/api/admin/save-data", {
+      data: mockupData,
+    });
+    console.log(res.status, res.data);
+  };
 
   return (
     <>
@@ -246,6 +269,18 @@ export default function SvgViewer({
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
             <div className="flex flex-col gap-1">
+              <label htmlFor="">곡 id</label>
+              <input type="text" name="" id="" />
+              <label htmlFor="">테마 색</label>
+              <Colorful
+                color={accentColor}
+                disableAlpha={true}
+                onChange={(color) => {
+                  setAccentColor(color.hex);
+                }}
+              />
+              <label htmlFor="">작곡가</label>
+              <TextInput />
               <label htmlFor="">제목</label>
               <div className="grid grid-cols-2 gap-4">
                 <TextViewer
@@ -259,15 +294,15 @@ export default function SvgViewer({
                   updateTextItem={updateTextItem}
                 />
               </div>
+              <label htmlFor="">가사</label>
+              <TextInput />
+              <label htmlFor="">제목(한국어)</label>
+              <TextInput />
+              <label htmlFor="">작곡가(한국어)</label>
+              <TextInput />
             </div>
 
-            <Colorful
-              color={accentColor}
-              disableAlpha={true}
-              onChange={(color) => {
-                setAccentColor(color.hex);
-              }}
-            />
+            <Btn onClick={sendSvgData}>저장하기</Btn>
           </div>
         )}
       </div>
