@@ -1,7 +1,12 @@
 import express, { type Express, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { connectDatabase, Song, PV } from "@vocaloid-birthday/database";
+import {
+  connectDatabase,
+  Song,
+  PV,
+  Calendar,
+} from "@vocaloid-birthday/database";
 import { Op, fn, col, where } from "sequelize";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -9,6 +14,12 @@ import { join } from "path";
 import { Low } from "lowdb/lib";
 import { JSONFilePreset } from "lowdb/node";
 import cookieParser from "cookie-parser";
+// import { CalendarAttributes } from "@vocaloid-birthday/common";
+import { authMiddleware } from "./authMiddleware";
+import { v4 as uuidv4 } from "uuid";
+import type { AdminData } from "./type";
+import fs from "fs/promises";
+import dayjs from "dayjs";
 
 dotenv.config();
 
@@ -36,15 +47,16 @@ const defaultData: RefreshTokenData = { refreshTokens: [] };
 const file = join(process.cwd(), "db.json");
 let refreshTokenDB: Low<RefreshTokenData>;
 
-app.post("/api/songs", async (req: Request, res: Response) => {
-  const { month, date } = req.body;
-  const monthString = String(month).padStart(2, "0");
+app.get("/api/songs", async (req: Request, res: Response) => {
+  const { month, date } = req.query as { month: string; date: string };
+  console.log(req.query);
+  const monthString = month.padStart(2, "0");
   const condition = [
     where(fn("strftime", "%m", col("Song.publishDate")), monthString),
   ];
 
-  if (date !== 0) {
-    const dateString = String(date).padStart(2, "0");
+  if (parseInt(date) !== 0) {
+    const dateString = date.padStart(2, "0");
     condition.push(
       where(fn("strftime", "%d", col("Song.publishDate")), dateString)
     );
@@ -75,13 +87,10 @@ app.post("/api/songs", async (req: Request, res: Response) => {
   }
 });
 
-type AdminData = {
-  isAdmin: boolean;
-};
-
 app.post("/api/auth/login", async (req: Request, res: Response) => {
   const { password } = req.body;
   const hashedPassword = process.env.HASHED_PASSWORD;
+  console.log(hashedPassword);
   const isMatch = await bcrypt.compare(password, hashedPassword!);
 
   if (isMatch) {
@@ -164,6 +173,87 @@ app.post("/api/logout", async (req, res) => {
     return res.status(500).json({
       message: "로그아웃 처리 중 오류가 발생했습니다. 다시 시도해주세요",
     });
+  }
+});
+
+type CalendarData = {
+  title: string;
+  composer: string;
+  titleKor: string;
+  composerKor: string;
+  publishDate?: Date;
+  calendarDate: Date;
+  lyrics: string;
+  svgConfig: object;
+  songId?: number;
+  svgData: string;
+};
+
+app.post("/api/admin/save-data", authMiddleware, async (req, res) => {
+  const { data } = req.body as { data: CalendarData };
+  console.log("SVG 데이터 수신:", data);
+  const svgStorageDir = join(process.cwd(), "..", "database", "svg");
+  const svgFileName = `${uuidv4()}.svg`;
+  const svgFilePath = join(svgStorageDir, svgFileName);
+  console.log(svgFilePath);
+
+  try {
+    await fs.mkdir(svgStorageDir, { recursive: true });
+    await fs.writeFile(svgFilePath, data.svgData, { encoding: "utf-8" });
+
+    await Calendar.create({
+      title: data.title,
+      composer: data.composer,
+      titleKor: data.titleKor,
+      composerKor: data.composerKor,
+      publishDate: data.publishDate,
+      calendarDate: data.calendarDate,
+      lyrics: data.lyrics,
+      svgConfig: data.svgConfig,
+      svgFileName: svgFileName,
+      songId: data.songId,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "데이터가 성공적으로 저장되었습니다." });
+  } catch (error) {
+    console.error("데이터 저장 중 오류 발생:", error);
+    return res
+      .status(500)
+      .json({ message: "데이터 저장 중 오류가 발생했습니다." });
+  }
+});
+
+app.get("/api/progress", async (req: Request, res: Response) => {
+  const { month } = req.query as { month: string };
+  const monthString = month.padStart(2, "0");
+
+  try {
+    const result = await Calendar.findAll({
+      where: where(
+        fn("strftime", "%Y-%m", col("calendarDate")),
+        `2026-${monthString}`
+      ),
+      order: [["calendarDate", "ASC"]],
+    });
+
+    const daysInMonth = dayjs(`2026-${monthString}-01`).daysInMonth();
+
+    const monthProgressArray = new Array(daysInMonth).fill(false);
+    result.forEach((calendarItem) => {
+      const date = dayjs(calendarItem.calendarDate).date();
+      monthProgressArray[date - 1] = true;
+    });
+
+    return res.status(200).json({
+      progress: monthProgressArray,
+    });
+  } catch (error) {
+    console.error("데이터를 검색하던 중 에러가 발생했습니다.");
+    return res
+      .status(500)
+      .json({ message: "데이터를 검색하던 중 에러가 발생했습니다." });
   }
 });
 
