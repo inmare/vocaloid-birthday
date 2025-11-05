@@ -4,6 +4,7 @@ import path from "path";
 import { DB_FILE_NAME } from "@vocaloid-birthday/common";
 import { InitSongModel } from "./song.model";
 import { InitPVModel } from "./pv.model";
+import { InitCalendarModel } from "./calendar.model";
 
 export const DB_PATH = path.join(__dirname, "..", DB_FILE_NAME);
 
@@ -20,6 +21,9 @@ export const Song = InitSongModel(sequelize);
 // PV 모델 초기화
 export const PV = InitPVModel(sequelize);
 
+// Calendar 모델 초기화
+export const Calendar = InitCalendarModel(sequelize);
+
 // One to many 관계 정의
 Song.hasMany(PV, {
   foreignKey: "songId",
@@ -27,6 +31,9 @@ Song.hasMany(PV, {
   onDelete: "cascade",
 });
 PV.belongsTo(Song, {
+  foreignKey: "songId",
+});
+Calendar.belongsTo(Song, {
   foreignKey: "songId",
 });
 

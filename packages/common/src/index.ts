@@ -24,3 +24,17 @@ export interface PVAttributes {
 export interface SongWithPVs extends SongAttributes {
   PVs: PVAttributes[];
 }
+
+export interface CalendarAttributes {
+  id?: number;
+  title: string;
+  composer: string;
+  titleKor: string;
+  composerKor: string;
+  publishDate: Date;
+  calendarDate: Date;
+  lyrics: string;
+  svgConfig: object;
+  svgFileName: string;
+  songId: number;
+}
