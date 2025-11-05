@@ -1,6 +1,7 @@
 import api from "@/api";
+import { SvgProvider } from "@/components/SvgProvider";
+import Calendar from "@/components/ui/svg/Calendar";
 import { useAuth } from "@components/AuthContext";
-import Calendar from "@components/ui/fragments/Calendar";
 import DateString from "@components/ui/fragments/DateString";
 import SongListDisplayer from "@components/ui/fragments/SongListDisplayer";
 import SvgViewer from "@components/ui/svg/SvgViewer";
@@ -53,7 +54,7 @@ export default function Progress() {
   };
 
   return (
-    <>
+    <SvgProvider>
       <div className="grid h-full grid-cols-[1fr_auto]">
         <div className="grid min-h-0 grid-rows-[auto_auto_1fr_auto]">
           <div>
@@ -85,6 +86,6 @@ export default function Progress() {
           <SvgViewer month={month} date={date} isAdmin={isAdmin} />
         </div>
       </div>
-    </>
+    </SvgProvider>
   );
 }
