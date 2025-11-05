@@ -5,7 +5,7 @@ import {
   SvgSizeY,
 } from "@/constants/svgConfig";
 import sampleImage from "@assets/lustorus-sample.jpg";
-import type { TitleConfig } from "@components/type";
+import type { TextConfig } from "@components/type";
 import Guideline from "@components/ui/svg/Guideline";
 import { Vec2 } from "@components/utils";
 import dayjs from "dayjs";
@@ -21,7 +21,7 @@ export default function CalendarSvg({
   month: number;
   date: number;
   accentColor: string;
-  titleConfig: TitleConfig;
+  titleConfig: TextConfig;
 }) {
   const svgSize = new Vec2(SvgSizeX * SvgFactor, SvgSizeY * SvgFactor);
   const currentDate = dayjs()
