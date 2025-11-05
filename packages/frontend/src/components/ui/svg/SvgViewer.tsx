@@ -1,193 +1,16 @@
 import api from "@/api";
-import {
-  DefaultTextTypo,
-  DefaultTitleConfig,
-  type LineConfig,
-  type TextItemConfig,
-  type TitleConfig,
-} from "@components/type";
+import type { VisibilityState } from "@/components/type";
+import { SvgContext } from "@components/SvgContext";
+import { TextEditContext } from "@components/TextEditContext";
 import Btn from "@components/ui/fragments/Btn";
-import TextBtn from "@components/ui/fragments/TextBtn";
-import CalendarSvg from "@components/ui/svg/CalendarSvg";
+import CustomTextarea from "@components/ui/fragments/CustomTextarea";
+import CustomTextInput from "@components/ui/fragments/CustomTextInput";
+import TextEditor from "@components/ui/svg/TextEditor";
+import TextViewer from "@components/ui/svg/TextViewer";
 import Colorful from "@uiw/react-color-colorful";
+import clsx from "clsx";
 import dayjs from "dayjs";
-import { ListPlus, Plus } from "lucide-react";
-import { useEffect, useState, type ChangeEvent } from "react";
-import { useImmer, type Updater } from "use-immer";
-import TextInput from "../fragments/TextInput";
-
-function createEmptyItem(): TextItemConfig {
-  return {
-    id: dayjs().valueOf() + 1,
-    text: "",
-    typo: {
-      ...DefaultTextTypo,
-    },
-  };
-}
-
-function createEmptyLine(): LineConfig {
-  return {
-    item: [createEmptyItem()],
-  };
-}
-
-function TextList({
-  config,
-  lineIndex,
-  updateTitleConfig,
-  updateTextItem,
-  currentTextItem,
-}: {
-  config: LineConfig;
-  lineIndex: number;
-  updateTitleConfig: Updater<TitleConfig>;
-  updateTextItem: Updater<TextItemConfig | null>;
-  currentTextItem: TextItemConfig | null;
-}) {
-  const addItem = () => {
-    updateTitleConfig((draft) => {
-      draft.line.forEach((value, index) => {
-        if (index === lineIndex) {
-          value.item.push(createEmptyItem());
-        }
-      });
-    });
-  };
-
-  const deleteItem = (value: TextItemConfig) => {
-    updateTitleConfig((draft) => {
-      draft.line.forEach((line) => {
-        line.item = line.item.filter((item) => {
-          return item.id !== value.id;
-        });
-      });
-    });
-    updateTextItem(null);
-  };
-
-  return (
-    <div className="grid grid-cols-[1fr_auto]">
-      <div className="flex flex-row gap-1 overflow-x-auto whitespace-nowrap">
-        {config.item.map((value) => {
-          return (
-            <TextBtn
-              onDoubleClick={() => {
-                deleteItem(value);
-              }}
-              onClick={() => {
-                updateTextItem(value);
-              }}
-              toggled={currentTextItem?.id === value.id}
-            >
-              {value.text.replaceAll(" ", "\u00a0")}
-            </TextBtn>
-          );
-        })}
-      </div>
-      <Btn onClick={addItem} className="my-auto aspect-square rounded-full">
-        <Plus size={16} />
-      </Btn>
-    </div>
-  );
-}
-
-function TextViewer({
-  config,
-  updateTitleConfig,
-  updateTextItem,
-  currentTextItem,
-}: {
-  config: TitleConfig;
-  updateTitleConfig: Updater<TitleConfig>;
-  updateTextItem: Updater<TextItemConfig | null>;
-  currentTextItem: TextItemConfig | null;
-}) {
-  return (
-    <div>
-      <div className="grid-cols grid gap-2">
-        {config.line.map((value, index) => {
-          return (
-            <TextList
-              key={index}
-              lineIndex={index}
-              config={value}
-              updateTitleConfig={updateTitleConfig}
-              updateTextItem={updateTextItem}
-              currentTextItem={currentTextItem}
-            />
-          );
-        })}
-        <Btn
-          onClick={() => {
-            updateTitleConfig((draft) => {
-              draft.line.push(createEmptyLine());
-            });
-          }}
-          className="w-full rounded-lg"
-        >
-          <ListPlus className="mx-auto" />
-        </Btn>
-      </div>
-    </div>
-  );
-}
-
-function TextEditor({
-  textItem,
-  updateTextItem,
-}: {
-  textItem: TextItemConfig | null;
-  updateTextItem: Updater<TextItemConfig | null>;
-}) {
-  const labelClassName = "font-monospace pr-1";
-  const inputClassName =
-    "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none";
-
-  return (
-    <div>
-      <div className="grid grid-cols-[auto_1fr] gap-1">
-        <TextInput
-          disabled={!textItem}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            updateTextItem((draft) => {
-              if (draft) draft.text = event.target.value;
-            });
-          }}
-          value={textItem ? textItem.text : ""}
-          className="col-span-2"
-        />
-        <label className={labelClassName} htmlFor="offset-x">
-          OffsetX
-        </label>
-        <input
-          className={inputClassName}
-          type="number"
-          name="offset-x"
-          step={0.1}
-        />
-        <label className={labelClassName} htmlFor="offset-y">
-          OffsetY
-        </label>
-        <input
-          className={inputClassName}
-          type="number"
-          name="offset-y"
-          step={0.1}
-        />
-        <label className={labelClassName} htmlFor="leading">
-          Leading
-        </label>
-        <input
-          className={inputClassName}
-          type="number"
-          name="leading"
-          step={0.1}
-        />
-      </div>
-    </div>
-  );
-}
+import { useContext, useMemo, useState, type ChangeEvent } from "react";
 
 export default function SvgViewer({
   month,
@@ -199,39 +22,6 @@ export default function SvgViewer({
   isAdmin: boolean;
 }) {
   const [accentColor, setAccentColor] = useState<string>("#000000");
-  const [titleConfig, updateTitleConfig] = useImmer<TitleConfig>({
-    ...DefaultTitleConfig,
-    line: [createEmptyLine()],
-  });
-  const [textItem, updateTextItem] = useImmer<TextItemConfig | null>(null);
-
-  useEffect(() => {
-    if (!textItem) return;
-    updateTitleConfig((draft) => {
-      for (const line of draft.line) {
-        line.item.forEach((value) => {
-          if (value.id === textItem.id) {
-            value.text = textItem.text;
-            value.typo = textItem.typo;
-          }
-        });
-      }
-    });
-  }, [textItem, updateTitleConfig]);
-
-  useEffect(() => {
-    updateTitleConfig((draft) => {
-      const hasEmptyLine = draft.line.some((value) => {
-        return value.item.length === 0;
-      });
-
-      if (hasEmptyLine) {
-        draft.line = draft.line.filter((value) => {
-          return value.item.length !== 0;
-        });
-      }
-    });
-  }, [titleConfig, updateTitleConfig]);
 
   const sendSvgData = async () => {
     const mockupData = {
@@ -244,7 +34,6 @@ export default function SvgViewer({
       lyrics: "Lyrics",
       svgConfig: {
         accentColor,
-        titleConfig,
       },
       svgData: "<svg></svg>",
       songId: 1,
@@ -255,51 +44,99 @@ export default function SvgViewer({
     console.log(res.status, res.data);
   };
 
+  const config = useContext(SvgContext);
+
+  const titleValue = useMemo(
+    () => ({
+      data: config.title,
+      updateData: config.updateTitle,
+    }),
+    [config.title, config.updateTitle],
+  );
+
+  const composerValue = useMemo(
+    () => ({
+      data: config.composer,
+      updateData: config.updateComposer,
+    }),
+    [config.composer, config.updateComposer],
+  );
+
+  const [paletteVisible, setPaletteVisible] = useState<VisibilityState>("hide");
+
   return (
     <>
       <div className="grid h-full overflow-auto p-5">
         <div className="m-auto flex content-center justify-center">
-          <CalendarSvg
+          {/* <CalendarSvg
             month={month}
             date={date}
             accentColor={accentColor}
             titleConfig={titleConfig}
-          />
+          /> */}
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
             <div className="flex flex-col gap-1">
               <label htmlFor="">곡 id</label>
-              <input type="text" name="" id="" />
+              <CustomTextInput />
               <label htmlFor="">테마 색</label>
-              <Colorful
-                color={accentColor}
-                disableAlpha={true}
-                onChange={(color) => {
-                  setAccentColor(color.hex);
-                }}
-              />
-              <label htmlFor="">작곡가</label>
-              <TextInput />
-              <label htmlFor="">제목</label>
-              <div className="grid grid-cols-2 gap-4">
-                <TextViewer
-                  config={titleConfig}
-                  updateTitleConfig={updateTitleConfig}
-                  updateTextItem={updateTextItem}
-                  currentTextItem={textItem}
-                />
-                <TextEditor
-                  textItem={textItem}
-                  updateTextItem={updateTextItem}
+              <div className="flex flex-row gap-2">
+                <div className="relative h-8 w-8">
+                  <div
+                    className="aspect-square w-8 rounded-full"
+                    style={{ backgroundColor: accentColor }}
+                    onClick={() => {
+                      if (paletteVisible === "show") setPaletteVisible("hide");
+                      else if (paletteVisible === "hide")
+                        setPaletteVisible("show");
+                    }}
+                  ></div>
+                  <Colorful
+                    className={clsx(
+                      "absolute inset-0 top-2 shadow-2xl transition-all duration-100 ease-in-out",
+                      {
+                        ["opacity-100"]: paletteVisible === "show",
+                        ["pointer-events-none opacity-0"]:
+                          paletteVisible === "hide",
+                      },
+                    )}
+                    color={accentColor}
+                    disableAlpha={true}
+                    onChange={(color) => {
+                      setAccentColor(color.hex);
+                    }}
+                  />
+                </div>
+                <CustomTextInput
+                  value={accentColor}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    setAccentColor(event.target.value);
+                  }}
+                  className="font-monospace w-21"
                 />
               </div>
+
+              <label htmlFor="">작곡가</label>
+              <div className="grid grid-cols-2 gap-4">
+                <TextEditContext.Provider value={composerValue}>
+                  <TextViewer />
+                  <TextEditor />
+                </TextEditContext.Provider>
+              </div>
+              <label htmlFor="">제목</label>
+              <div className="grid grid-cols-2 gap-4">
+                <TextEditContext.Provider value={titleValue}>
+                  <TextViewer />
+                  <TextEditor />
+                </TextEditContext.Provider>
+              </div>
               <label htmlFor="">가사</label>
-              <TextInput />
+              <CustomTextarea />
               <label htmlFor="">제목(한국어)</label>
-              <TextInput />
+              <CustomTextarea />
               <label htmlFor="">작곡가(한국어)</label>
-              <TextInput />
+              <CustomTextarea />
             </div>
 
             <Btn onClick={sendSvgData}>저장하기</Btn>
