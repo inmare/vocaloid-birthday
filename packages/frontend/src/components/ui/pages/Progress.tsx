@@ -25,7 +25,9 @@ export default function Progress() {
   useEffect(() => {
     const getSongData = async () => {
       try {
-        const response = await api.post("/api/songs", { month, date });
+        const response = await api.get("/api/songs", {
+          params: { month, date },
+        });
         const json = response.data;
 
         if (response.status !== 200) {
@@ -52,7 +54,7 @@ export default function Progress() {
 
   return (
     <>
-      <div className="grid h-full grid-cols-2">
+      <div className="grid h-full grid-cols-[1fr_auto]">
         <div className="grid min-h-0 grid-rows-[auto_auto_1fr_auto]">
           <div>
             <Calendar
@@ -79,7 +81,7 @@ export default function Progress() {
             )}
           </div>
         </div>
-        <div className="min-h-0">
+        <div className="mx-auto min-h-0 max-w-xl">
           <SvgViewer month={month} date={date} isAdmin={isAdmin} />
         </div>
       </div>
