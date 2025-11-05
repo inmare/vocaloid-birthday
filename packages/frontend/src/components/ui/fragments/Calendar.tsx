@@ -1,3 +1,4 @@
+import api from "@/api";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -20,6 +21,11 @@ function MonthMoveBtn({ mode, className, ...rest }: MonthMoveBtnProps) {
   );
 }
 
+type DateData = {
+  value: number | null;
+  finished?: boolean;
+};
+
 export default function Calendar({
   month,
   setMonth,
@@ -31,7 +37,7 @@ export default function Calendar({
   setDate: (date: number) => void;
   setCurrentSong: (data: null) => void;
 }) {
-  const [dateArray, setDateArray] = useState<(number | null)[]>([]);
+  const [dateArray, setDateArray] = useState<DateData[]>([]);
 
   const handleMonth = (moveMode: MoveMode) => {
     const getMonth = (m: number) => {
@@ -46,28 +52,59 @@ export default function Calendar({
   };
 
   useEffect(() => {
-    // 한 달의 날짜만큼 미리 날짜를 만들어 둠
-    const month2026 = dayjs("2026").set("month", month - 1);
-    const daysInMonth = month2026.daysInMonth();
-    const dateArray: (number | null)[] = Array.from(
-      {
-        length: daysInMonth,
-      },
-      (_, index) => index + 1,
-    );
+    const fetchProgress = async () => {
+      // 한 달의 날짜만큼 미리 날짜를 만들어 둠
+      const month2026 = dayjs("2026").set("month", month - 1);
+      const daysInMonth = month2026.daysInMonth();
+      const dateArray: DateData[] = Array.from(
+        {
+          length: daysInMonth,
+        },
+        (_, index) => {
+          return { value: index + 1 };
+        },
+      );
 
-    // 시작하는 요일 반환
-    const startDay = month2026.startOf("month").day();
-    // 배열 앞의 빈 부분을 null로 채움
-    for (let i = 0; i < startDay; i++) {
-      dateArray.unshift(null);
-    }
-    // 배열 뒤의 빈 부분을 null로 채움
-    while (dateArray.length % 7 !== 0) {
-      dateArray.push(null);
-    }
-    setDateArray(dateArray);
+      try {
+        const progressRes = await api.get("/api/progress", {
+          params: { month },
+        });
+
+        const progressData: { progress: boolean[] } = progressRes.data;
+
+        progressData.progress.forEach((finished, index) => {
+          if (dateArray[index]) dateArray[index].finished = finished;
+        });
+      } catch (error) {
+        console.error("데이터를 불러오던 중 에러가 발생했습니다:", error);
+      }
+
+      // 시작하는 요일 반환
+      const startDay = month2026.startOf("month").day();
+      // 배열 앞의 빈 부분을 null로 채움
+      for (let i = 0; i < startDay; i++) {
+        dateArray.unshift({ value: null });
+      }
+      // 배열 뒤의 빈 부분을 null로 채움
+      while (dateArray.length % 7 !== 0) {
+        dateArray.push({ value: null });
+      }
+      setDateArray(dateArray);
+    };
+
+    fetchProgress();
   }, [month]);
+
+  const progressClass = {
+    finished: "bg-green-900",
+    unfinished: "bg-red-900",
+    noValue: "bg-gray-700",
+  };
+
+  const getProgressClass = (data: DateData) => {
+    if (data.value === null) return progressClass.noValue;
+    return data.finished ? progressClass.finished : progressClass.unfinished;
+  };
 
   return (
     <>
@@ -83,13 +120,16 @@ export default function Calendar({
               <button
                 key={index}
                 onClick={() => {
-                  if (value === null) return;
-                  setDate(value);
+                  if (value.value === null) return;
+                  setDate(value.value);
                   setCurrentSong(null);
                 }}
-                className="font-monospace rounded-lg bg-cyan-900 p-1"
+                className={clsx(
+                  "font-monospace rounded-lg p-1",
+                  getProgressClass(value),
+                )}
               >
-                {value !== null ? value : ""}
+                {value.value !== null ? value.value : ""}
               </button>
             );
           })}
