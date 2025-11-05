@@ -17,7 +17,7 @@ api.interceptors.request.use(
   (config) => {
     if (accessToken) {
       if (accessToken) {
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
     return config;
@@ -40,7 +40,7 @@ api.interceptors.response.use(
           { withCredentials: true },
         );
         setAccessToken(data.accessToken);
-        originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
         console.log("세션이 만료되었습니다. 다시 로그인 해주세요");
