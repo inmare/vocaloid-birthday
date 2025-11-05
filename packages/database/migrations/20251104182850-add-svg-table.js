@@ -31,7 +31,6 @@ module.exports = {
         type: Sequelize.DATE,
       },
       calendarDate: {
-        primaryKey: true,
         type: Sequelize.DATE,
       },
       lyrics: {
