@@ -1,7 +1,7 @@
 import CustomTextarea from "@/components/ui/fragments/CustomTextarea";
 import { TextEditContext } from "@components/TextEditContext";
 import type { TextItem } from "@components/type";
-import { type ChangeEvent, useContext, useEffect } from "react";
+import { type ChangeEvent, useCallback, useContext } from "react";
 import { useImmer } from "use-immer";
 
 export default function TextEditor() {
@@ -12,16 +12,16 @@ export default function TextEditor() {
   const { data, updateData } = useContext(TextEditContext);
   const [item, updateItem] = useImmer<TextItem | null>(null);
 
-  useEffect(() => {
+  useCallback(() => {
     const lines = data.items;
     for (const line of lines) {
       line.forEach((value) => {
         if (value.selected) updateItem(value);
       });
     }
-  }, [data]);
+  }, [data, updateItem]);
 
-  useEffect(() => {
+  useCallback(() => {
     if (!item) return;
     updateData((draft) => {
       for (const line of draft.items) {
@@ -30,7 +30,7 @@ export default function TextEditor() {
         });
       }
     });
-  }, [item]);
+  }, [item, updateData]);
 
   return (
     <div>
