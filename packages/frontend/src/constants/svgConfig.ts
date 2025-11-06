@@ -3,13 +3,15 @@ const SvgSizeX = 106;
 const SvgSizeY = 156;
 const SvgDateFont = "AbrilFatface";
 const SvgCaptionFont = "Pretendard Variable";
-const SvgTextFont = "LINESeed JP, LINESeed KR";
+const SvgMainFont = "LINESeed JP, LINESeed KR";
+const SvgSerifFont = "BookkMyungjo";
 
 export {
   SvgCaptionFont,
   SvgDateFont,
   SvgFactor,
+  SvgMainFont,
+  SvgSerifFont,
   SvgSizeX,
   SvgSizeY,
-  SvgTextFont,
 };
