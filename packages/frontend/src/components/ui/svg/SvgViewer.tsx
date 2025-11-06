@@ -5,13 +5,13 @@ import { TextEditContext } from "@components/TextEditContext";
 import Btn from "@components/ui/fragments/Btn";
 import CustomTextarea from "@components/ui/fragments/CustomTextarea";
 import CustomTextInput from "@components/ui/fragments/CustomTextInput";
+import SvgCalendar from "@components/ui/svg/SvgCalendar";
 import TextEditor from "@components/ui/svg/TextEditor";
 import TextViewer from "@components/ui/svg/TextViewer";
 import Colorful from "@uiw/react-color-colorful";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useContext, useMemo, useRef, useState, type ChangeEvent } from "react";
-import CalendarSvg from "./CalendarSvg";
 
 export default function SvgViewer({
   month,
@@ -71,11 +71,14 @@ export default function SvgViewer({
     console.log(file);
   };
 
+  const inputClassName =
+    "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none";
+
   return (
     <>
-      <div className="grid h-full overflow-auto p-5">
-        <div className="m-auto flex content-center justify-center">
-          <CalendarSvg month={month} date={date} accentColor={accentColor} />
+      <div className="grid h-full place-items-center overflow-auto p-5">
+        <div className="flex scale-75 items-center justify-center">
+          <SvgCalendar month={month} date={date} accentColor={accentColor} />
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
@@ -119,6 +122,51 @@ export default function SvgViewer({
                 />
               </div>
 
+              <label htmlFor="">이미지</label>
+              <Btn
+                className="self-start rounded-md px-2 py-1"
+                onClick={() => {
+                  if (inputFileRef) inputFileRef.current?.click();
+                }}
+              >
+                선택하기
+                <input
+                  ref={inputFileRef}
+                  onChange={onFileChange}
+                  type="file"
+                  className="hidden"
+                />
+              </Btn>
+              <div className="grid grid-cols-3 gap-1">
+                <label className="font-monospace" htmlFor="image-x">
+                  x
+                </label>
+                <label className="font-monospace" htmlFor="image-y">
+                  y
+                </label>
+                <label className="font-monospace" htmlFor="image-scale">
+                  scale
+                </label>
+                <input
+                  className={inputClassName}
+                  name="image-x"
+                  type="number"
+                  step={0.1}
+                />
+                <input
+                  className={inputClassName}
+                  name="image-y"
+                  type="number"
+                  step={0.1}
+                />
+                <input
+                  className={inputClassName}
+                  name="image-scale"
+                  type="number"
+                  step={0.1}
+                />
+              </div>
+
               <label htmlFor="">작곡가</label>
               <div className="grid grid-cols-2 gap-4">
                 <TextEditContext.Provider value={composerValue}>
@@ -139,21 +187,6 @@ export default function SvgViewer({
               <CustomTextarea />
               <label htmlFor="">작곡가(한국어)</label>
               <CustomTextarea />
-              <label htmlFor="">이미지</label>
-              <Btn
-                className="self-start rounded-md px-2 py-1"
-                onClick={() => {
-                  if (inputFileRef) inputFileRef.current?.click();
-                }}
-              >
-                선택하기
-                <input
-                  ref={inputFileRef}
-                  onChange={onFileChange}
-                  type="file"
-                  className="hidden"
-                />
-              </Btn>
             </div>
 
             <Btn onClick={sendSvgData}>저장하기</Btn>
