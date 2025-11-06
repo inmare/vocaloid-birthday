@@ -25,7 +25,7 @@ export class Vec2 {
   static toStyle(vectors: Vec2[]): string {
     let str = "";
     for (const vec of vectors) {
-      str += `${vec.x},${vec.y} `;
+      str += `${vec.x} ${vec.y} `;
     }
 
     return str.trim();
