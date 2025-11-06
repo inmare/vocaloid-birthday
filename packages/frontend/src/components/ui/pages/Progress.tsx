@@ -55,7 +55,7 @@ export default function Progress() {
 
   return (
     <SvgProvider>
-      <div className="grid h-full grid-cols-[1fr_auto]">
+      <div className="grid h-full grid-cols-2">
         <div className="grid min-h-0 grid-rows-[auto_auto_1fr_auto]">
           <div>
             <Calendar
