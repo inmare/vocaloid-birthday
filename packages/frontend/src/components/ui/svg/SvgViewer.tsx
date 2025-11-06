@@ -10,7 +10,8 @@ import TextViewer from "@components/ui/svg/TextViewer";
 import Colorful from "@uiw/react-color-colorful";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { useContext, useMemo, useState, type ChangeEvent } from "react";
+import { useContext, useMemo, useRef, useState, type ChangeEvent } from "react";
+import CalendarSvg from "./CalendarSvg";
 
 export default function SvgViewer({
   month,
@@ -63,17 +64,18 @@ export default function SvgViewer({
   );
 
   const [paletteVisible, setPaletteVisible] = useState<VisibilityState>("hide");
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log(file);
+  };
 
   return (
     <>
       <div className="grid h-full overflow-auto p-5">
         <div className="m-auto flex content-center justify-center">
-          {/* <CalendarSvg
-            month={month}
-            date={date}
-            accentColor={accentColor}
-            titleConfig={titleConfig}
-          /> */}
+          <CalendarSvg month={month} date={date} accentColor={accentColor} />
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
@@ -84,7 +86,7 @@ export default function SvgViewer({
               <div className="flex flex-row gap-2">
                 <div className="relative h-8 w-8">
                   <div
-                    className="aspect-square w-8 rounded-full"
+                    className="aspect-square w-8 rounded-full border-2 border-zinc-100"
                     style={{ backgroundColor: accentColor }}
                     onClick={() => {
                       if (paletteVisible === "show") setPaletteVisible("hide");
@@ -137,6 +139,21 @@ export default function SvgViewer({
               <CustomTextarea />
               <label htmlFor="">작곡가(한국어)</label>
               <CustomTextarea />
+              <label htmlFor="">이미지</label>
+              <Btn
+                className="self-start rounded-md px-2 py-1"
+                onClick={() => {
+                  if (inputFileRef) inputFileRef.current?.click();
+                }}
+              >
+                선택하기
+                <input
+                  ref={inputFileRef}
+                  onChange={onFileChange}
+                  type="file"
+                  className="hidden"
+                />
+              </Btn>
             </div>
 
             <Btn onClick={sendSvgData}>저장하기</Btn>
