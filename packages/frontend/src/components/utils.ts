@@ -22,13 +22,17 @@ export class Vec2 {
     this.y = y;
   }
 
+  public array(): [number, number] {
+    return [this.x, this.y];
+  }
+
   static toStyle(vectors: Vec2[]): string {
     let str = "";
     for (const vec of vectors) {
       str += `${vec.x} ${vec.y} `;
     }
 
-    return str.trim();
+    return `translate(${str.trim()})`;
   }
 }
 
