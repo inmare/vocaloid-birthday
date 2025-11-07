@@ -1,19 +1,21 @@
 import { Vec2 } from "@/components/utils";
-import { SvgDateFont } from "@/constants/svgConfig";
+import { SvgDateFont, SvgSizeX } from "@/constants/svgConfig";
 import dayjs from "dayjs";
 
 export default function DateText({
   month,
   date,
+  accentColor,
 }: {
   month: number;
   date: number;
+  accentColor: string;
 }) {
   const dayjsDate = dayjs(`2026-${month}-${date}`);
   const color = {
     normal: "#000000",
-    saturday: "#0000FF",
-    sunday: "#FF0000",
+    saturday: "#1567b4",
+    sunday: "#c22828",
   };
 
   const getColor = () => {
@@ -25,22 +27,35 @@ export default function DateText({
     return color.normal;
   };
 
-  const textPos = new Vec2(13, 20);
-  const dateFontSize = 13;
-  const dayFontSize = 6;
+  const textPos = new Vec2(13, 24);
+  const dateFontSize = 16;
+  const dayFontSize = 7;
+
+  const dividerX = 12.85;
+  const dividerY = 26;
 
   return (
-    <text
-      transform={`${Vec2.toStyle([textPos])}`}
-      fontFamily={SvgDateFont}
-      textAnchor="start"
-    >
-      <tspan fontSize={dateFontSize}>
-        {dayjsDate.format("M.D").toUpperCase()}
-      </tspan>
-      <tspan fill={getColor()} fontSize={dayFontSize}>
-        {dayjsDate.format(" ddd").toUpperCase().replaceAll(" ", "\u00a0")}
-      </tspan>
-    </text>
+    <>
+      <text
+        transform={`${Vec2.toStyle([textPos])}`}
+        fontFamily={SvgDateFont}
+        textAnchor="start"
+      >
+        <tspan fontSize={dateFontSize}>
+          {dayjsDate.format("M.D").toUpperCase()}
+        </tspan>
+        <tspan fill={getColor()} fontSize={dayFontSize}>
+          {dayjsDate.format(" ddd").toUpperCase().replaceAll(" ", "\u00a0")}
+        </tspan>
+      </text>
+      <line
+        x1={dividerX}
+        y1={dividerY}
+        x2={SvgSizeX - dividerX - 17}
+        y2={dividerY}
+        strokeWidth={0.4}
+        stroke={accentColor}
+      ></line>
+    </>
   );
 }
