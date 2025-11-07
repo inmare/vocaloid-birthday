@@ -4,9 +4,10 @@ import Thumbnail from "@components/ui/svg/SvgThumbnail";
 import { useRef } from "react";
 import DateText from "./SvgDateText";
 import Footer from "./SvgFooter";
+import QrCode from "./SvgQrCode";
 import Title from "./SvgTitle";
 
-export default function CalendarSvg({
+export default function SvgCalendar({
   month,
   date,
   accentColor,
@@ -27,21 +28,11 @@ export default function CalendarSvg({
       className="shadow-[0_0_10px] shadow-zinc-400"
     >
       <rect width={SvgSizeX} height={SvgSizeY} fill="#ffffff" />
-      <DateText {...{ month, date }} />
+      <DateText {...{ month, date, accentColor }} />
+      <QrCode {...{ month, date }} />
       <Thumbnail />
       <Title />
       <Footer accentColor={accentColor} />
-      {/* <g
-        dangerouslySetInnerHTML={{
-          __html: new QRCode({
-            content: "https://example.com",
-            padding: 1,
-            join: true,
-            container: "none",
-          }).svg(),
-        }}
-        transform={`translate(${100}, 100) scale(0.6)`}
-      ></g> */}
       <Guideline visible={true} />
     </svg>
   );
