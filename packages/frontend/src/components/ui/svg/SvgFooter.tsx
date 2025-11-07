@@ -6,11 +6,11 @@ import {
   SvgSizeY,
 } from "@/constants/svgConfig";
 
-export default function Footer({ accentColor }: { accentColor: string }) {
-  const footerHeight = 20;
+export default function SvgFooter({ accentColor }: { accentColor: string }) {
+  const footerHeight = 23;
 
   const rectPos = new Vec2(0, SvgSizeY - footerHeight);
-  const textPos = new Vec2(SvgSizeX / 2, SvgSizeY - 11);
+  const textPos = new Vec2(SvgSizeX / 2, SvgSizeY - 13);
 
   const lyricsFontSize = 4.5;
 
