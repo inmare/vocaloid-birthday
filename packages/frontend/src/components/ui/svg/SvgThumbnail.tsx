@@ -1,16 +1,16 @@
-import { Vec2 } from "@/components/utils";
 import { SvgSizeX } from "@/constants/svgConfig";
 import sampleImage from "@assets/no-image.png";
+import { Vec2 } from "@components/utils";
 
 export default function Thumbnail() {
   const width = 80;
-  const height = 55;
+  const height = 65;
   const x = SvgSizeX / 2 - width / 2;
-  const y = 50 - height / 2;
+  const y = 60 - height / 2;
 
   const clipPathId = "thumbnail";
-  const imageScale = 4 / 100;
-  const imagePos = new Vec2(5, 20);
+  const imageScale = 4.5 / 100;
+  const imagePos = new Vec2(0, 15);
 
   return (
     <>
