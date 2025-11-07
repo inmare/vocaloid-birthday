@@ -1,7 +1,7 @@
 import api from "@/api";
-import type { VisibilityState } from "@/components/type";
 import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
+import type { VisibilityState } from "@components/type";
 import Btn from "@components/ui/fragments/Btn";
 import CustomTextarea from "@components/ui/fragments/CustomTextarea";
 import CustomTextInput from "@components/ui/fragments/CustomTextInput";
@@ -76,8 +76,8 @@ export default function SvgViewer({
 
   return (
     <>
-      <div className="grid h-full place-items-center overflow-auto p-5">
-        <div className="flex scale-75 items-center justify-center">
+      <div className="mx-auto grid max-w-xl p-5">
+        <div className="flex scale-100 items-center justify-center">
           <SvgCalendar month={month} date={date} accentColor={accentColor} />
         </div>
         {isAdmin && (
@@ -122,21 +122,7 @@ export default function SvgViewer({
                 />
               </div>
 
-              <label htmlFor="">이미지</label>
-              <Btn
-                className="self-start rounded-md px-2 py-1"
-                onClick={() => {
-                  if (inputFileRef) inputFileRef.current?.click();
-                }}
-              >
-                선택하기
-                <input
-                  ref={inputFileRef}
-                  onChange={onFileChange}
-                  type="file"
-                  className="hidden"
-                />
-              </Btn>
+              <label htmlFor="">이미지 위치</label>
               <div className="grid grid-cols-3 gap-1">
                 <label className="font-monospace" htmlFor="image-x">
                   x
@@ -166,7 +152,6 @@ export default function SvgViewer({
                   step={0.1}
                 />
               </div>
-
               <label htmlFor="">작곡가</label>
               <div className="grid grid-cols-2 gap-4">
                 <TextEditContext.Provider value={composerValue}>
@@ -187,6 +172,21 @@ export default function SvgViewer({
               <CustomTextarea />
               <label htmlFor="">작곡가(한국어)</label>
               <CustomTextarea />
+              <label htmlFor="">이미지</label>
+              <Btn
+                className="self-start rounded-md px-2 py-1"
+                onClick={() => {
+                  if (inputFileRef) inputFileRef.current?.click();
+                }}
+              >
+                선택하기
+                <input
+                  ref={inputFileRef}
+                  onChange={onFileChange}
+                  type="file"
+                  className="hidden"
+                />
+              </Btn>
             </div>
 
             <Btn onClick={sendSvgData}>저장하기</Btn>
