@@ -82,7 +82,7 @@ export default function Progress() {
             )}
           </div>
         </div>
-        <div className="mx-auto min-h-0 max-w-xl">
+        <div className="mx-auto min-h-0 w-full overflow-auto">
           <SvgViewer month={month} date={date} isAdmin={isAdmin} />
         </div>
       </div>
