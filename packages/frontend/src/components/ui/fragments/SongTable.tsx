@@ -73,7 +73,7 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
   const vocaDBLink = `https://vocadb.net/s/${song.vocaDBId}`;
   return (
     <>
-      <table className="w-full table-fixed border-collapse">
+      <table className="mx-auto w-full max-w-xl table-fixed border-collapse">
         <tbody>
           <tr>
             <TableTh>제목</TableTh>
