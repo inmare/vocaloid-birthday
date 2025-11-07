@@ -1,8 +1,6 @@
 import CustomTextarea from "@/components/ui/fragments/CustomTextarea";
 import { TextEditContext } from "@components/TextEditContext";
-import type { TextItem } from "@components/type";
-import { type ChangeEvent, useCallback, useContext } from "react";
-import { useImmer } from "use-immer";
+import { type ChangeEvent, useContext, useMemo } from "react";
 
 export default function TextEditor() {
   const labelClassName = "font-monospace pr-1";
@@ -10,40 +8,39 @@ export default function TextEditor() {
     "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none";
 
   const { data, updateData } = useContext(TextEditContext);
-  const [item, updateItem] = useImmer<TextItem | null>(null);
 
-  useCallback(() => {
-    const lines = data.items;
-    for (const line of lines) {
-      line.forEach((value) => {
-        if (value.selected) updateItem(value);
-      });
+  const item = useMemo(() => {
+    for (const line of data.items) {
+      for (const value of line) {
+        if (value.selected) return value;
+      }
     }
-  }, [data, updateItem]);
+    return null;
+  }, [data.items]);
 
-  useCallback(() => {
+  const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     if (!item) return;
+
+    const newText = event.target.value;
+    const id = item.id;
+
     updateData((draft) => {
       for (const line of draft.items) {
-        line.forEach((value, index) => {
-          if (value.id === item.id) line[index] = item;
-        });
+        const idx = line.findIndex((value) => value.id === id);
+        if (idx !== -1) {
+          line[idx].text = newText;
+          break;
+        }
       }
     });
-  }, [item, updateData]);
+  };
 
   return (
     <div>
       <div className="grid grid-cols-[auto_1fr] gap-1">
         <CustomTextarea
           disabled={!item}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-            updateItem((draft) => {
-              if (draft) {
-                draft.text = event.target.value;
-              }
-            });
-          }}
+          onChange={handleTextChange}
           value={item ? item.text : ""}
           className="col-span-2"
         />
