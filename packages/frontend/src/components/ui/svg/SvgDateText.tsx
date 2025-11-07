@@ -1,8 +1,8 @@
-import { Vec2 } from "@/components/utils";
 import { SvgDateFont, SvgSizeX } from "@/constants/svgConfig";
+import { Vec2 } from "@components/utils";
 import dayjs from "dayjs";
 
-export default function DateText({
+export default function SvgDateText({
   month,
   date,
   accentColor,
