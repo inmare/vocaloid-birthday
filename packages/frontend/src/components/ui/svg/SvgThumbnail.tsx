@@ -2,7 +2,7 @@ import { SvgSizeX } from "@/constants/svgConfig";
 import sampleImage from "@assets/no-image.png";
 import { Vec2 } from "@components/utils";
 
-export default function Thumbnail() {
+export default function SvgThumbnail() {
   const width = 80;
   const height = 65;
   const x = SvgSizeX / 2 - width / 2;
