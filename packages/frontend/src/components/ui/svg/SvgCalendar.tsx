@@ -5,16 +5,16 @@ import SvgGuideline from "@components/ui/svg/SvgGuideline";
 import SvgQrCode from "@components/ui/svg/SvgQrCode";
 import SvgThumbnail from "@components/ui/svg/SvgThumbnail";
 import SvgTitle from "@components/ui/svg/SvgTitle";
-import { useRef } from "react";
 
 export default function SvgCalendar({
   month,
   date,
+  svgRef,
 }: {
   month: number;
   date: number;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 }) {
-  const svgRef = useRef<SVGSVGElement | null>(null);
   const { sizeX, sizeY } = SvgDefault;
 
   return (
