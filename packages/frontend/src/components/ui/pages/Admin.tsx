@@ -1,11 +1,8 @@
 import api from "@/api";
 import { useAuth } from "@components/AuthContext";
 import { type FormEvent } from "react";
-// import styled from "styled-components";
-
-// const hide = styled.style`
-//   display: none;
-// `;
+import Btn from "../fragments/Btn";
+import CustomTextInput from "../fragments/CustomTextInput";
 
 export default function Admin() {
   const { isLoading, accessToken, setAccessToken } = useAuth();
@@ -17,11 +14,9 @@ export default function Admin() {
     const formData = new FormData(target);
     const pwd = formData.get("pwd") as string;
     try {
-      console.log(pwd);
       const response = await api.post("/api/auth/login", { password: pwd });
       setAccessToken(response.data.accessToken);
       console.log("로그인에 성공했습니다!");
-      console.log(response.data.accessToken, accessToken);
     } catch (error) {
       console.error(error);
     }
@@ -30,7 +25,7 @@ export default function Admin() {
   const handleLogout = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      await api.post("/api/logout");
+      await api.post("/api/auth/logout");
       setAccessToken(null);
       console.log("로그아웃에 성공했습니다");
     } catch (error) {
@@ -42,18 +37,28 @@ export default function Admin() {
     <>
       <div>
         {!accessToken && !isLoading && (
-          <form onSubmit={handleLogin}>
-            <input type="password" name="pwd" id="pwd" />
-            <button type="submit">로그인</button>
+          <form
+            onSubmit={handleLogin}
+            className="flex justify-center gap-2 p-5"
+          >
+            <CustomTextInput name="pwd" type="password" />
+            <Btn className="rounded-lg px-4 py-2" type="submit">
+              로그인
+            </Btn>
           </form>
         )}
         {accessToken && !isLoading && (
-          <form onSubmit={handleLogout}>
-            <button type="submit">로그아웃</button>
+          <form
+            onSubmit={handleLogout}
+            className="flex justify-center gap-2 p-5"
+          >
+            <Btn className="rounded-lg px-4 py-2" type="submit">
+              로그아웃
+            </Btn>
           </form>
         )}
 
-        {isLoading && <div>로드 중입니다...</div>}
+        {isLoading && <div className="p-5 text-center">로드 중입니다...</div>}
       </div>
     </>
   );
