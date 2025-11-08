@@ -1,20 +1,28 @@
-import Guideline from "@/components/ui/svg/SvgGuideline";
+import SvgGuideline from "@/components/ui/svg/SvgGuideline";
 import { SvgSizeX, SvgSizeY } from "@/constants/svgConfig";
-import Thumbnail from "@components/ui/svg/SvgThumbnail";
+import SvgThumbnail from "@components/ui/svg/SvgThumbnail";
 import { useRef } from "react";
-import DateText from "./SvgDateText";
-import Footer from "./SvgFooter";
-import QrCode from "./SvgQrCode";
+import SvgDateText from "./SvgDateText";
+import SvgFooter from "./SvgFooter";
+import SvgQrCode from "./SvgQrCode";
 import Title from "./SvgTitle";
 
 export default function SvgCalendar({
   month,
   date,
   accentColor,
+  lyrics,
+  titleKor,
+  composerKor,
+  imageBase64,
 }: {
   month: number;
   date: number;
   accentColor: string;
+  lyrics: string;
+  titleKor: string;
+  composerKor: string;
+  imageBase64: string | null;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -28,12 +36,12 @@ export default function SvgCalendar({
       className="shadow-[0_0_10px] shadow-zinc-400"
     >
       <rect width={SvgSizeX} height={SvgSizeY} fill="#ffffff" />
-      <DateText {...{ month, date, accentColor }} />
-      <QrCode {...{ month, date }} />
-      <Thumbnail />
+      <SvgDateText {...{ month, date, accentColor }} />
+      <SvgQrCode {...{ month, date }} />
+      <SvgThumbnail {...{ imageBase64 }} />
       <Title />
-      <Footer accentColor={accentColor} />
-      <Guideline visible={true} />
+      <SvgFooter {...{ accentColor, lyrics, titleKor, composerKor }} />
+      <SvgGuideline visible={true} />
     </svg>
   );
 }
