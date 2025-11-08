@@ -11,6 +11,7 @@ export class Calendar extends Model {
   declare lyrics: string;
   declare svgConfig: object;
   declare svgFileName: string;
+  declare imageFileName?: string;
   declare songId: number;
 }
 
@@ -39,8 +40,6 @@ export const InitCalendarModel = (sequelize: Sequelize) => {
         type: DataTypes.DATE,
       },
       calendarDate: {
-        primaryKey: true,
-        allowNull: false,
         type: DataTypes.DATE,
       },
       lyrics: {
@@ -51,6 +50,10 @@ export const InitCalendarModel = (sequelize: Sequelize) => {
       },
       svgFileName: {
         type: DataTypes.STRING,
+      },
+      imageFileName: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       songId: {
         type: DataTypes.INTEGER,
