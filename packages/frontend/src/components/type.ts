@@ -35,3 +35,8 @@ export type DataConfig = {
   data: TextConfig;
   updateData: Updater<TextConfig>;
 };
+export type ImageConfig = {
+  x: number;
+  y: number;
+  scale: number;
+};
