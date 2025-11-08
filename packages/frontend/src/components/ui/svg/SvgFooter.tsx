@@ -6,7 +6,17 @@ import {
   SvgSizeY,
 } from "@/constants/svgConfig";
 
-export default function SvgFooter({ accentColor }: { accentColor: string }) {
+export default function SvgFooter({
+  accentColor,
+  lyrics,
+  titleKor,
+  composerKor,
+}: {
+  accentColor: string;
+  lyrics: string;
+  titleKor: string;
+  composerKor: string;
+}) {
   const footerHeight = 23;
 
   const rectPos = new Vec2(0, SvgSizeY - footerHeight);
@@ -29,7 +39,7 @@ export default function SvgFooter({ accentColor }: { accentColor: string }) {
           fill="#ffffff"
           fontSize={lyricsFontSize}
         >
-          <tspan>아아, 하늘은 이런 색이었구나</tspan>
+          <tspan>{lyrics}</tspan>
         </text>
         <text
           textAnchor="middle"
@@ -38,7 +48,7 @@ export default function SvgFooter({ accentColor }: { accentColor: string }) {
           fontSize={2.5}
           dy={lyricsFontSize}
         >
-          <tspan>러스트러스, *Luna</tspan>
+          <tspan>{`${titleKor}, ${composerKor}`}</tspan>
         </text>
       </g>
     </>
