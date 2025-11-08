@@ -9,7 +9,7 @@ export default function SvgFooter() {
   const rectPos = new Vec2(0, SvgDefault.sizeY - footerHeight);
   const textPos = new Vec2(SvgDefault.sizeX / 2, SvgDefault.sizeY - 13);
 
-  const lyricsFontSize = 4.5;
+  const lyricsFontSize = 3.5;
 
   const { fragment } = useContext(SvgContext);
   const captionText = useMemo(() => {
