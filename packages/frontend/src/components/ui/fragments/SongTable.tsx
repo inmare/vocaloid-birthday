@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/AuthContext";
 import { type PVAttributes, type SongWithPVs } from "@vocaloid-birthday/common";
 import type {
   AnchorHTMLAttributes,
@@ -45,6 +46,9 @@ function TableTd({
 }
 
 export default function SongTable({ song }: { song: SongWithPVs }) {
+  const { accessToken } = useAuth();
+  const isAdmin = !!accessToken;
+
   const createPVLink = (pvList: PVAttributes[]) => {
     return (
       <>
@@ -75,6 +79,12 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
     <>
       <table className="mx-auto w-full max-w-xl table-fixed border-collapse">
         <tbody>
+          {isAdmin && (
+            <tr>
+              <TableTh>곡 ID</TableTh>
+              <TableTd>{song.id}</TableTd>
+            </tr>
+          )}
           <tr>
             <TableTh>제목</TableTh>
             <TableTd>{song.title}</TableTd>
