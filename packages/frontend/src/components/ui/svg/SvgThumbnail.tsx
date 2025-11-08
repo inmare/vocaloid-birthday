@@ -1,26 +1,36 @@
 import { SvgContext } from "@/components/SvgContext";
 import SvgDefault from "@/constants/svgConfig";
 import sampleImage from "@assets/no-image.png";
-import { useContext, useMemo, useRef } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 export default function SvgThumbnail() {
-  const width = 80;
-  const height = 65;
-  const x = SvgDefault.sizeX / 2 - width / 2;
-  const y = 60 - height / 2;
+  const rectWidth = 80;
+  const rectHeight = 65;
+  const rectX = SvgDefault.sizeX / 2 - rectWidth / 2;
+  const rectY = 60 - rectHeight / 2;
 
   const clipPathId = "thumbnail";
 
   const { fragment } = useContext(SvgContext);
 
-  const imageLink = useMemo(() => {
-    return fragment.imageBase64 ? fragment.imageBase64 : sampleImage;
+  const imageRef = useRef<SVGImageElement | null>(null);
+  const [imageLink, setImageLink] = useState<string>(sampleImage);
+  const [transformStr, setTransformStr] = useState<string>(
+    `translate(${fragment.imageX} ${fragment.imageY}) scale(${fragment.imageScale})`,
+  );
+
+  useEffect(() => {
+    setImageLink(fragment.imageBase64 || sampleImage);
   }, [fragment.imageBase64]);
 
-  const imageRef = useRef<SVGImageElement | null>(null);
-
-  const imageTransfomString = useMemo(() => {
-    if (!imageRef.current) return `translate(0, 0) scale(1)`;
+  useLayoutEffect(() => {
+    if (!imageRef.current) return;
     const imgSvg = imageRef.current;
     const bbox = imgSvg.getBBox();
     const x =
@@ -28,27 +38,32 @@ export default function SvgThumbnail() {
       (bbox.width * fragment.imageScale) / 2 +
       fragment.imageX;
     const y = 60 - (bbox.height * fragment.imageScale) / 2 + fragment.imageY;
-    return `translate(${x}, ${y}) scale(${fragment.imageScale})`;
-  }, [imageRef, fragment.imageX, fragment.imageY, fragment.imageScale]);
+    setTransformStr(`translate(${x}, ${y}) scale(${fragment.imageScale})`);
+  }, [fragment.imageX, fragment.imageY, fragment.imageScale]);
 
   return (
     <>
       <clipPath id={clipPathId}>
-        <rect {...{ x, y, width, height }} />
+        <rect x={rectX} y={rectY} width={rectWidth} height={rectHeight} />
       </clipPath>
 
       <g clipPath={`url(#${clipPathId})`}>
         {/* 배경용 placeholder */}
-        <rect {...{ x, y, width, height }} opacity={0.5} />
-        {/* 이미지 */}
-        <image
-          ref={imageRef}
-          href={imageLink}
-          transform={imageTransfomString}
+        <rect
+          x={rectX}
+          y={rectY}
+          width={rectWidth}
+          height={rectHeight}
+          opacity={0.5}
         />
+        {/* 이미지 */}
+        <image ref={imageRef} href={imageLink} transform={transformStr} />
         {/* 그림자 */}
         <rect
-          {...{ x, y, width, height }}
+          x={rectX}
+          y={rectY}
+          width={rectWidth}
+          height={rectHeight}
           fill="transparent"
           stroke="#000000"
           strokeWidth={2}
