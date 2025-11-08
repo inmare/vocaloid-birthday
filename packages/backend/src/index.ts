@@ -12,6 +12,8 @@ import refresh from "./auth/refresh";
 import progress from "./progress/progress";
 import { initTokenDB } from "./auth/refreshTokenDB";
 import logout from "./auth/logout";
+import calendarData from "./calendar/calendarData";
+import { staticFolder } from "./constants";
 
 dotenv.config();
 
@@ -26,17 +28,24 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use("/static", express.static(staticFolder));
 
 app.set("port", process.env.PORT || port);
 
 app.get("/api/songs", song);
 app.get("/api/progress", progress);
+app.get("/api/calendar", calendarData);
 
 app.post("/api/auth/login", login);
 app.post("/api/auth/logout", logout);
 app.post("/api/auth/refresh", refresh);
 
-app.post("/api/admin/save", authMiddleware, upload.single("svgFile"), saveSvg);
+app.post(
+  "/api/admin/save",
+  authMiddleware,
+  upload.fields([{ name: "svgFile" }, { name: "imageFile" }]),
+  saveSvg
+);
 
 const startServer = async () => {
   await connectDatabase({ debug: false });
