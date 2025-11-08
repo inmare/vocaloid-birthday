@@ -8,6 +8,9 @@ const SvgDefault = {
   titleFontSize: 9,
   composerFontSize: 6,
   accentColor: "#000000",
+  imageX: 0,
+  imageY: 0,
+  imageScale: 0.1,
 } as const;
 
 export default SvgDefault;
