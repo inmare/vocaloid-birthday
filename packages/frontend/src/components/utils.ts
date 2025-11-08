@@ -36,6 +36,10 @@ export class Vec2 {
   }
 }
 
+/**
+ * 빈 TextConfig용 임시 아이템을 생성합니다.
+ * @returns 빈 TextItem 객체
+ */
 export function createEmptyItem(): TextItem {
   return {
     id: dayjs().valueOf(),
@@ -45,4 +49,23 @@ export function createEmptyItem(): TextItem {
     },
     selected: false,
   };
+}
+
+/**
+ * 이미지 파일을 base64로 인코딩합니다.
+ * @param file 이미지 파일
+ * @returns base64로 인코딩된 이미지
+ */
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      return resolve(reader.result as string);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+    reader.readAsDataURL(file);
+  });
 }
