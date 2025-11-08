@@ -35,5 +35,6 @@ export interface CalendarAttributes {
   lyrics: string;
   svgConfig: object;
   svgFileName: string;
+  imageFileName?: string;
   songId: number;
 }
