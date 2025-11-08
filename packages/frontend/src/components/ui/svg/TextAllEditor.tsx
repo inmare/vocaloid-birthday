@@ -1,6 +1,6 @@
+import CustomInput from "@/components/ui/fragments/CustomInput";
 import { TextEditContext } from "@components/TextEditContext";
 import CutstomLabel from "@components/ui/fragments/CustomLabel";
-import CustomNumberInput from "@components/ui/fragments/CustomNumberInput";
 import { useContext, type ChangeEvent } from "react";
 
 export default function TextAllEditor({
@@ -28,12 +28,8 @@ export default function TextAllEditor({
     <div className="col-span-2 grid grid-cols-2 gap-1">
       <CutstomLabel>FontSize</CutstomLabel>
       <CutstomLabel>LineHeight</CutstomLabel>
-      <CustomNumberInput
-        defaultValue={fontSize}
-        onChange={updateFontSize}
-        step={1}
-      />
-      <CustomNumberInput
+      <CustomInput defaultValue={fontSize} onChange={updateFontSize} step={1} />
+      <CustomInput
         defaultValue={lineHeight}
         onChange={updateLineHeight}
         step={0.1}
