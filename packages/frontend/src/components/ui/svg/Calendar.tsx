@@ -28,11 +28,13 @@ type DateData = {
 
 export default function Calendar({
   month,
+  date,
   setMonth,
   setDate,
   setCurrentSong,
 }: {
   month: number;
+  date: number;
   setMonth: (month: number) => void;
   setDate: (date: number) => void;
   setCurrentSong: (data: null) => void;
@@ -40,13 +42,24 @@ export default function Calendar({
   const [dateArray, setDateArray] = useState<DateData[]>([]);
 
   const handleMonth = (moveMode: MoveMode) => {
-    const getMonth = (m: number) => {
-      return Math.max(Math.min(12, m), 1);
-    };
-
-    const newMonth =
-      moveMode === "left" ? getMonth(month - 1) : getMonth(month + 1);
+    let newMonth = month;
+    if (moveMode === "left") {
+      if (month === 1) newMonth = 12;
+      else newMonth -= 1;
+    } else if (moveMode === "right") {
+      if (month === 12) newMonth = 1;
+      else newMonth += 1;
+    }
     setMonth(newMonth);
+
+    // 날짜가 바뀐 달의 일 수보다 크면 맞춰줌
+    const daysInMonth = dayjs("2026")
+      .set("month", newMonth - 1)
+      .daysInMonth();
+    if (date > daysInMonth) {
+      setDate(daysInMonth);
+    }
+
     // 달이 바뀌면 새로운 노래를 리셋함
     setCurrentSong(null);
   };
