@@ -1,7 +1,7 @@
 import { Low } from "lowdb";
 import { JSONFilePreset } from "lowdb/node";
 import path from "path";
-import type { RefreshTokenData } from "../type.ts";
+import type { RefreshTokenData } from "../types";
 
 const defaultData: RefreshTokenData = { refreshTokens: [] };
 const file = path.join(process.cwd(), "db.json");

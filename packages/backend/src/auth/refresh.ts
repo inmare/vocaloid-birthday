@@ -1,4 +1,4 @@
-import { AdminData } from "../type";
+import { AdminData } from "../types";
 import * as jwt from "jsonwebtoken";
 import { refreshTokenDB } from "./refreshTokenDB";
 import { Request, Response } from "express";

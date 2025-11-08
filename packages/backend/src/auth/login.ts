@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { AdminData } from "../type";
+import { AdminData } from "../types";
 import { refreshTokenDB } from "./refreshTokenDB";
 
 export default async function login(req: Request, res: Response) {
