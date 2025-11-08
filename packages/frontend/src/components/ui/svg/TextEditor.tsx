@@ -1,12 +1,10 @@
 import CustomTextarea from "@/components/ui/fragments/CustomTextarea";
 import { TextEditContext } from "@components/TextEditContext";
 import { type ChangeEvent, useContext, useMemo } from "react";
+import CutstomLabel from "../fragments/CustomLabel";
+import CustomNumberInput from "../fragments/CustomNumberInput";
 
 export default function TextEditor() {
-  const labelClassName = "font-monospace pr-1";
-  const inputClassName =
-    "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none";
-
   const { data, updateData } = useContext(TextEditContext);
 
   const item = useMemo(() => {
@@ -44,33 +42,12 @@ export default function TextEditor() {
           value={item ? item.text : ""}
           className="col-span-2"
         />
-        <label className={labelClassName} htmlFor="offset-x">
-          OffsetX
-        </label>
-        <input
-          className={inputClassName}
-          type="number"
-          name="offset-x"
-          step={0.1}
-        />
-        <label className={labelClassName} htmlFor="offset-y">
-          OffsetY
-        </label>
-        <input
-          className={inputClassName}
-          type="number"
-          name="offset-y"
-          step={0.1}
-        />
-        <label className={labelClassName} htmlFor="leading">
-          Leading
-        </label>
-        <input
-          className={inputClassName}
-          type="number"
-          name="leading"
-          step={0.1}
-        />
+        <CutstomLabel>OffsetX</CutstomLabel>
+        <CustomNumberInput step={0.1} />
+        <CutstomLabel>OffsetY</CutstomLabel>
+        <CustomNumberInput step={0.1} />
+        <CutstomLabel>Leading</CutstomLabel>
+        <CustomNumberInput step={0.1} />
       </div>
     </div>
   );
