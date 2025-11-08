@@ -1,8 +1,8 @@
 import CustomTextarea from "@/components/ui/fragments/CustomTextarea";
 import { TextEditContext } from "@components/TextEditContext";
 import { type ChangeEvent, useContext, useMemo } from "react";
+import CustomInput from "../fragments/CustomInput";
 import CutstomLabel from "../fragments/CustomLabel";
-import CustomNumberInput from "../fragments/CustomNumberInput";
 
 export default function TextEditor() {
   const { data, updateData } = useContext(TextEditContext);
@@ -43,11 +43,11 @@ export default function TextEditor() {
           className="col-span-2"
         />
         <CutstomLabel>OffsetX</CutstomLabel>
-        <CustomNumberInput step={0.1} />
+        <CustomInput step={0.1} />
         <CutstomLabel>OffsetY</CutstomLabel>
-        <CustomNumberInput step={0.1} />
+        <CustomInput step={0.1} />
         <CutstomLabel>Leading</CutstomLabel>
-        <CustomNumberInput step={0.1} />
+        <CustomInput step={0.1} />
       </div>
     </div>
   );
