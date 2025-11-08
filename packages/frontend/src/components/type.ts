@@ -42,7 +42,7 @@ export type FragemntConfig = {
   lyrics: string;
   titleKor: string;
   composerKor: string;
-  imageBase64?: string;
+  imageLink: string | null;
   imageX: number;
   imageY: number;
   imageScale: number;
