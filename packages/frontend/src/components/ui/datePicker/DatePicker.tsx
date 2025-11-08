@@ -35,11 +35,6 @@ export default function DatePicker({
   useEffect(() => {
     const detectClick = (event: MouseEvent) => {
       if (!(event.target instanceof Node)) return;
-      console.log(
-        event.target,
-        pickerRef.current,
-        !pickerRef.current?.contains(event.target),
-      );
 
       if (pickerRef.current && !pickerRef.current.contains(event.target)) {
         setVisibility("hide");
