@@ -19,6 +19,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.5.2",
     "@vocaloid-birthday/common": "workspace:*",
     "@vocaloid-birthday/database": "workspace:*",
@@ -37,6 +38,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "lowdb": "^7.0.1",
+    "multer": "^2.0.2",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
     "uuid": "^13.0.0"
