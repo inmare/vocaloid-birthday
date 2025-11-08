@@ -1,11 +1,11 @@
 import multer from "multer";
-import { join } from "path";
 import { v4 as uuidv4 } from "uuid";
+import { staticFolder } from "../constants";
 
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, done) {
-      done(null, join(process.cwd(), "..", "database", "svg"));
+      done(null, staticFolder);
     },
     filename(req, file, done) {
       const ext = file.originalname.split(".").pop();
