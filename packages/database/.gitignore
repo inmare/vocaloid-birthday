@@ -1,3 +1,4 @@
 *.sqlite
 *.sqlite-journal
-svg
+svgs
+images
