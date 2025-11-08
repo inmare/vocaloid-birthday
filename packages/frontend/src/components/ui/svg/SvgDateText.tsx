@@ -1,15 +1,15 @@
-import { SvgDateFont, SvgSizeX } from "@/constants/svgConfig";
+import { SvgContext } from "@/components/SvgContext";
+import SvgDefault from "@/constants/svgConfig";
 import { Vec2 } from "@components/utils";
 import dayjs from "dayjs";
+import { useContext } from "react";
 
 export default function SvgDateText({
   month,
   date,
-  accentColor,
 }: {
   month: number;
   date: number;
-  accentColor: string;
 }) {
   const dayjsDate = dayjs(`2026-${month}-${date}`);
   const color = {
@@ -34,11 +34,14 @@ export default function SvgDateText({
   const dividerX = 12.85;
   const dividerY = 26;
 
+  const { sizeX, dateFont } = SvgDefault;
+  const { fragment } = useContext(SvgContext);
+
   return (
     <>
       <text
         transform={`${Vec2.toStyle([textPos])}`}
-        fontFamily={SvgDateFont}
+        fontFamily={dateFont}
         textAnchor="start"
       >
         <tspan fontSize={dateFontSize}>
@@ -51,10 +54,10 @@ export default function SvgDateText({
       <line
         x1={dividerX}
         y1={dividerY}
-        x2={SvgSizeX - dividerX - 17}
+        x2={sizeX - dividerX - 17} // qr코드까지 고려한 크기 조정
         y2={dividerY}
         strokeWidth={0.4}
-        stroke={accentColor}
+        stroke={fragment.accentColor}
       ></line>
     </>
   );

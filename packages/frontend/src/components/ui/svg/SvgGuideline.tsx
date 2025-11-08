@@ -1,4 +1,4 @@
-import { SvgSizeX, SvgSizeY } from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgConfig";
 import { Vec2 } from "@components/utils";
 
 export default function SvgGuideline({
@@ -12,8 +12,8 @@ export default function SvgGuideline({
 
   return (
     <rect
-      width={SvgSizeX - padding * 2}
-      height={SvgSizeY - padding * 2}
+      width={SvgDefault.sizeX - padding * 2}
+      height={SvgDefault.sizeY - padding * 2}
       transform={Vec2.toStyle([new Vec2(padding, padding)])}
       fill="transparent"
       stroke={lineColor}

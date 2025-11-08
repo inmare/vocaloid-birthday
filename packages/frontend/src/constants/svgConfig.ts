@@ -1,19 +1,13 @@
-const SvgSizeX = 106;
-const SvgSizeY = 156;
-const SvgDateFont = "AbrilFatface";
-const SvgCaptionFont = "Pretendard JP Variable, Noto Emoji";
-const SvgMainFont = "Paperlogy, Pretendard JP Variable, Noto Color Emoji";
-const SvgSerifFont = "BookkMyungjo";
-const SvgTitleFontSize = 9;
-const SvgComposerFontSize = 6;
+const SvgDefault = {
+  sizeX: 106,
+  sizeY: 156,
+  dateFont: "AbrilFatface",
+  captionFont: "Pretendard JP Variable, Noto Emoji",
+  mainFont: "Paperlogy, Pretendard JP Variable, Noto Color Emoji",
+  serifFont: "BookkMyungjo",
+  titleFontSize: 9,
+  composerFontSize: 6,
+  accentColor: "#000000",
+} as const;
 
-export {
-  SvgCaptionFont,
-  SvgComposerFontSize,
-  SvgDateFont,
-  SvgMainFont,
-  SvgSerifFont,
-  SvgSizeX,
-  SvgSizeY,
-  SvgTitleFontSize,
-};
+export default SvgDefault;

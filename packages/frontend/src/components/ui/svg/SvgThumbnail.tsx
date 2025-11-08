@@ -1,43 +1,35 @@
-import type { ImageConfig } from "@/components/type";
-import { SvgSizeX } from "@/constants/svgConfig";
+import { SvgContext } from "@/components/SvgContext";
+import SvgDefault from "@/constants/svgConfig";
 import sampleImage from "@assets/no-image.png";
-import { useEffect, useMemo, useRef } from "react";
+import { useContext, useMemo, useRef } from "react";
 
-export default function SvgThumbnail({
-  imageBase64,
-  imagePos,
-}: {
-  imageBase64: string | null;
-  imagePos: ImageConfig;
-}) {
+export default function SvgThumbnail() {
   const width = 80;
   const height = 65;
-  const x = SvgSizeX / 2 - width / 2;
+  const x = SvgDefault.sizeX / 2 - width / 2;
   const y = 60 - height / 2;
 
   const clipPathId = "thumbnail";
 
+  const { fragment } = useContext(SvgContext);
+
   const imageLink = useMemo(() => {
-    return imageBase64 ? imageBase64 : sampleImage;
-  }, [imageBase64]);
+    return fragment.imageBase64 ? fragment.imageBase64 : sampleImage;
+  }, [fragment.imageBase64]);
 
   const imageRef = useRef<SVGImageElement | null>(null);
 
-  useEffect(() => {
-    if (!imageRef.current) return null;
-    if (!imagePos) return { x: 0, y: 0, scale: 1 };
-
+  const imageTransfomString = useMemo(() => {
+    if (!imageRef.current) return `translate(0, 0) scale(1)`;
     const imgSvg = imageRef.current;
     const bbox = imgSvg.getBBox();
-    const x = SvgSizeX / 2 - (bbox.width * imagePos.scale) / 2;
-    const y = 60 - (bbox.height * imagePos.scale) / 2;
-
-    return {
-      x: x + imagePos.x,
-      y: y + imagePos.y,
-      scale: imagePos.scale,
-    };
-  }, [imageRef, imagePos]);
+    const x =
+      SvgDefault.sizeX / 2 -
+      (bbox.width * fragment.imageScale) / 2 +
+      fragment.imageX;
+    const y = 60 - (bbox.height * fragment.imageScale) / 2 + fragment.imageY;
+    return `translate(${x}, ${y}) scale(${fragment.imageScale})`;
+  }, [imageRef, fragment.imageX, fragment.imageY, fragment.imageScale]);
 
   return (
     <>
@@ -46,18 +38,21 @@ export default function SvgThumbnail({
       </clipPath>
 
       <g clipPath={`url(#${clipPathId})`}>
+        {/* 배경용 placeholder */}
         <rect {...{ x, y, width, height }} opacity={0.5} />
+        {/* 이미지 */}
         <image
           ref={imageRef}
           href={imageLink}
-          transform={`translate(${imageRealPos?.x}, ${imageRealPos?.y}) scale(${imageRealPos?.scale})`}
+          transform={imageTransfomString}
         />
+        {/* 그림자 */}
         <rect
           {...{ x, y, width, height }}
           fill="transparent"
           stroke="#000000"
           strokeWidth={2}
-          opacity={0.5}
+          opacity={0.75}
           filter="blur(2px)"
         />
       </g>

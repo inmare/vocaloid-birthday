@@ -1,13 +1,13 @@
-import { SvgSizeX } from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgConfig";
 import { SvgContext } from "@components/SvgContext";
 import type { TextItem } from "@components/type";
 import { Vec2 } from "@components/utils";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 
-export default function Title() {
+export default function SvgTitle() {
   const { title, composer } = useContext(SvgContext);
 
-  const defaultX = SvgSizeX / 2;
+  const defaultX = SvgDefault.sizeX / 2;
   const defaultY = 117.5;
   const groupRef = useRef<SVGGElement | null>(null);
 

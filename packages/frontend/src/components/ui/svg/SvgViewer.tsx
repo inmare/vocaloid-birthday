@@ -1,8 +1,7 @@
 import api from "@/api";
-import { SvgComposerFontSize, SvgTitleFontSize } from "@/constants/svgConfig";
 import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
-import type { ImageConfig, VisibilityState } from "@components/type";
+import type { VisibilityState } from "@components/type";
 import Btn from "@components/ui/fragments/Btn";
 import CustomTextarea from "@components/ui/fragments/CustomTextarea";
 import CustomTextInput from "@components/ui/fragments/CustomTextInput";
@@ -13,6 +12,8 @@ import Colorful from "@uiw/react-color-colorful";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { useContext, useMemo, useState, type ChangeEvent } from "react";
+import CutstomLabel from "../fragments/CustomLabel";
+import CustomNumberInput from "../fragments/CustomNumberInput";
 import ImageInput from "./ImageInput";
 import TextAllEditor from "./TextAllEditor";
 
@@ -25,8 +26,6 @@ export default function SvgViewer({
   date: number;
   isAdmin: boolean;
 }) {
-  const [accentColor, setAccentColor] = useState<string>("#000000");
-
   const sendSvgData = async () => {
     const mockupData = {
       title: "Title",
@@ -36,9 +35,7 @@ export default function SvgViewer({
       publishDate: dayjs().toDate(),
       calendarDate: dayjs(`2026-${month}-${date + 1}`).toDate(),
       lyrics: "Lyrics",
-      svgConfig: {
-        accentColor,
-      },
+      svgConfig: {},
       svgData: "<svg></svg>",
       songId: 1,
     };
@@ -48,55 +45,38 @@ export default function SvgViewer({
     console.log(res.status, res.data);
   };
 
-  const config = useContext(SvgContext);
+  const {
+    title,
+    updateTitle,
+    composer,
+    updateComposer,
+    fragment,
+    updateFragment,
+  } = useContext(SvgContext);
 
   const titleValue = useMemo(
     () => ({
-      data: config.title,
-      updateData: config.updateTitle,
+      data: title,
+      updateData: updateTitle,
     }),
-    [config.title, config.updateTitle],
+    [title, updateTitle],
   );
 
   const composerValue = useMemo(
     () => ({
-      data: config.composer,
-      updateData: config.updateComposer,
+      data: composer,
+      updateData: updateComposer,
     }),
-    [config.composer, config.updateComposer],
+    [composer, updateComposer],
   );
 
   const [paletteVisible, setPaletteVisible] = useState<VisibilityState>("hide");
-
-  const inputClassName =
-    "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none";
-
-  const [lyrics, setLyrics] = useState<string>("");
-  const [titleKor, setTitleKor] = useState<string>("");
-  const [composerKor, setComposerKor] = useState<string>("");
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [imagePos, setImagePos] = useState<ImageConfig>({
-    x: 0,
-    y: 0,
-    scale: 4.5 / 100,
-  });
 
   return (
     <>
       <div className="mx-auto grid max-w-xl p-5">
         <div className="flex scale-100 items-center justify-center">
-          <SvgCalendar
-            {...{
-              month,
-              date,
-              accentColor,
-              lyrics,
-              titleKor,
-              composerKor,
-              imageBase64,
-              imagePos,
-            }}
-          />
+          <SvgCalendar month={month} date={date} />
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
@@ -108,7 +88,7 @@ export default function SvgViewer({
                 <div className="relative h-8 w-8">
                   <div
                     className="aspect-square w-8 rounded-full border-2 border-zinc-100"
-                    style={{ backgroundColor: accentColor }}
+                    style={{ backgroundColor: fragment.accentColor }}
                     onClick={() => {
                       if (paletteVisible === "show") setPaletteVisible("hide");
                       else if (paletteVisible === "hide")
@@ -124,17 +104,21 @@ export default function SvgViewer({
                           paletteVisible === "hide",
                       },
                     )}
-                    color={accentColor}
+                    color={fragment.accentColor}
                     disableAlpha={true}
                     onChange={(color) => {
-                      setAccentColor(color.hex);
+                      updateFragment((draft) => {
+                        draft.accentColor = color.hex;
+                      });
                     }}
                   />
                 </div>
                 <CustomTextInput
-                  value={accentColor}
+                  value={fragment.accentColor}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setAccentColor(event.target.value);
+                    updateFragment((draft) => {
+                      draft.accentColor = event.target.value;
+                    });
                   }}
                   className="font-monospace w-21"
                 />
@@ -142,51 +126,36 @@ export default function SvgViewer({
 
               <label htmlFor="">이미지 위치</label>
               <div className="grid grid-cols-3 gap-1">
-                <label className="font-monospace" htmlFor="image-x">
-                  x
-                </label>
-                <label className="font-monospace" htmlFor="image-y">
-                  y
-                </label>
-                <label className="font-monospace" htmlFor="image-scale">
-                  scale
-                </label>
-                <input
-                  className={inputClassName}
-                  name="image-x"
+                <CutstomLabel>x</CutstomLabel>
+                <CutstomLabel>y</CutstomLabel>
+                <CutstomLabel>scale</CutstomLabel>
+                <CustomNumberInput
                   type="number"
                   step={0.1}
-                  value={imagePos.x}
+                  value={fragment.imageX}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setImagePos({
-                      ...imagePos,
-                      x: parseFloat(event.target.value),
+                    updateFragment((draft) => {
+                      draft.imageX = parseFloat(event.target.value);
                     });
                   }}
                 />
-                <input
-                  className={inputClassName}
-                  name="image-y"
+                <CustomNumberInput
                   type="number"
                   step={0.1}
-                  value={imagePos.y}
+                  value={fragment.imageY}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setImagePos({
-                      ...imagePos,
-                      y: parseFloat(event.target.value),
+                    updateFragment((draft) => {
+                      draft.imageY = parseFloat(event.target.value);
                     });
                   }}
                 />
-                <input
-                  className={inputClassName}
-                  name="image-scale"
+                <CustomNumberInput
                   type="number"
-                  step={0.1}
-                  value={imagePos.scale}
+                  step={0.01}
+                  value={fragment.imageScale}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setImagePos({
-                      ...imagePos,
-                      scale: parseFloat(event.target.value),
+                    updateFragment((draft) => {
+                      draft.imageScale = parseFloat(event.target.value);
                     });
                   }}
                 />
@@ -194,7 +163,7 @@ export default function SvgViewer({
               <label htmlFor="">작곡가</label>
               <div className="grid grid-cols-2 gap-4">
                 <TextEditContext.Provider value={composerValue}>
-                  <TextAllEditor fontSize={SvgTitleFontSize} lineHeight={1} />
+                  <TextAllEditor fontSize={composer.fontSize} lineHeight={1} />
                   <TextViewer />
                   <TextEditor />
                 </TextEditContext.Provider>
@@ -203,8 +172,8 @@ export default function SvgViewer({
               <div className="grid grid-cols-2 gap-4">
                 <TextEditContext.Provider value={titleValue}>
                   <TextAllEditor
-                    fontSize={SvgComposerFontSize}
-                    lineHeight={1}
+                    fontSize={title.fontSize}
+                    lineHeight={title.lineHeight}
                   />
                   <TextViewer />
                   <TextEditor />
@@ -212,27 +181,39 @@ export default function SvgViewer({
               </div>
               <label htmlFor="">가사</label>
               <CustomTextarea
-                value={lyrics}
+                value={fragment.lyrics}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-                  setLyrics(event.target.value);
+                  updateFragment((draft) => {
+                    draft.lyrics = event.target.value;
+                  });
                 }}
               />
               <label htmlFor="">제목(한국어)</label>
               <CustomTextarea
-                value={titleKor}
+                value={fragment.titleKor}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-                  setTitleKor(event.target.value);
+                  updateFragment((draft) => {
+                    draft.titleKor = event.target.value;
+                  });
                 }}
               />
               <label htmlFor="">작곡가(한국어)</label>
               <CustomTextarea
-                value={composerKor}
+                value={fragment.composerKor}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
-                  setComposerKor(event.target.value);
+                  updateFragment((draft) => {
+                    draft.composerKor = event.target.value;
+                  });
                 }}
               />
               <label htmlFor="">이미지</label>
-              <ImageInput {...{ setImageBase64 }} />
+              <ImageInput
+                setImageBase64={(base64: string) => {
+                  updateFragment((draft) => {
+                    draft.imageBase64 = base64;
+                  });
+                }}
+              />
             </div>
 
             <Btn onClick={sendSvgData}>저장하기</Btn>

@@ -28,15 +28,22 @@ export type TextConfig = {
 export type SvgConfig = {
   title: TextConfig;
   composer: TextConfig;
+  fragment: FragemntConfig;
   updateTitle: Updater<TextConfig>;
   updateComposer: Updater<TextConfig>;
+  updateFragment: Updater<FragemntConfig>;
 };
 export type DataConfig = {
   data: TextConfig;
   updateData: Updater<TextConfig>;
 };
-export type ImageConfig = {
-  x: number;
-  y: number;
-  scale: number;
+export type FragemntConfig = {
+  accentColor: string;
+  lyrics: string;
+  titleKor: string;
+  composerKor: string;
+  imageBase64: string | null;
+  imageX: number;
+  imageY: number;
+  imageScale: number;
 };

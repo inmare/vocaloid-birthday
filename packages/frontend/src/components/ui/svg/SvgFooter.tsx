@@ -1,54 +1,46 @@
+import { SvgContext } from "@/components/SvgContext";
 import { Vec2 } from "@/components/utils";
-import {
-  SvgCaptionFont,
-  SvgSerifFont,
-  SvgSizeX,
-  SvgSizeY,
-} from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgConfig";
+import { useContext, useMemo } from "react";
 
-export default function SvgFooter({
-  accentColor,
-  lyrics,
-  titleKor,
-  composerKor,
-}: {
-  accentColor: string;
-  lyrics: string;
-  titleKor: string;
-  composerKor: string;
-}) {
+export default function SvgFooter() {
   const footerHeight = 23;
 
-  const rectPos = new Vec2(0, SvgSizeY - footerHeight);
-  const textPos = new Vec2(SvgSizeX / 2, SvgSizeY - 13);
+  const rectPos = new Vec2(0, SvgDefault.sizeY - footerHeight);
+  const textPos = new Vec2(SvgDefault.sizeX / 2, SvgDefault.sizeY - 13);
 
   const lyricsFontSize = 4.5;
+
+  const { fragment } = useContext(SvgContext);
+  const captionText = useMemo(() => {
+    return `${fragment.titleKor}, ${fragment.composerKor}`;
+  }, [fragment.titleKor, fragment.composerKor]);
 
   return (
     <>
       <rect
-        width={SvgSizeX}
+        width={SvgDefault.sizeX}
         height={footerHeight}
         transform={`${Vec2.toStyle([rectPos])}`}
-        fill={accentColor}
+        fill={fragment.accentColor}
       />
       <g transform={`${Vec2.toStyle([textPos])}`}>
         <text
           textAnchor="middle"
-          fontFamily={SvgSerifFont}
+          fontFamily={SvgDefault.serifFont}
           fill="#ffffff"
           fontSize={lyricsFontSize}
         >
-          <tspan>{lyrics}</tspan>
+          <tspan>{fragment.lyrics}</tspan>
         </text>
         <text
           textAnchor="middle"
-          fontFamily={SvgCaptionFont}
+          fontFamily={SvgDefault.captionFont}
           fill="#ffffff"
           fontSize={2.5}
           dy={lyricsFontSize}
         >
-          <tspan>{`${titleKor}, ${composerKor}`}</tspan>
+          <tspan>{captionText}</tspan>
         </text>
       </g>
     </>
