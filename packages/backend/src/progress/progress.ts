@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { Calendar } from "@vocaloid-birthday/database";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { col, fn, where } from "sequelize";
+
+dayjs.extend(utc);
 
 export default async function progress(req: Request, res: Response) {
   const { month } = req.query as { month: string };
@@ -20,7 +23,7 @@ export default async function progress(req: Request, res: Response) {
 
     const monthProgressArray = new Array(daysInMonth).fill(false);
     result.forEach((calendarItem) => {
-      const date = dayjs(calendarItem.calendarDate).date();
+      const date = dayjs.utc(calendarItem.calendarDate).date();
       monthProgressArray[date - 1] = true;
     });
 
