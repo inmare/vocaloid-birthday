@@ -21,10 +21,9 @@ export function SvgProvider({ children }: { children: ReactNode }) {
     lyrics: "",
     titleKor: "",
     composerKor: "",
-    imageBase64: null,
-    imageX: 0,
-    imageY: 0,
-    imageScale: 0.5,
+    imageX: SvgDefault.imageX,
+    imageY: SvgDefault.imageY,
+    imageScale: SvgDefault.imageScale,
   });
 
   const value = useMemo(
