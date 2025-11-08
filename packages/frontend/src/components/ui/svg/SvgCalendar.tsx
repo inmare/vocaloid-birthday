@@ -1,3 +1,4 @@
+import type { ImageConfig } from "@/components/type";
 import SvgGuideline from "@/components/ui/svg/SvgGuideline";
 import { SvgSizeX, SvgSizeY } from "@/constants/svgConfig";
 import SvgThumbnail from "@components/ui/svg/SvgThumbnail";
@@ -15,6 +16,7 @@ export default function SvgCalendar({
   titleKor,
   composerKor,
   imageBase64,
+  imagePos,
 }: {
   month: number;
   date: number;
@@ -23,6 +25,7 @@ export default function SvgCalendar({
   titleKor: string;
   composerKor: string;
   imageBase64: string | null;
+  imagePos: ImageConfig;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -38,7 +41,7 @@ export default function SvgCalendar({
       <rect width={SvgSizeX} height={SvgSizeY} fill="#ffffff" />
       <SvgDateText {...{ month, date, accentColor }} />
       <SvgQrCode {...{ month, date }} />
-      <SvgThumbnail {...{ imageBase64 }} />
+      <SvgThumbnail {...{ imageBase64, imagePos }} />
       <Title />
       <SvgFooter {...{ accentColor, lyrics, titleKor, composerKor }} />
       <SvgGuideline visible={true} />
