@@ -1,19 +1,6 @@
+import { fileToBase64 } from "@components/utils";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      return resolve(reader.result as string);
-    };
-
-    reader.onerror = (error) => {
-      reject(error);
-    };
-    reader.readAsDataURL(file);
-  });
-};
 
 export default function ImageInput({
   setImageBase64,
