@@ -1,21 +1,21 @@
 import api from "@/api";
+import CustomInput from "@/components/ui/fragments/CustomInput";
 import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
-import type { VisibilityState } from "@components/type";
+import type { TextItem, VisibilityState } from "@components/type";
 import Btn from "@components/ui/fragments/Btn";
+import CutstomLabel from "@components/ui/fragments/CustomLabel";
 import CustomTextarea from "@components/ui/fragments/CustomTextarea";
 import CustomTextInput from "@components/ui/fragments/CustomTextInput";
+import ImageInput from "@components/ui/svg/ImageInput";
 import SvgCalendar from "@components/ui/svg/SvgCalendar";
+import TextAllEditor from "@components/ui/svg/TextAllEditor";
 import TextEditor from "@components/ui/svg/TextEditor";
 import TextViewer from "@components/ui/svg/TextViewer";
 import Colorful from "@uiw/react-color-colorful";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { useContext, useMemo, useState, type ChangeEvent } from "react";
-import CutstomLabel from "../fragments/CustomLabel";
-import CustomNumberInput from "../fragments/CustomNumberInput";
-import ImageInput from "./ImageInput";
-import TextAllEditor from "./TextAllEditor";
+import { useContext, useMemo, useRef, useState, type ChangeEvent } from "react";
 
 export default function SvgViewer({
   month,
@@ -26,24 +26,7 @@ export default function SvgViewer({
   date: number;
   isAdmin: boolean;
 }) {
-  const sendSvgData = async () => {
-    const mockupData = {
-      title: "Title",
-      composer: "Composer",
-      titleKor: "타이틀",
-      composerKor: "작곡가",
-      publishDate: dayjs().toDate(),
-      calendarDate: dayjs(`2026-${month}-${date + 1}`).toDate(),
-      lyrics: "Lyrics",
-      svgConfig: {},
-      svgData: "<svg></svg>",
-      songId: 1,
-    };
-    const res = await api.post("/api/admin/save-data", {
-      data: mockupData,
-    });
-    console.log(res.status, res.data);
-  };
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
   const {
     title,
@@ -72,17 +55,85 @@ export default function SvgViewer({
 
   const [paletteVisible, setPaletteVisible] = useState<VisibilityState>("hide");
 
+  const [songId, setSongId] = useState<number | null>(null);
+
+  const getTextFromItems = (itemMatrix: TextItem[][]): string => {
+    let result = "";
+    itemMatrix.forEach((line) => {
+      line.forEach((item) => {
+        result += item.text;
+      });
+      result += "\n";
+    });
+    return result;
+  };
+
+  const sendSvgData = async () => {
+    if (!svgRef.current) return;
+    if (!isAdmin) return;
+    if (songId === null) return alert("곡 ID를 입력해주세요.");
+
+    const filteredFragment = { ...fragment };
+    delete filteredFragment.imageBase64;
+
+    const data = {
+      title: getTextFromItems(title.items),
+      composer: getTextFromItems(composer.items),
+      titleKor: fragment.titleKor,
+      composerKor: fragment.composerKor,
+      calendarDate: dayjs(`2026-${month}-${date + 1}`).toDate(),
+      lyrics: fragment.lyrics,
+      svgConfig: {
+        title,
+        composer,
+        fragment: filteredFragment,
+      },
+      svgData: svgRef.current.outerHTML,
+      songId: songId,
+    };
+
+    const blob = new Blob([svgRef.current.outerHTML], {
+      type: "image/svg+xml",
+    });
+    const svgFile = new File([blob], "image.svg", { type: "imaeg/svg+xml" });
+
+    const formData = new FormData();
+    formData.append("svgFile", svgFile);
+    formData.append("data", JSON.stringify(data));
+
+    try {
+      const res = await api.post("/api/admin/save", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res.status, res.data);
+    } catch (error) {
+      console.error("SVG 데이터 전송 중 오류 발생:", error);
+    }
+  };
+
   return (
     <>
       <div className="mx-auto grid max-w-xl p-5">
         <div className="flex scale-100 items-center justify-center">
-          <SvgCalendar month={month} date={date} />
+          <SvgCalendar svgRef={svgRef} month={month} date={date} />
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">
             <div className="flex flex-col gap-1">
               <label htmlFor="">곡 id</label>
-              <CustomTextInput />
+              <CustomTextInput
+                value={songId === null ? "" : songId}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  const intValue = parseInt(event.target.value);
+                  if (isNaN(intValue)) {
+                    setSongId(null);
+                  } else {
+                    setSongId(intValue);
+                  }
+                }}
+              />
               <label htmlFor="">테마 색</label>
               <div className="flex flex-row gap-2">
                 <div className="relative h-8 w-8">
@@ -129,7 +180,7 @@ export default function SvgViewer({
                 <CutstomLabel>x</CutstomLabel>
                 <CutstomLabel>y</CutstomLabel>
                 <CutstomLabel>scale</CutstomLabel>
-                <CustomNumberInput
+                <CustomInput
                   type="number"
                   step={0.1}
                   value={fragment.imageX}
@@ -139,7 +190,7 @@ export default function SvgViewer({
                     });
                   }}
                 />
-                <CustomNumberInput
+                <CustomInput
                   type="number"
                   step={0.1}
                   value={fragment.imageY}
@@ -149,7 +200,7 @@ export default function SvgViewer({
                     });
                   }}
                 />
-                <CustomNumberInput
+                <CustomInput
                   type="number"
                   step={0.01}
                   value={fragment.imageScale}
