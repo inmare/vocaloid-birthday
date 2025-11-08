@@ -1,4 +1,4 @@
-import SvgDefault from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgDefaults";
 import SvgDateText from "@components/ui/svg/SvgDateText";
 import SvgFooter from "@components/ui/svg/SvgFooter";
 import SvgGuideline from "@components/ui/svg/SvgGuideline";

@@ -1,4 +1,4 @@
-import SvgDefault from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgDefaults";
 import { Vec2 } from "@components/utils";
 
 export default function SvgGuideline({

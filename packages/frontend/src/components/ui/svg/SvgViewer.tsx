@@ -1,8 +1,13 @@
 import api from "@/api";
 import CustomInput from "@/components/ui/fragments/CustomInput";
+import {
+  ComposerDefault,
+  FragmentDefault,
+  TitleDefault,
+} from "@/constants/configDefaults";
 import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
-import type { TextItem, VisibilityState } from "@components/type";
+import type { SvgConfig, TextItem, VisibilityState } from "@components/type";
 import Btn from "@components/ui/fragments/Btn";
 import CutstomLabel from "@components/ui/fragments/CustomLabel";
 import CustomTextarea from "@components/ui/fragments/CustomTextarea";
@@ -13,9 +18,17 @@ import TextAllEditor from "@components/ui/svg/TextAllEditor";
 import TextEditor from "@components/ui/svg/TextEditor";
 import TextViewer from "@components/ui/svg/TextViewer";
 import Colorful from "@uiw/react-color-colorful";
+import type { CalendarAttributes } from "@vocaloid-birthday/common";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import { useContext, useMemo, useRef, useState, type ChangeEvent } from "react";
+import {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+} from "react";
 
 export default function SvgViewer({
   month,
@@ -73,8 +86,23 @@ export default function SvgViewer({
     if (!isAdmin) return;
     if (songId === null) return alert("곡 ID를 입력해주세요.");
 
+    const formData = new FormData();
+
     const filteredFragment = { ...fragment };
-    delete filteredFragment.imageBase64;
+    if (
+      filteredFragment.imageLink &&
+      filteredFragment.imageLink.startsWith("data:")
+    ) {
+      const imageString = filteredFragment.imageLink;
+      const imageType = imageString.match(/^data:(image\/\w+);base64,/)?.[1];
+      const imageExt = imageType?.split("/")[1];
+      const imageBlob = new Blob([imageString], { type: imageType });
+      const imageFile = new File([imageBlob], `image.${imageExt}`, {
+        type: imageType,
+      });
+      formData.append("imageFile", imageFile);
+      filteredFragment.imageLink = null;
+    }
 
     const data = {
       title: getTextFromItems(title.items),
@@ -92,12 +120,16 @@ export default function SvgViewer({
       songId: songId,
     };
 
-    const blob = new Blob([svgRef.current.outerHTML], {
+    // 현재 svg 요소를 복사해서 불필요한 속성 제거
+    const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
+    svgClone.classList = "";
+    const svgString = svgClone.outerHTML;
+
+    const blob = new Blob([svgString], {
       type: "image/svg+xml",
     });
-    const svgFile = new File([blob], "image.svg", { type: "imaeg/svg+xml" });
+    const svgFile = new File([blob], "image.svg", { type: "image/svg+xml" });
 
-    const formData = new FormData();
     formData.append("svgFile", svgFile);
     formData.append("data", JSON.stringify(data));
 
@@ -112,6 +144,35 @@ export default function SvgViewer({
       console.error("SVG 데이터 전송 중 오류 발생:", error);
     }
   };
+
+  useEffect(() => {
+    const getCalendarData = async () => {
+      try {
+        const response = await api.get("/api/calendar", {
+          params: { month, date },
+        });
+        const data = response.data as CalendarAttributes | null;
+        if (data === null) {
+          updateTitle(TitleDefault);
+          updateComposer(ComposerDefault);
+          updateFragment(FragmentDefault);
+        } else {
+          const svgConfig = data.svgConfig as SvgConfig;
+          updateTitle(svgConfig.title);
+          updateComposer(svgConfig.composer);
+          const fragment = svgConfig.fragment;
+          fragment.imageLink = data.imageFileName
+            ? `/static/${data.imageFileName}`
+            : null;
+          updateFragment(fragment);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getCalendarData();
+  }, [month, date, updateTitle, updateComposer, updateFragment]);
 
   return (
     <>
@@ -261,7 +322,7 @@ export default function SvgViewer({
               <ImageInput
                 setImageBase64={(base64: string) => {
                   updateFragment((draft) => {
-                    draft.imageBase64 = base64;
+                    draft.imageLink = base64;
                   });
                 }}
               />

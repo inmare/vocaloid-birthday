@@ -1,5 +1,5 @@
 import { SvgContext } from "@/components/SvgContext";
-import SvgDefault from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgDefaults";
 import sampleImage from "@assets/no-image.png";
 import {
   useContext,
@@ -21,13 +21,24 @@ export default function SvgThumbnail() {
 
   const imageRef = useRef<SVGImageElement | null>(null);
   const [imageLink, setImageLink] = useState<string>(sampleImage);
-  const [transformStr, setTransformStr] = useState<string>(
-    `translate(${fragment.imageX} ${fragment.imageY}) scale(${fragment.imageScale})`,
-  );
+  const [transformStr, setTransformStr] = useState<string>("");
 
   useEffect(() => {
-    setImageLink(fragment.imageBase64 || sampleImage);
-  }, [fragment.imageBase64]);
+    const image = new Image();
+    image.src = sampleImage;
+    image.onload = () => {
+      const w = image.width;
+      const h = image.height;
+      const scale = SvgDefault.imageScale;
+      const x = SvgDefault.sizeX / 2 - (w * scale) / 2;
+      const y = 60 - (h * scale) / 2;
+      setTransformStr(`translate(${x}, ${y}) scale(${scale})`);
+    };
+  }, []);
+
+  useEffect(() => {
+    setImageLink(fragment.imageLink || sampleImage);
+  }, [fragment.imageLink]);
 
   useLayoutEffect(() => {
     if (!imageRef.current) return;

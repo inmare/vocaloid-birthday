@@ -1,6 +1,6 @@
 import { SvgContext } from "@/components/SvgContext";
 import { Vec2 } from "@/components/utils";
-import SvgDefault from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgDefaults";
 import { useContext, useMemo } from "react";
 
 export default function SvgFooter() {

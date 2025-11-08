@@ -1,4 +1,4 @@
-import SvgDefault from "@/constants/svgConfig";
+import SvgDefault from "@/constants/svgDefaults";
 import { SvgContext } from "@components/SvgContext";
 import type { TextItem } from "@components/type";
 import { Vec2 } from "@components/utils";
