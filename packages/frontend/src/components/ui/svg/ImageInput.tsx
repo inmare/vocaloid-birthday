@@ -34,12 +34,13 @@ export default function ImageInput({
         if (item.type.startsWith("image/")) {
           const file = item.getAsFile();
           if (file) {
-            // 여기서 파일 업로드 처리 로직을 추가하세요.
             const imgBase64 = await fileToBase64(file);
             setImageBase64(imgBase64);
+            break;
           }
         }
       }
+      setSelected(false);
     };
 
     if (selected) {
@@ -67,7 +68,7 @@ export default function ImageInput({
         setSelected(!selected);
       }}
     >
-      <p className="text-sm select-none">클릭 후 파일 / 유튜브 링크 붙여넣기</p>
+      <p className="text-sm select-none">클릭 후 파일 붙여넣기</p>
     </div>
   );
 }
