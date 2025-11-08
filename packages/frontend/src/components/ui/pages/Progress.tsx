@@ -1,13 +1,13 @@
 import api from "@/api";
-import { SvgProvider } from "@/components/SvgProvider";
-import Calendar from "@/components/ui/svg/Calendar";
 import { useAuth } from "@components/AuthContext";
+import { SvgProvider } from "@components/SvgProvider";
 import DateString from "@components/ui/fragments/DateString";
 import SongListDisplayer from "@components/ui/fragments/SongListDisplayer";
+import SongTable from "@components/ui/fragments/SongTable";
+import Calendar from "@components/ui/svg/Calendar";
 import SvgViewer from "@components/ui/svg/SvgViewer";
 import type { SongWithPVs } from "@vocaloid-birthday/common";
 import { useEffect, useState } from "react";
-import SongTable from "../fragments/SongTable";
 
 export default function Progress() {
   const { accessToken } = useAuth();
@@ -60,6 +60,7 @@ export default function Progress() {
           <div>
             <Calendar
               month={month}
+              date={date}
               setMonth={setMonth}
               setDate={setDate}
               setCurrentSong={setCurrentSong}
