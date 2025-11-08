@@ -2,28 +2,27 @@ import { SvgSizeX } from "@/constants/svgConfig";
 import { SvgContext } from "@components/SvgContext";
 import type { TextItem } from "@components/type";
 import { Vec2 } from "@components/utils";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 
 export default function Title() {
   const { title, composer } = useContext(SvgContext);
 
+  const defaultX = SvgSizeX / 2;
+  const defaultY = 117.5;
   const groupRef = useRef<SVGGElement | null>(null);
+
   const [groupPos, setGroupPos] = useState<[number, number]>([
-    SvgSizeX / 2,
-    100,
+    defaultX,
+    defaultY,
   ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!groupRef.current) return;
     const g = groupRef.current;
     const bbox = g.getBBox();
-    const x = SvgSizeX / 2;
-    const y = 117 - bbox.height / 2;
-    setGroupPos([x, y]);
-  }, [title, composer, setGroupPos]);
-
-  const composerFontSize = 6;
-  const titleFontSize = 8;
+    const y = defaultY - bbox.height / 2;
+    setGroupPos([defaultX, y]);
+  }, [title, composer, defaultX, defaultY]);
 
   const createTextItems = (line: TextItem[]) => {
     return line.map((item) => {
@@ -40,10 +39,14 @@ export default function Title() {
     });
   };
 
-  const createTextLines = (itemMatrix: TextItem[][], fontSize: number) => {
+  const createTextLines = (
+    itemMatrix: TextItem[][],
+    fontSize: number,
+    lineHeight: number,
+  ) => {
     return itemMatrix.map((line, index) => {
       return (
-        <text key={index} y={index * fontSize}>
+        <text key={index} y={index * fontSize * lineHeight}>
           {createTextItems(line)}
         </text>
       );
@@ -56,15 +59,19 @@ export default function Title() {
       textAnchor="middle"
       transform={`${Vec2.toStyle([new Vec2(...groupPos)])}`}
     >
-      <g fontSize={composerFontSize} fontWeight={300}>
-        {createTextLines(composer.items, composerFontSize)}
+      <g fontSize={composer.fontSize} fontWeight={300}>
+        {createTextLines(
+          composer.items,
+          composer.fontSize,
+          composer.lineHeight,
+        )}
       </g>
       <g
-        fontSize={titleFontSize}
-        transform={`translate(0, ${composerFontSize * composer.items.length + 2})`}
+        fontSize={title.fontSize}
+        transform={`translate(0, ${composer.fontSize * composer.lineHeight * composer.items.length + 3})`}
         fontWeight={700}
       >
-        {createTextLines(title.items, titleFontSize)}
+        {createTextLines(title.items, title.fontSize, title.lineHeight)}
       </g>
     </g>
   );
