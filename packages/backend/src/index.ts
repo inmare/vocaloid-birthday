@@ -16,15 +16,23 @@ import calendarData from "./calendar/calendarData";
 import { staticFolder } from "./constants";
 import { existsSync } from "fs";
 import { mkdir } from "fs/promises";
+import { authRateLimiter } from "./auth/authRateLimiter";
+import helmet from "helmet";
 
 dotenv.config();
 
 const app: Express = express();
 const port = 3000;
 
+app.use(helmet());
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://vocalendar.moe",
+      "https://www.vocalendar.moe",
+    ],
     credentials: true,
   })
 );
@@ -38,7 +46,7 @@ app.get("/api/songs", song);
 app.get("/api/progress", progress);
 app.get("/api/calendar", calendarData);
 
-app.post("/api/auth/login", login);
+app.post("/api/auth/login", authRateLimiter, login);
 app.post("/api/auth/logout", logout);
 app.post("/api/auth/refresh", refresh);
 
