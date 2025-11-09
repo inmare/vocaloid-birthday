@@ -24,7 +24,14 @@ export default async function progress(req: Request, res: Response) {
     const monthProgressArray = new Array(daysInMonth).fill(false);
     result.forEach((calendarItem) => {
       const date = dayjs.utc(calendarItem.calendarDate).date();
-      monthProgressArray[date - 1] = true;
+      // 모든 항목이 채워져 있어야 완료로 간주
+      const finishedCondition =
+        calendarItem.title !== null &&
+        calendarItem.composer !== null &&
+        calendarItem.titleKor !== null &&
+        calendarItem.composerKor !== null &&
+        calendarItem.lyrics !== null;
+      if (finishedCondition) monthProgressArray[date - 1] = true;
     });
 
     return res.status(200).json({
