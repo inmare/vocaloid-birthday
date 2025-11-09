@@ -14,6 +14,8 @@ import { initTokenDB } from "./auth/refreshTokenDB";
 import logout from "./auth/logout";
 import calendarData from "./calendar/calendarData";
 import { staticFolder } from "./constants";
+import { existsSync } from "fs";
+import { mkdir } from "fs/promises";
 
 dotenv.config();
 
@@ -50,6 +52,10 @@ app.post(
 const startServer = async () => {
   await connectDatabase({ debug: false });
   await initTokenDB();
+  // static 폴더 경로 만들기
+  if (!existsSync(staticFolder)) {
+    await mkdir(staticFolder);
+  }
   app.listen(app.get("port"), () => {
     console.log(app.get("port"), "번 포트에서 대기 중!");
   });
