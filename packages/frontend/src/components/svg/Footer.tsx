@@ -7,7 +7,7 @@ export default function Footer() {
   const footerHeight = 23;
 
   const rectPos = new Vec2(0, SvgDefault.sizeY - footerHeight);
-  const textPos = new Vec2(SvgDefault.sizeX / 2, SvgDefault.sizeY - 13);
+  const textPos = new Vec2(SvgDefault.sizeX / 2, SvgDefault.sizeY - 14);
 
   const lyricsFontSize = 3.5;
 
@@ -38,7 +38,7 @@ export default function Footer() {
           fontFamily={SvgDefault.captionFont}
           fill="#ffffff"
           fontSize={2.5}
-          dy={lyricsFontSize}
+          dy={lyricsFontSize + 1}
         >
           <tspan>{captionText}</tspan>
         </text>
