@@ -1,10 +1,10 @@
 import api from "@/api";
+import MainSvg from "@/components/svg/MainSvg";
 import {
   ComposerDefault,
   FragmentDefault,
   TitleDefault,
 } from "@/constants/configDefaults";
-import SvgCalendar from "@components/svg/SvgCalendar";
 import { SvgContext } from "@components/SvgContext";
 import ImageInput from "@components/svgEditor/ImageInput";
 import TextAllEditor from "@components/svgEditor/TextAllEditor";
@@ -186,7 +186,7 @@ export default function SvgViewer({
     <>
       <div className="mx-auto grid max-w-xl p-5">
         <div className="flex scale-100 items-center justify-center">
-          <SvgCalendar svgRef={svgRef} month={month} date={date} />
+          <MainSvg svgRef={svgRef} month={month} date={date} />
         </div>
         {isAdmin && (
           <div className="grid w-full gap-1 py-1">

@@ -4,7 +4,7 @@ import { Vec2 } from "@components/utils";
 import dayjs from "dayjs";
 import { useContext } from "react";
 
-export default function SvgDateText({
+export default function DateText({
   month,
   date,
 }: {

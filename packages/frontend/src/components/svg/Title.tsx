@@ -4,7 +4,7 @@ import type { TextItem } from "@components/type";
 import { Vec2 } from "@components/utils";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 
-export default function SvgTitle() {
+export default function Title() {
   const { title, composer } = useContext(SvgContext);
 
   const defaultX = SvgDefault.sizeX / 2;

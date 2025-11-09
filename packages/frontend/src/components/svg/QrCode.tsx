@@ -2,7 +2,7 @@ import { Vec2 } from "@/components/utils";
 import QRCode from "qrcode-svg";
 import { useEffect, useState } from "react";
 
-export default function SvgQrCode({
+export default function QrCode({
   month,
   date,
 }: {

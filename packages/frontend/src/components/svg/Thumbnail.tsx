@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-export default function SvgThumbnail() {
+export default function Thumbnail() {
   const rectWidth = 80;
   const rectHeight = 65;
   const rectX = SvgDefault.sizeX / 2 - rectWidth / 2;

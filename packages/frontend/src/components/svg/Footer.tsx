@@ -3,7 +3,7 @@ import { Vec2 } from "@/components/utils";
 import SvgDefault from "@/constants/svgDefaults";
 import { useContext, useMemo } from "react";
 
-export default function SvgFooter() {
+export default function Footer() {
   const footerHeight = 23;
 
   const rectPos = new Vec2(0, SvgDefault.sizeY - footerHeight);
