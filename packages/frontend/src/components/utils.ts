@@ -37,6 +37,26 @@ export class Vec2 {
 }
 
 /**
+ * 이미지 URL을 base64로 인코딩합니다.
+ * @param url 입력할 이미지의 url
+ * @returns base64로 인코딩된 이미지 string
+ */
+export async function imageToBase64(url: string): Promise<string> {
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = (error) => {
+      reject(error);
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
  * 빈 TextConfig용 임시 아이템을 생성합니다.
  * @returns 빈 TextItem 객체
  */
@@ -49,25 +69,6 @@ export function createEmptyItem(): TextItem {
     },
     selected: false,
   };
-}
-
-/**
- * 이미지 파일을 base64로 인코딩합니다.
- * @param file 이미지 파일
- * @returns base64로 인코딩된 이미지
- */
-export function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      return resolve(reader.result as string);
-    };
-
-    reader.onerror = (error) => {
-      reject(error);
-    };
-    reader.readAsDataURL(file);
-  });
 }
 
 /**
