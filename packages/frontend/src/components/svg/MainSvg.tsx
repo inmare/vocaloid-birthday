@@ -34,7 +34,7 @@ export default function MainSvg({
       <Thumbnail />
       <Title />
       <Footer />
-      <Guideline visible={true} />
+      <Guideline />
     </svg>
   );
 }
