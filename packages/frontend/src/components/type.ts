@@ -3,6 +3,13 @@ import type { Updater } from "use-immer";
 export type DateSelectMode = "month" | "date";
 export type VisibilityState = "show" | "hide";
 
+// 달력의 날짜 데이터 타입
+export type DateData = {
+  value: number | null;
+  finished?: boolean;
+};
+
+// 텍스트 관련 설정 타입
 export type TextTypo = {
   offsetX: number;
   offsetY: number;
@@ -13,7 +20,6 @@ export const DefaultTextTypo: TextTypo = {
   offsetY: 0,
   leading: 0,
 } as const;
-
 export type TextItem = {
   id: number;
   text: string;
@@ -25,6 +31,8 @@ export type TextConfig = {
   lineHeight: number;
   items: TextItem[][];
 };
+
+// svg 관련 설정 타입
 export type SvgConfig = {
   title: TextConfig;
   composer: TextConfig;
