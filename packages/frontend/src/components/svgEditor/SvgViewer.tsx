@@ -13,8 +13,9 @@ import {
   TextViewer,
 } from "@components/svgEditor";
 import { TextEditContext } from "@components/TextEditContext";
-import type { SvgConfig, TextItem, VisibilityState } from "@components/type";
+import type { SvgConfig, VisibilityState } from "@components/type";
 import { Button, Input, Label, Textarea, TextInput } from "@components/ui";
+import { getTextFromItems } from "@components/utils";
 import Colorful from "@uiw/react-color-colorful";
 import type { CalendarAttributes } from "@vocaloid-birthday/common";
 import clsx from "clsx";
@@ -70,17 +71,6 @@ export default function SvgViewer({
   const [paletteVisible, setPaletteVisible] = useState<VisibilityState>("hide");
 
   const [songId, setSongId] = useState<number | null>(null);
-
-  const getTextFromItems = (itemMatrix: TextItem[][]): string => {
-    let result = "";
-    itemMatrix.forEach((line) => {
-      line.forEach((item) => {
-        result += item.text;
-      });
-      result += "\n";
-    });
-    return result;
-  };
 
   // TODO: svg의 이미지 링크도 로컬 형식으로 바꾸기
   const sendSvgData = async () => {

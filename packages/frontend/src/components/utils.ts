@@ -69,3 +69,19 @@ export function fileToBase64(file: File): Promise<string> {
     reader.readAsDataURL(file);
   });
 }
+
+/**
+ * TextItem의 2차원 배열에서 텍스트만 전부 합친 문자열을 반환합니다.
+ * @param itemMatrix TextItem의 2차원 배열
+ * @returns 배열의 텍스트만 전부 합친 문자열
+ */
+export function getTextFromItems(itemMatrix: TextItem[][]): string {
+  let result = "";
+  itemMatrix.forEach((line) => {
+    line.forEach((item) => {
+      result += item.text;
+    });
+    result += "\n";
+  });
+  return result;
+}
