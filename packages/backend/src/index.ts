@@ -1,22 +1,21 @@
 import { connectDatabase } from "@vocaloid-birthday/database";
+import {
+  authRateLimiter,
+  login,
+  authMiddleware,
+  logout,
+  refresh,
+  initTokenDB,
+} from "./auth";
+import { songs, calendarData } from "./calendar";
+import { progress, saveSvg, upload } from "./progress";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
-import authMiddleware from "./auth/authMiddleware";
-import login from "./auth/login";
-import saveSvg from "./progress/saveSvg";
-import upload from "./progress/upload";
-import song from "./calendar/songs";
-import refresh from "./auth/refresh";
-import progress from "./progress/progress";
-import { initTokenDB } from "./auth/refreshTokenDB";
-import logout from "./auth/logout";
-import calendarData from "./calendar/calendarData";
 import { staticFolder } from "./constants";
 import { existsSync } from "fs";
 import { mkdir } from "fs/promises";
-import { authRateLimiter } from "./auth/authRateLimiter";
 import helmet from "helmet";
 
 dotenv.config();
@@ -24,8 +23,7 @@ dotenv.config();
 const app: Express = express();
 const port = 3000;
 
-app.use(helmet());
-
+// cors 설정
 app.use(
   cors({
     origin: [
@@ -36,13 +34,19 @@ app.use(
     credentials: true,
   })
 );
+// 보안 헤더 설정, cross origin일때만 리소스 허용
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use("/static", express.static(staticFolder));
 
 app.set("port", process.env.PORT || port);
 
-app.get("/api/songs", song);
+app.get("/api/songs", songs);
 app.get("/api/progress", progress);
 app.get("/api/calendar", calendarData);
 

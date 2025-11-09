@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Op, fn, col, where } from "sequelize";
 import { Song, PV } from "@vocaloid-birthday/database";
 
-export default async function song(req: Request, res: Response) {
+export default async function songs(req: Request, res: Response) {
   const { month, date } = req.query as { month: string; date: string };
   const monthString = month.padStart(2, "0");
   const condition = [
