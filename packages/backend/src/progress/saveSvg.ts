@@ -3,6 +3,8 @@ import { Calendar, Song } from "@vocaloid-birthday/database";
 import { Request, Response } from "express";
 import fs from "fs/promises";
 import { CalendarData } from "../types";
+import { join } from "path";
+import { staticFolder } from "../constants";
 
 export default async function saveSvg(req: Request, res: Response) {
   if (!req.files) {
@@ -55,9 +57,11 @@ export default async function saveSvg(req: Request, res: Response) {
 
     if (calendarSong) {
       // 기존 파일 삭제
-      await fs.unlink(calendarSong.svgFileName);
+      const svgFilePath = join(staticFolder, calendarSong.svgFileName);
+      await fs.unlink(svgFilePath);
       if (calendarSong.imageFileName && imageFile) {
-        await fs.unlink(calendarSong.imageFileName);
+        const imageFilePath = join(staticFolder, calendarSong.imageFileName);
+        await fs.unlink(imageFilePath);
       }
       calendarSong.update(dbData);
     } else {
@@ -69,8 +73,12 @@ export default async function saveSvg(req: Request, res: Response) {
       .json({ message: "데이터가 성공적으로 저장되었습니다." });
   } catch (error) {
     // 이미 업로드 된 파일 삭제
-    await fs.unlink(svgFileName);
-    if (imageFile) fs.unlink(imageFileName!);
+    const svgFilePath = join(staticFolder, svgFileName);
+    await fs.unlink(svgFilePath);
+    if (imageFile) {
+      const imageFilePath = join(staticFolder, imageFileName!);
+      fs.unlink(imageFilePath);
+    }
     console.error("데이터 저장 중 오류 발생:", error);
     return res
       .status(500)
