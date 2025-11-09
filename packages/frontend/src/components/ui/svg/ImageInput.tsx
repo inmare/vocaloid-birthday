@@ -1,11 +1,10 @@
-import { fileToBase64 } from "@components/utils";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
 export default function ImageInput({
-  setImageBase64,
+  setImageLink,
 }: {
-  setImageBase64: (base64: string) => void;
+  setImageLink: (link: string) => void;
 }) {
   const inputRef = useRef<HTMLDivElement | null>(null);
   const divClass = {
@@ -33,11 +32,10 @@ export default function ImageInput({
       for (const item of items) {
         if (item.type.startsWith("image/")) {
           const file = item.getAsFile();
-          if (file) {
-            const imgBase64 = await fileToBase64(file);
-            setImageBase64(imgBase64);
-            break;
-          }
+          if (!file) continue;
+          const url = URL.createObjectURL(file);
+          console.log(url);
+          setImageLink(url);
         }
       }
       setSelected(false);
@@ -52,7 +50,7 @@ export default function ImageInput({
       window.removeEventListener("click", detectClick);
       window.removeEventListener("paste", detectPaste);
     };
-  }, [selected, inputRef, setImageBase64]);
+  }, [selected, inputRef, setImageLink]);
 
   return (
     <div
