@@ -11,29 +11,26 @@ export default function QrCode({
 }) {
   const [qrSvgString, setQrSvgString] = useState<string>("");
 
+  const qrSize = 16;
+  const qrPos = new Vec2(85.5 - qrSize / 2, 11);
+
   useEffect(() => {
     const qrUrl = `https://vocalendar.moe/2026/${month}/${date}`;
     const qrCode = new QRCode({
       content: qrUrl,
       padding: 1,
       join: true,
-      container: "svg",
+      width: qrSize,
+      height: qrSize,
     });
 
-    const base64 = btoa(qrCode.svg());
-    const href = `data:image/svg+xml;base64,${base64}`;
-    setQrSvgString(href);
+    setQrSvgString(qrCode.svg({ container: "none" }));
   }, [month, date]);
 
-  const qrSize = 16;
-  const qrPos = new Vec2(85.5 - qrSize / 2, 11);
-
   return (
-    <image
-      href={qrSvgString}
+    <g
+      dangerouslySetInnerHTML={{ __html: qrSvgString }}
       transform={`${Vec2.toStyle([qrPos])}`}
-      width={qrSize}
-      height={qrSize}
-    />
+    ></g>
   );
 }
