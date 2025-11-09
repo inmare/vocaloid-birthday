@@ -16,7 +16,7 @@ import {
 import { TextEditContext } from "@components/TextEditContext";
 import type { SvgConfig, VisibilityState } from "@components/type";
 import { Button, Input, Label, Textarea, TextInput } from "@components/ui";
-import { getTextFromItems } from "@components/utils";
+import { getTextFromItems, imageToBase64 } from "@components/utils";
 import Colorful from "@uiw/react-color-colorful";
 import type { CalendarAttributes } from "@vocaloid-birthday/common";
 import clsx from "clsx";
@@ -116,12 +116,33 @@ export default function SvgViewer({
     }
 
     // svg의 이미지를 로컬 링크로 설정
+    const embedImageLink = fragment.imageLink
+      ? await imageToBase64(fragment.imageLink)
+      : null;
     const imageElement = svgClone.getElementById(SvgDefault.imageId);
-    imageElement?.setAttribute("href", localImageLink || "");
+    if (embedImageLink) {
+      imageElement?.setAttribute("xlink:href", embedImageLink);
+    }
+
+    if (fragment.imageLink && fragment.imageLink.startsWith("blob:")) {
+      const res = await fetch(fragment.imageLink);
+      const blob = await res.blob();
+      const ext = blob.type.split("/")[1];
+      const file = new File([blob], `${fileId}-image.${ext}`, {
+        type: blob.type,
+      });
+      formData.append("imageFile", file);
+    }
+
+    // 백엔드로 보낼 fragment 객체에서는 이미지 링크 제거
+    const filteredFragment = { ...fragment };
+    filteredFragment.imageLink = null;
 
     // 가이드라인 요소 제거
     const guideElement = svgClone.getElementById(SvgDefault.guideId);
     guideElement?.remove();
+
+    const svgString = new XMLSerializer().serializeToString(svgClone);
 
     const data = {
       title: getTextFromItems(title.items),
