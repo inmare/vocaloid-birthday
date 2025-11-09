@@ -21,6 +21,7 @@ import Colorful from "@uiw/react-color-colorful";
 import type { CalendarAttributes } from "@vocaloid-birthday/common";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import {
   useContext,
   useEffect,
@@ -30,6 +31,7 @@ import {
   type ChangeEvent,
 } from "react";
 import { "v4" as uuidv4 } from "uuid";
+dayjs.extend(utc);
 
 export default function SvgViewer({
   month,
@@ -145,11 +147,12 @@ export default function SvgViewer({
     const svgString = new XMLSerializer().serializeToString(svgClone);
 
     const data = {
+      songId: songId,
       title: getTextFromItems(title.items),
       composer: getTextFromItems(composer.items),
       titleKor: fragment.titleKor,
       composerKor: fragment.composerKor,
-      calendarDate: dayjs(`2026-${month}-${date + 1}`).toDate(),
+      calendarDate: dayjs.utc(`2026-${month}-${date}`).toDate(),
       lyrics: fragment.lyrics,
       svgConfig: {
         title,
