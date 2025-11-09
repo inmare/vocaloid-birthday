@@ -21,7 +21,7 @@ function MonthMoveBtn({ mode, className, ...rest }: MonthMoveBtnProps) {
   );
 }
 
-export default function Calendar({
+export default function ProgressCalendar({
   month,
   date,
   dateArray,

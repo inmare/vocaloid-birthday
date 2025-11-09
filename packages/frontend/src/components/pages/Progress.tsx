@@ -1,7 +1,7 @@
 import api from "@/api";
 import SongListDisplayer from "@/components/fragments/SongListDisplayer";
 import SongTable from "@/components/fragments/SongTable";
-import Calendar from "@/components/svgEditor/Calendar";
+import ProgressCalendar from "@/components/svgEditor/ProgressCalendar";
 import SvgViewer from "@/components/svgEditor/SvgViewer";
 import type { DateData } from "@/components/type";
 import DateString from "@/components/ui/DateString";
@@ -105,7 +105,7 @@ export default function Progress() {
       <div className="grid h-full grid-cols-2">
         <div className="grid min-h-0 grid-rows-[auto_auto_1fr_auto]">
           <div>
-            <Calendar
+            <ProgressCalendar
               month={month}
               date={date}
               dateArray={dateArray}
