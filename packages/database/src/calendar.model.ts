@@ -2,13 +2,13 @@ import { DataTypes, Model, Sequelize } from "sequelize";
 
 export class Calendar extends Model {
   declare id: number;
-  declare title: string;
-  declare composer: string;
-  declare titleKor: string;
-  declare composerKor: string;
+  declare title?: string;
+  declare composer?: string;
+  declare titleKor?: string;
+  declare composerKor?: string;
   declare publishDate: Date;
   declare calendarDate: Date;
-  declare lyrics: string;
+  declare lyrics?: string;
   declare svgConfig: object;
   declare svgFileName: string;
   declare imageFileName?: string;
@@ -26,15 +26,19 @@ export const InitCalendarModel = (sequelize: Sequelize) => {
       },
       title: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
       composer: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
       titleKor: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
       composerKor: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
       publishDate: {
         type: DataTypes.DATE,
@@ -44,6 +48,7 @@ export const InitCalendarModel = (sequelize: Sequelize) => {
       },
       lyrics: {
         type: DataTypes.STRING,
+        allowNull: true,
       },
       svgConfig: {
         type: DataTypes.JSON,
