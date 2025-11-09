@@ -1,4 +1,5 @@
 import api from "@/api";
+import { DEV_API_ENDPOINT } from "@/constants";
 import {
   ComposerDefault,
   FragmentDefault,
@@ -89,34 +90,6 @@ export default function SvgViewer({
     // 클래스 속성 제거
     svgClone.removeAttribute("class");
 
-    const filteredFragment = { ...fragment };
-    let localImageLink: string = "#";
-
-    // 이미지가 null이 아니면 링크 localImageLink 설정
-    if (filteredFragment.imageLink) {
-      if (filteredFragment.imageLink.startsWith("blob:")) {
-        // 이미지가 붙여넣은 blob 형식이면 파일로 변환해서 전송
-        const imageLink = filteredFragment.imageLink;
-        const res = await fetch(imageLink);
-        const blob = await res.blob();
-        const ext = blob.type.split("/")[1] || "png";
-        // 파일명은 임의로 지정
-        const fileName = `${fileId}-Image.${ext}`;
-        const imageFile = new File([blob], fileName, {
-          type: blob.type,
-        });
-
-        formData.append("imageFile", imageFile);
-        localImageLink = fileName;
-      } else if (filteredFragment.imageLink.startsWith("/static/")) {
-        // 기존에 업로드된 이미지면 파일명만 추출
-        localImageLink = filteredFragment.imageLink.split("/static/")[1];
-      }
-
-      // svgConfig에는 이미지 링크를 저장하지 않음
-      filteredFragment.imageLink = null;
-    }
-
     // svg의 이미지를 로컬 링크로 설정
     const embedImageLink = fragment.imageLink
       ? await imageToBase64(fragment.imageLink)
@@ -159,12 +132,7 @@ export default function SvgViewer({
         composer,
         fragment: filteredFragment,
       },
-      svgData: svgRef.current.outerHTML,
-      songId: songId,
     };
-
-    const svgString = svgClone.outerHTML;
-
     const blob = new Blob([svgString], {
       type: "image/svg+xml",
     });
@@ -204,10 +172,12 @@ export default function SvgViewer({
           updateTitle(svgConfig.title);
           updateComposer(svgConfig.composer);
           const fragment = svgConfig.fragment;
+          console.log(data.imageFileName);
           fragment.imageLink = data.imageFileName
-            ? `/static/${data.imageFileName}`
+            ? `${DEV_API_ENDPOINT}/static/${data.imageFileName}`
             : null;
           updateFragment(fragment);
+          setSongId(data.songId);
         }
       } catch (error) {
         console.error(error);
@@ -286,7 +256,7 @@ export default function SvgViewer({
                 <Label>scale</Label>
                 <Input
                   type="number"
-                  step={0.1}
+                  step={0.5}
                   value={fragment.imageX}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     updateFragment((draft) => {
@@ -296,7 +266,7 @@ export default function SvgViewer({
                 />
                 <Input
                   type="number"
-                  step={0.1}
+                  step={0.5}
                   value={fragment.imageY}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     updateFragment((draft) => {
@@ -318,7 +288,7 @@ export default function SvgViewer({
               <label htmlFor="">작곡가</label>
               <div className="grid grid-cols-2 gap-4">
                 <TextEditContext.Provider value={composerValue}>
-                  <TextAllEditor fontSize={composer.fontSize} lineHeight={1} />
+                  <TextAllEditor />
                   <TextViewer />
                   <TextEditor />
                 </TextEditContext.Provider>
@@ -326,10 +296,7 @@ export default function SvgViewer({
               <label htmlFor="">제목</label>
               <div className="grid grid-cols-2 gap-4">
                 <TextEditContext.Provider value={titleValue}>
-                  <TextAllEditor
-                    fontSize={title.fontSize}
-                    lineHeight={title.lineHeight}
-                  />
+                  <TextAllEditor />
                   <TextViewer />
                   <TextEditor />
                 </TextEditContext.Provider>
