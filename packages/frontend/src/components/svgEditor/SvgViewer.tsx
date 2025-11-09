@@ -73,13 +73,14 @@ export default function SvgViewer({
 
   const [songId, setSongId] = useState<number | null>(null);
 
-  // TODO: svg의 이미지 링크도 로컬 형식으로 바꾸기
+  // svg 데이터를 서버로 전송하는 함수
   const sendSvgData = async () => {
     if (!svgRef.current) return;
     if (!isAdmin) return;
     if (songId === null) return alert("곡 ID를 입력해주세요.");
 
     const formData = new FormData();
+    const fileId = uuidv4();
 
     // 현재 svg 요소를 복사해서 불필요한 속성 제거
     const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
@@ -98,7 +99,7 @@ export default function SvgViewer({
         const blob = await res.blob();
         const ext = blob.type.split("/")[1] || "png";
         // 파일명은 임의로 지정
-        const fileName = `${uuidv4()}.${ext}`;
+        const fileName = `${fileId}-Image.${ext}`;
         const imageFile = new File([blob], fileName, {
           type: blob.type,
         });
@@ -110,6 +111,7 @@ export default function SvgViewer({
         localImageLink = filteredFragment.imageLink.split("/static/")[1];
       }
 
+      // svgConfig에는 이미지 링크를 저장하지 않음
       filteredFragment.imageLink = null;
     }
 
@@ -142,7 +144,7 @@ export default function SvgViewer({
     const blob = new Blob([svgString], {
       type: "image/svg+xml",
     });
-    const svgFile = new File([blob], `${uuidv4()}.svg`, {
+    const svgFile = new File([blob], `${fileId}-svg.svg`, {
       type: "image/svg+xml",
     });
 
