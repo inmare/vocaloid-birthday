@@ -16,15 +16,19 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       composer: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       titleKor: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       composerKor: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       publishDate: {
@@ -34,6 +38,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       lyrics: {
+        allowNull: true,
         type: Sequelize.STRING,
       },
       svgConfig: {
