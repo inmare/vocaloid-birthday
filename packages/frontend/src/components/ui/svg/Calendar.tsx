@@ -28,7 +28,6 @@ export default function Calendar({
   setMonth,
   setDate,
   setCurrentSong,
-  fetchProgress,
 }: {
   month: number;
   date: number;
@@ -36,7 +35,6 @@ export default function Calendar({
   setMonth: (month: number) => void;
   setDate: (date: number) => void;
   setCurrentSong: (data: null) => void;
-  fetchProgress: () => Promise<void>;
 }) {
   const handleMonth = (moveMode: MoveMode) => {
     let newMonth = month;
