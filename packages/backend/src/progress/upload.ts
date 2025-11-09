@@ -1,5 +1,4 @@
 import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
 import { staticFolder } from "../constants";
 
 const upload = multer({
@@ -8,8 +7,7 @@ const upload = multer({
       done(null, staticFolder);
     },
     filename(req, file, done) {
-      const ext = file.originalname.split(".").pop();
-      done(null, `${uuidv4()}.${ext}`);
+      done(null, file.originalname);
     },
   }),
 });
