@@ -1,4 +1,5 @@
 import api from "@/api";
+import type { DateData } from "@/components/type";
 import { useAuth } from "@components/AuthContext";
 import { SvgProvider } from "@components/SvgProvider";
 import DateString from "@components/ui/fragments/DateString";
@@ -7,6 +8,7 @@ import SongTable from "@components/ui/fragments/SongTable";
 import Calendar from "@components/ui/svg/Calendar";
 import SvgViewer from "@components/ui/svg/SvgViewer";
 import type { SongWithPVs } from "@vocaloid-birthday/common";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 export default function Progress() {
@@ -15,6 +17,7 @@ export default function Progress() {
 
   const [month, setMonth] = useState<number>(1);
   const [date, setDate] = useState<number>(1);
+  const [dateArray, setDateArray] = useState<DateData[]>([]);
 
   const [currentSong, setCurrentSong] = useState<SongWithPVs | null>(null);
   const [songList, setSongList] = useState<SongWithPVs[]>([]);
@@ -53,6 +56,50 @@ export default function Progress() {
     setCurrentSong(song);
   };
 
+  const fetchProgress = async () => {
+    // 한 달의 날짜만큼 미리 날짜를 만들어 둠
+    const month2026 = dayjs("2026").set("month", month - 1);
+    const daysInMonth = month2026.daysInMonth();
+    const dateArray: DateData[] = Array.from(
+      {
+        length: daysInMonth,
+      },
+      (_, index) => {
+        return { value: index + 1 };
+      },
+    );
+
+    try {
+      const progressRes = await api.get("/api/progress", {
+        params: { month },
+      });
+
+      const progressData: { progress: boolean[] } = progressRes.data;
+
+      progressData.progress.forEach((finished, index) => {
+        if (dateArray[index]) dateArray[index].finished = finished;
+      });
+    } catch (error) {
+      console.error("데이터를 불러오던 중 에러가 발생했습니다:", error);
+    }
+
+    // 시작하는 요일 반환
+    const startDay = month2026.startOf("month").day();
+    // 배열 앞의 빈 부분을 null로 채움
+    for (let i = 0; i < startDay; i++) {
+      dateArray.unshift({ value: null });
+    }
+    // 배열 뒤의 빈 부분을 null로 채움
+    while (dateArray.length % 7 !== 0) {
+      dateArray.push({ value: null });
+    }
+    setDateArray(dateArray);
+  };
+
+  useEffect(() => {
+    fetchProgress();
+  }, [month]);
+
   return (
     <SvgProvider>
       <div className="grid h-full grid-cols-2">
@@ -61,6 +108,7 @@ export default function Progress() {
             <Calendar
               month={month}
               date={date}
+              dateArray={dateArray}
               setMonth={setMonth}
               setDate={setDate}
               setCurrentSong={setCurrentSong}
@@ -84,7 +132,12 @@ export default function Progress() {
           </div>
         </div>
         <div className="mx-auto min-h-0 w-full overflow-auto">
-          <SvgViewer month={month} date={date} isAdmin={isAdmin} />
+          <SvgViewer
+            month={month}
+            date={date}
+            isAdmin={isAdmin}
+            fetchProgress={fetchProgress}
+          />
         </div>
       </div>
     </SvgProvider>

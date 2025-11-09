@@ -1,8 +1,8 @@
-import api from "@/api";
+import type { DateData } from "@/components/type";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState, type ButtonHTMLAttributes } from "react";
+import { type ButtonHTMLAttributes } from "react";
 
 type MoveMode = "left" | "right";
 
@@ -21,26 +21,23 @@ function MonthMoveBtn({ mode, className, ...rest }: MonthMoveBtnProps) {
   );
 }
 
-type DateData = {
-  value: number | null;
-  finished?: boolean;
-};
-
 export default function Calendar({
   month,
   date,
+  dateArray,
   setMonth,
   setDate,
   setCurrentSong,
+  fetchProgress,
 }: {
   month: number;
   date: number;
+  dateArray: DateData[];
   setMonth: (month: number) => void;
   setDate: (date: number) => void;
   setCurrentSong: (data: null) => void;
+  fetchProgress: () => Promise<void>;
 }) {
-  const [dateArray, setDateArray] = useState<DateData[]>([]);
-
   const handleMonth = (moveMode: MoveMode) => {
     let newMonth = month;
     if (moveMode === "left") {
@@ -63,50 +60,6 @@ export default function Calendar({
     // 달이 바뀌면 새로운 노래를 리셋함
     setCurrentSong(null);
   };
-
-  useEffect(() => {
-    const fetchProgress = async () => {
-      // 한 달의 날짜만큼 미리 날짜를 만들어 둠
-      const month2026 = dayjs("2026").set("month", month - 1);
-      const daysInMonth = month2026.daysInMonth();
-      const dateArray: DateData[] = Array.from(
-        {
-          length: daysInMonth,
-        },
-        (_, index) => {
-          return { value: index + 1 };
-        },
-      );
-
-      try {
-        const progressRes = await api.get("/api/progress", {
-          params: { month },
-        });
-
-        const progressData: { progress: boolean[] } = progressRes.data;
-
-        progressData.progress.forEach((finished, index) => {
-          if (dateArray[index]) dateArray[index].finished = finished;
-        });
-      } catch (error) {
-        console.error("데이터를 불러오던 중 에러가 발생했습니다:", error);
-      }
-
-      // 시작하는 요일 반환
-      const startDay = month2026.startOf("month").day();
-      // 배열 앞의 빈 부분을 null로 채움
-      for (let i = 0; i < startDay; i++) {
-        dateArray.unshift({ value: null });
-      }
-      // 배열 뒤의 빈 부분을 null로 채움
-      while (dateArray.length % 7 !== 0) {
-        dateArray.push({ value: null });
-      }
-      setDateArray(dateArray);
-    };
-
-    fetchProgress();
-  }, [month]);
 
   const progressClass = {
     finished: "bg-green-900",
