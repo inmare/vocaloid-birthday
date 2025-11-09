@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { NavLink, type NavLinkProps } from "react-router";
 
-export default function CustomNavLink(props: NavLinkProps) {
+export default function StyledNavLink(props: NavLinkProps) {
   return (
     <NavLink
       className={clsx(

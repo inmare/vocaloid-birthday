@@ -1,9 +1,9 @@
 import api from "@/api";
 import DatePicker from "@/components/datePicker/DatePicker";
-import CustomNavLink from "@/components/fragments/CustomNavLink";
 import DateString from "@/components/fragments/DateString";
 import SongListDisplayer from "@/components/fragments/SongListDisplayer";
 import SongTable from "@/components/fragments/SongTable";
+import StyledNavLink from "@/components/fragments/StyledNavLink";
 import { type SongWithPVs } from "@vocaloid-birthday/common";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
@@ -66,8 +66,8 @@ function App() {
             <DatePicker setMonth={setMonth} setDate={setDate} />
           </div>
           <div className="flex content-center justify-center gap-4 p-3">
-            <CustomNavLink to="/about">About</CustomNavLink>
-            <CustomNavLink to="/progress">Progress</CustomNavLink>
+            <StyledNavLink to="/about">About</StyledNavLink>
+            <StyledNavLink to="/progress">Progress</StyledNavLink>
           </div>
         </header>
 
