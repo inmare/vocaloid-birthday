@@ -46,6 +46,7 @@ export async function imageToBase64(url: string): Promise<string> {
   const blob = await res.blob();
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+
     reader.onload = () => {
       resolve(reader.result as string);
     };

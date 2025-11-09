@@ -34,7 +34,6 @@ export default function ImageInput({
           const file = item.getAsFile();
           if (!file) continue;
           const url = URL.createObjectURL(file);
-          console.log(url);
           setImageLink(url);
         }
       }
