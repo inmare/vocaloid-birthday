@@ -1,4 +1,9 @@
 import api from "@/api";
+import Button from "@/components/ui/fragments/Button";
+import Input from "@/components/ui/fragments/Input";
+import Label from "@/components/ui/fragments/Label";
+import Textarea from "@/components/ui/fragments/Textarea";
+import TextInput from "@/components/ui/fragments/TextInput";
 import {
   ComposerDefault,
   FragmentDefault,
@@ -7,11 +12,6 @@ import {
 import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
 import type { SvgConfig, TextItem, VisibilityState } from "@components/type";
-import Btn from "@components/ui/fragments/Btn";
-import CustomInput from "@components/ui/fragments/CustomInput";
-import CutstomLabel from "@components/ui/fragments/CustomLabel";
-import CustomTextarea from "@components/ui/fragments/CustomTextarea";
-import CustomTextInput from "@components/ui/fragments/CustomTextInput";
 import ImageInput from "@components/ui/svg/ImageInput";
 import SvgCalendar from "@components/ui/svg/SvgCalendar";
 import TextAllEditor from "@components/ui/svg/TextAllEditor";
@@ -192,7 +192,7 @@ export default function SvgViewer({
           <div className="grid w-full gap-1 py-1">
             <div className="flex flex-col gap-1">
               <label htmlFor="">곡 id</label>
-              <CustomTextInput
+              <TextInput
                 value={songId === null ? "" : songId}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                   const intValue = parseInt(event.target.value);
@@ -233,7 +233,7 @@ export default function SvgViewer({
                     }}
                   />
                 </div>
-                <CustomTextInput
+                <TextInput
                   value={fragment.accentColor}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     updateFragment((draft) => {
@@ -246,10 +246,10 @@ export default function SvgViewer({
 
               <label htmlFor="">이미지 위치</label>
               <div className="grid grid-cols-3 gap-1">
-                <CutstomLabel>x</CutstomLabel>
-                <CutstomLabel>y</CutstomLabel>
-                <CutstomLabel>scale</CutstomLabel>
-                <CustomInput
+                <Label>x</Label>
+                <Label>y</Label>
+                <Label>scale</Label>
+                <Input
                   type="number"
                   step={0.1}
                   value={fragment.imageX}
@@ -259,7 +259,7 @@ export default function SvgViewer({
                     });
                   }}
                 />
-                <CustomInput
+                <Input
                   type="number"
                   step={0.1}
                   value={fragment.imageY}
@@ -269,7 +269,7 @@ export default function SvgViewer({
                     });
                   }}
                 />
-                <CustomInput
+                <Input
                   type="number"
                   step={0.01}
                   value={fragment.imageScale}
@@ -300,7 +300,7 @@ export default function SvgViewer({
                 </TextEditContext.Provider>
               </div>
               <label htmlFor="">가사</label>
-              <CustomTextarea
+              <Textarea
                 value={fragment.lyrics}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
                   updateFragment((draft) => {
@@ -309,7 +309,7 @@ export default function SvgViewer({
                 }}
               />
               <label htmlFor="">제목(한국어)</label>
-              <CustomTextarea
+              <Textarea
                 value={fragment.titleKor}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
                   updateFragment((draft) => {
@@ -318,7 +318,7 @@ export default function SvgViewer({
                 }}
               />
               <label htmlFor="">작곡가(한국어)</label>
-              <CustomTextarea
+              <Textarea
                 value={fragment.composerKor}
                 onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
                   updateFragment((draft) => {
@@ -341,7 +341,7 @@ export default function SvgViewer({
               />
             </div>
 
-            <Btn onClick={sendSvgData}>저장하기</Btn>
+            <Button onClick={sendSvgData}>저장하기</Button>
           </div>
         )}
       </div>

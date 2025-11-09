@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { ButtonHTMLAttributes } from "react";
 
-export default function Btn({
+export default function Button({
   className,
   children,
   ...rest

@@ -1,17 +1,16 @@
 import clsx from "clsx";
 import type { InputHTMLAttributes } from "react";
 
-export default function CustomInput({
-  type,
+export default function TextInput({
   className,
   ...rest
 }: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      type={type ? type : "number"}
+      type="text"
       className={clsx(
         className,
-        "min-w-0 border-none bg-zinc-50 pl-1 text-zinc-950 outline-none",
+        "rounded-lg border-none bg-zinc-50 px-2 py-1 text-zinc-950 outline-none",
       )}
       {...rest}
     />

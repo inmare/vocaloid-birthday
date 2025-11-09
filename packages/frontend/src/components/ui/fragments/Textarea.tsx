@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { TextareaHTMLAttributes } from "react";
 
-export default function CustomTextarea({
+export default function Textarea({
   className,
   children,
   ...rest

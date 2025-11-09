@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { LabelHTMLAttributes } from "react";
 
-export default function CutstomLabel({
+export default function Label({
   className,
   children,
   ...rest

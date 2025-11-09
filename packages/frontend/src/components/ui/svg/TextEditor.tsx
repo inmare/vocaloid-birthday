@@ -1,8 +1,8 @@
-import CustomTextarea from "@/components/ui/fragments/CustomTextarea";
+import Textarea from "@/components/ui/fragments/Textarea";
 import { TextEditContext } from "@components/TextEditContext";
 import { type ChangeEvent, useContext, useMemo } from "react";
-import CustomInput from "../fragments/CustomInput";
-import CutstomLabel from "../fragments/CustomLabel";
+import Input from "../fragments/Input";
+import Label from "../fragments/Label";
 
 export default function TextEditor() {
   const { data, updateData } = useContext(TextEditContext);
@@ -36,18 +36,18 @@ export default function TextEditor() {
   return (
     <div>
       <div className="grid grid-cols-[auto_1fr] gap-1">
-        <CustomTextarea
+        <Textarea
           disabled={!item}
           onChange={handleTextChange}
           value={item ? item.text : ""}
           className="col-span-2"
         />
-        <CutstomLabel>OffsetX</CutstomLabel>
-        <CustomInput step={0.1} />
-        <CutstomLabel>OffsetY</CutstomLabel>
-        <CustomInput step={0.1} />
-        <CutstomLabel>Leading</CutstomLabel>
-        <CustomInput step={0.1} />
+        <Label>OffsetX</Label>
+        <Input step={0.1} />
+        <Label>OffsetY</Label>
+        <Input step={0.1} />
+        <Label>Leading</Label>
+        <Input step={0.1} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
+import Button from "@/components/ui/fragments/Button";
 import { createEmptyItem } from "@/components/utils";
 import { TextEditContext } from "@components/TextEditContext";
-import Btn from "@components/ui/fragments/Btn";
 import TextList from "@components/ui/svg/TextList";
 import { ListPlus } from "lucide-react";
 import { useContext } from "react";
@@ -14,7 +14,7 @@ export default function TextViewer() {
         {data.items.map((_value, index) => {
           return <TextList key={index} lineIndex={index} />;
         })}
-        <Btn
+        <Button
           onClick={() => {
             updateData((draft) => {
               draft.items.push([createEmptyItem()]);
@@ -23,7 +23,7 @@ export default function TextViewer() {
           className="w-full rounded-lg"
         >
           <ListPlus className="mx-auto" />
-        </Btn>
+        </Button>
       </div>
     </div>
   );

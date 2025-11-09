@@ -1,6 +1,6 @@
+import Button from "@/components/ui/fragments/Button";
 import { createEmptyItem } from "@/components/utils";
 import { TextEditContext } from "@components/TextEditContext";
-import Btn from "@components/ui/fragments/Btn";
 import TextBtn from "@components/ui/fragments/TextBtn";
 import { Plus } from "lucide-react";
 import { useContext } from "react";
@@ -61,9 +61,9 @@ export default function TextList({ lineIndex }: { lineIndex: number }) {
           );
         })}
       </div>
-      <Btn onClick={addItem} className="my-auto aspect-square rounded-full">
+      <Button onClick={addItem} className="my-auto aspect-square rounded-full">
         <Plus size={16} />
-      </Btn>
+      </Button>
     </div>
   );
 }

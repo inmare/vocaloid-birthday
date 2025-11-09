@@ -1,8 +1,8 @@
 import api from "@/api";
 import { useAuth } from "@components/AuthContext";
 import { type FormEvent } from "react";
-import Btn from "../fragments/Btn";
-import CustomTextInput from "../fragments/CustomTextInput";
+import Button from "../fragments/Button";
+import TextInput from "../fragments/TextInput";
 
 export default function Admin() {
   const { isLoading, accessToken, setAccessToken } = useAuth();
@@ -41,10 +41,10 @@ export default function Admin() {
             onSubmit={handleLogin}
             className="flex justify-center gap-2 p-5"
           >
-            <CustomTextInput name="pwd" type="password" />
-            <Btn className="rounded-lg px-4 py-2" type="submit">
+            <TextInput name="pwd" type="password" />
+            <Button className="rounded-lg px-4 py-2" type="submit">
               로그인
-            </Btn>
+            </Button>
           </form>
         )}
         {accessToken && !isLoading && (
@@ -52,9 +52,9 @@ export default function Admin() {
             onSubmit={handleLogout}
             className="flex justify-center gap-2 p-5"
           >
-            <Btn className="rounded-lg px-4 py-2" type="submit">
+            <Button className="rounded-lg px-4 py-2" type="submit">
               로그아웃
-            </Btn>
+            </Button>
           </form>
         )}
 
