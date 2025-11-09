@@ -2,13 +2,7 @@ import { TextEditContext } from "@components/TextEditContext";
 import { Input, Label } from "@components/ui";
 import { useContext, type ChangeEvent } from "react";
 
-export default function TextAllEditor({
-  fontSize,
-  lineHeight,
-}: {
-  fontSize?: number;
-  lineHeight?: number;
-}) {
+export default function TextAllEditor() {
   const textContext = useContext(TextEditContext);
 
   const updateFontSize = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +21,16 @@ export default function TextAllEditor({
     <div className="col-span-2 grid grid-cols-2 gap-1">
       <Label>FontSize</Label>
       <Label>LineHeight</Label>
-      <Input defaultValue={fontSize} onChange={updateFontSize} step={1} />
-      <Input defaultValue={lineHeight} onChange={updateLineHeight} step={0.1} />
+      <Input
+        defaultValue={textContext.data.fontSize}
+        onChange={updateFontSize}
+        step={0.5}
+      />
+      <Input
+        defaultValue={textContext.data.lineHeight}
+        onChange={updateLineHeight}
+        step={0.1}
+      />
     </div>
   );
 }
