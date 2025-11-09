@@ -1,8 +1,10 @@
-import { CalendarAttributes } from "@vocaloid-birthday/common";
+import {
+  CalendarAttributes,
+  CalendarPostAttributes,
+} from "@vocaloid-birthday/common";
 import { Calendar, Song } from "@vocaloid-birthday/database";
 import { Request, Response } from "express";
 import fs from "fs/promises";
-import { CalendarData } from "../types";
 import { join } from "path";
 import { staticFolder } from "../constants";
 import { col, fn, where } from "sequelize";
@@ -20,7 +22,7 @@ export default async function saveSvg(req: Request, res: Response) {
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
   const svgFile = files.svgFile ? files.svgFile[0] : null;
   const imageFile = files.imageFile ? files.imageFile[0] : null;
-  const data = JSON.parse(req.body.data) as CalendarData;
+  const data = JSON.parse(req.body.data) as CalendarPostAttributes;
 
   if (!svgFile) {
     return res
@@ -53,14 +55,16 @@ export default async function saveSvg(req: Request, res: Response) {
       where: where(fn("strftime", "%m-%d", col("calendarDate")), dateString),
     });
 
+    // DB에 저장할 데이터 구성
+    // 기존에 값이 존재하더라도 새로 받은 데이터에 값이 없으면 null로 저장
     const dbData = {
-      title: data.title,
-      composer: data.composer,
-      titleKor: data.titleKor,
-      composerKor: data.composerKor,
+      title: data.title ? data.title : null,
+      composer: data.composer ? data.composer : null,
+      titleKor: data.titleKor ? data.titleKor : null,
+      composerKor: data.composerKor ? data.composerKor : null,
       publishDate: songData.publishDate,
       calendarDate: data.calendarDate,
-      lyrics: data.lyrics,
+      lyrics: data.lyrics ? data.lyrics : null,
       svgConfig: data.svgConfig,
       svgFileName: svgFileName,
       songId: songData.id,
