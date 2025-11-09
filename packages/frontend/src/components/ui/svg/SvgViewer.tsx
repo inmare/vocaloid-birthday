@@ -1,5 +1,4 @@
 import api from "@/api";
-import CustomInput from "@/components/ui/fragments/CustomInput";
 import {
   ComposerDefault,
   FragmentDefault,
@@ -9,6 +8,7 @@ import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
 import type { SvgConfig, TextItem, VisibilityState } from "@components/type";
 import Btn from "@components/ui/fragments/Btn";
+import CustomInput from "@components/ui/fragments/CustomInput";
 import CutstomLabel from "@components/ui/fragments/CustomLabel";
 import CustomTextarea from "@components/ui/fragments/CustomTextarea";
 import CustomTextInput from "@components/ui/fragments/CustomTextInput";
@@ -29,15 +29,18 @@ import {
   useState,
   type ChangeEvent,
 } from "react";
+import { "v4" as uuidv4 } from "uuid";
 
 export default function SvgViewer({
   month,
   date,
   isAdmin,
+  fetchProgress,
 }: {
   month: number;
   date: number;
   isAdmin: boolean;
+  fetchProgress: () => Promise<void>;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -81,6 +84,7 @@ export default function SvgViewer({
     return result;
   };
 
+  // TODO: svg의 이미지 링크도 로컬 형식으로 바꾸기
   const sendSvgData = async () => {
     if (!svgRef.current) return;
     if (!isAdmin) return;
@@ -91,15 +95,16 @@ export default function SvgViewer({
     const filteredFragment = { ...fragment };
     if (
       filteredFragment.imageLink &&
-      filteredFragment.imageLink.startsWith("data:")
+      filteredFragment.imageLink.startsWith("blob:")
     ) {
-      const imageString = filteredFragment.imageLink;
-      const imageType = imageString.match(/^data:(image\/\w+);base64,/)?.[1];
-      const imageExt = imageType?.split("/")[1];
-      const imageBlob = new Blob([imageString], { type: imageType });
-      const imageFile = new File([imageBlob], `image.${imageExt}`, {
-        type: imageType,
+      const imageLink = filteredFragment.imageLink;
+      const res = await fetch(imageLink);
+      const blob = await res.blob();
+      const ext = blob.type.split("/")[1] || "png";
+      const imageFile = new File([blob], `${uuidv4()}.${ext}`, {
+        type: blob.type,
       });
+
       formData.append("imageFile", imageFile);
       filteredFragment.imageLink = null;
     }
@@ -128,7 +133,9 @@ export default function SvgViewer({
     const blob = new Blob([svgString], {
       type: "image/svg+xml",
     });
-    const svgFile = new File([blob], "image.svg", { type: "image/svg+xml" });
+    const svgFile = new File([blob], `${uuidv4()}.svg`, {
+      type: "image/svg+xml",
+    });
 
     formData.append("svgFile", svgFile);
     formData.append("data", JSON.stringify(data));
@@ -139,6 +146,7 @@ export default function SvgViewer({
           "Content-Type": "multipart/form-data",
         },
       });
+      await fetchProgress();
       console.log(res.status, res.data);
     } catch (error) {
       console.error("SVG 데이터 전송 중 오류 발생:", error);
@@ -320,9 +328,14 @@ export default function SvgViewer({
               />
               <label htmlFor="">이미지</label>
               <ImageInput
-                setImageBase64={(base64: string) => {
+                setImageLink={(link: string) => {
                   updateFragment((draft) => {
-                    draft.imageLink = base64;
+                    const prevLink = draft.imageLink;
+                    // 이전에 blob 형식의 링크였으면 해제
+                    if (prevLink?.startsWith("blob:")) {
+                      URL.revokeObjectURL(prevLink);
+                    }
+                    draft.imageLink = link;
                   });
                 }}
               />
