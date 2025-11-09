@@ -1,8 +1,8 @@
 import api from "@/api";
 import SongListDisplayer from "@/components/fragments/SongListDisplayer";
 import SongTable from "@/components/fragments/SongTable";
-import Calendar from "@/components/svg/Calendar";
-import SvgViewer from "@/components/svg/SvgViewer";
+import Calendar from "@/components/svgEditor/Calendar";
+import SvgViewer from "@/components/svgEditor/SvgViewer";
 import type { DateData } from "@/components/type";
 import DateString from "@/components/ui/DateString";
 import { useAuth } from "@components/AuthContext";

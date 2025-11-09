@@ -1,22 +1,22 @@
 import api from "@/api";
-import ImageInput from "@/components/svg/ImageInput";
-import SvgCalendar from "@/components/svg/SvgCalendar";
-import TextAllEditor from "@/components/svg/TextAllEditor";
-import TextEditor from "@/components/svg/TextEditor";
-import TextViewer from "@/components/svg/TextViewer";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import Label from "@/components/ui/Label";
-import Textarea from "@/components/ui/Textarea";
-import TextInput from "@/components/ui/TextInput";
 import {
   ComposerDefault,
   FragmentDefault,
   TitleDefault,
 } from "@/constants/configDefaults";
+import SvgCalendar from "@components/svg/SvgCalendar";
 import { SvgContext } from "@components/SvgContext";
+import ImageInput from "@components/svgEditor/ImageInput";
+import TextAllEditor from "@components/svgEditor/TextAllEditor";
+import TextEditor from "@components/svgEditor/TextEditor";
+import TextViewer from "@components/svgEditor/TextViewer";
 import { TextEditContext } from "@components/TextEditContext";
 import type { SvgConfig, TextItem, VisibilityState } from "@components/type";
+import Button from "@components/ui/Button";
+import Input from "@components/ui/Input";
+import Label from "@components/ui/Label";
+import Textarea from "@components/ui/Textarea";
+import TextInput from "@components/ui/TextInput";
 import Colorful from "@uiw/react-color-colorful";
 import type { CalendarAttributes } from "@vocaloid-birthday/common";
 import clsx from "clsx";
