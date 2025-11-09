@@ -1,4 +1,4 @@
-import CustomNavLink from "@/components/ui/fragments/CustomNavLink";
+import CustomNavLink from "@/components/fragments/CustomNavLink";
 import { Outlet } from "react-router";
 
 export default function OtherPageLayout() {

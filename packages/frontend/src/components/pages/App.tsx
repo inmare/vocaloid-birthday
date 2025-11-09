@@ -1,9 +1,9 @@
 import api from "@/api";
-import CustomNavLink from "@/components/ui/fragments/CustomNavLink";
-import SongListDisplayer from "@/components/ui/fragments/SongListDisplayer";
-import DatePicker from "@components/ui/datePicker/DatePicker";
-import DateString from "@components/ui/fragments/DateString";
-import SongTable from "@components/ui/fragments/SongTable";
+import DatePicker from "@/components/datePicker/DatePicker";
+import CustomNavLink from "@/components/fragments/CustomNavLink";
+import DateString from "@/components/fragments/DateString";
+import SongListDisplayer from "@/components/fragments/SongListDisplayer";
+import SongTable from "@/components/fragments/SongTable";
 import { type SongWithPVs } from "@vocaloid-birthday/common";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";

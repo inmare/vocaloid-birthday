@@ -1,9 +1,14 @@
 import api from "@/api";
-import Button from "@/components/ui/fragments/Button";
-import Input from "@/components/ui/fragments/Input";
-import Label from "@/components/ui/fragments/Label";
-import Textarea from "@/components/ui/fragments/Textarea";
-import TextInput from "@/components/ui/fragments/TextInput";
+import Button from "@/components/fragments/Button";
+import Input from "@/components/fragments/Input";
+import Label from "@/components/fragments/Label";
+import Textarea from "@/components/fragments/Textarea";
+import TextInput from "@/components/fragments/TextInput";
+import ImageInput from "@/components/svg/ImageInput";
+import SvgCalendar from "@/components/svg/SvgCalendar";
+import TextAllEditor from "@/components/svg/TextAllEditor";
+import TextEditor from "@/components/svg/TextEditor";
+import TextViewer from "@/components/svg/TextViewer";
 import {
   ComposerDefault,
   FragmentDefault,
@@ -12,11 +17,6 @@ import {
 import { SvgContext } from "@components/SvgContext";
 import { TextEditContext } from "@components/TextEditContext";
 import type { SvgConfig, TextItem, VisibilityState } from "@components/type";
-import ImageInput from "@components/ui/svg/ImageInput";
-import SvgCalendar from "@components/ui/svg/SvgCalendar";
-import TextAllEditor from "@components/ui/svg/TextAllEditor";
-import TextEditor from "@components/ui/svg/TextEditor";
-import TextViewer from "@components/ui/svg/TextViewer";
 import Colorful from "@uiw/react-color-colorful";
 import type { CalendarAttributes } from "@vocaloid-birthday/common";
 import clsx from "clsx";

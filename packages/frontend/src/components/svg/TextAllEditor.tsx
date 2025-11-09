@@ -1,5 +1,5 @@
-import Input from "@/components/ui/fragments/Input";
-import Label from "@/components/ui/fragments/Label";
+import Input from "@/components/fragments/Input";
+import Label from "@/components/fragments/Label";
 import { TextEditContext } from "@components/TextEditContext";
 import { useContext, type ChangeEvent } from "react";
 

@@ -1,10 +1,10 @@
+import SvgDateText from "@/components/svg/SvgDateText";
+import SvgFooter from "@/components/svg/SvgFooter";
+import SvgGuideline from "@/components/svg/SvgGuideline";
+import SvgQrCode from "@/components/svg/SvgQrCode";
+import SvgThumbnail from "@/components/svg/SvgThumbnail";
+import SvgTitle from "@/components/svg/SvgTitle";
 import SvgDefault from "@/constants/svgDefaults";
-import SvgDateText from "@components/ui/svg/SvgDateText";
-import SvgFooter from "@components/ui/svg/SvgFooter";
-import SvgGuideline from "@components/ui/svg/SvgGuideline";
-import SvgQrCode from "@components/ui/svg/SvgQrCode";
-import SvgThumbnail from "@components/ui/svg/SvgThumbnail";
-import SvgTitle from "@components/ui/svg/SvgTitle";
 
 export default function SvgCalendar({
   month,

@@ -1,4 +1,4 @@
-import Textarea from "@/components/ui/fragments/Textarea";
+import Textarea from "@/components/fragments/Textarea";
 import { TextEditContext } from "@components/TextEditContext";
 import { type ChangeEvent, useContext, useMemo } from "react";
 import Input from "../fragments/Input";
