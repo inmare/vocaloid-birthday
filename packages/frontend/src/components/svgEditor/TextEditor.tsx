@@ -1,8 +1,6 @@
-import Textarea from "@/components/ui/Textarea";
 import { TextEditContext } from "@components/TextEditContext";
+import { Input, Label, Textarea } from "@components/ui";
 import { type ChangeEvent, useContext, useMemo } from "react";
-import Input from "../ui/Input";
-import Label from "../ui/Label";
 
 export default function TextEditor() {
   const { data, updateData } = useContext(TextEditContext);

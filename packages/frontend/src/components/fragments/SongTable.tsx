@@ -1,4 +1,4 @@
-import { useAuth } from "@/components/AuthContext";
+import { useAuth } from "@components/AuthContext";
 import { type PVAttributes, type SongWithPVs } from "@vocaloid-birthday/common";
 import type {
   AnchorHTMLAttributes,

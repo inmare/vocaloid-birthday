@@ -1,6 +1,6 @@
-import { SvgContext } from "@/components/SvgContext";
 import SvgDefault from "@/constants/svgDefaults";
 import sampleImage from "@assets/no-image.png";
+import { SvgContext } from "@components/SvgContext";
 import {
   useContext,
   useEffect,

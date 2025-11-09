@@ -1,7 +1,7 @@
-import TextBtn from "@/components/fragments/TextBtn";
-import Button from "@/components/ui/Button";
-import { createEmptyItem } from "@/components/utils";
+import { TextBtn } from "@components/fragments";
 import { TextEditContext } from "@components/TextEditContext";
+import { Button } from "@components/ui";
+import { createEmptyItem } from "@components/utils";
 import { Plus } from "lucide-react";
 import { useContext } from "react";
 

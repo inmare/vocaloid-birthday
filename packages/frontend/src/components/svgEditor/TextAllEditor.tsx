@@ -1,6 +1,5 @@
-import Input from "@/components/ui/Input";
-import Label from "@/components/ui/Label";
 import { TextEditContext } from "@components/TextEditContext";
+import { Input, Label } from "@components/ui";
 import { useContext, type ChangeEvent } from "react";
 
 export default function TextAllEditor({

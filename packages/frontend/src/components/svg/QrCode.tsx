@@ -1,4 +1,4 @@
-import { Vec2 } from "@/components/utils";
+import { Vec2 } from "@components/utils";
 import QRCode from "qrcode-svg";
 import { useEffect, useState } from "react";
 

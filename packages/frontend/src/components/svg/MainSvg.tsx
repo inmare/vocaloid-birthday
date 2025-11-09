@@ -1,10 +1,12 @@
-import DateText from "@/components/svg/DateText";
-import Footer from "@/components/svg/Footer";
-import Guideline from "@/components/svg/Guideline";
-import QrCode from "@/components/svg/QrCode";
-import Thumbnail from "@/components/svg/Thumbnail";
-import Title from "@/components/svg/Title";
 import SvgDefault from "@/constants/svgDefaults";
+import {
+  DateText,
+  Footer,
+  Guideline,
+  QrCode,
+  Thumbnail,
+  Title,
+} from "@components/svg";
 
 export default function MainSvg({
   month,
