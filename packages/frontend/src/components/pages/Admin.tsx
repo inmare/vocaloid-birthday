@@ -1,8 +1,8 @@
 import api from "@/api";
 import { useAuth } from "@components/AuthContext";
 import { type FormEvent } from "react";
-import Button from "../fragments/Button";
-import TextInput from "../fragments/TextInput";
+import Button from "../ui/Button";
+import TextInput from "../ui/TextInput";
 
 export default function Admin() {
   const { isLoading, accessToken, setAccessToken } = useAuth();

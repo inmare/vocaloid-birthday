@@ -1,4 +1,4 @@
-import StyledNavLink from "@/components/fragments/StyledNavLink";
+import StyledNavLink from "@/components/ui/StyledNavLink";
 import { Outlet } from "react-router";
 
 export default function OtherPageLayout() {

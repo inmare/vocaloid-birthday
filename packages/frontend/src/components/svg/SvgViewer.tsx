@@ -1,14 +1,14 @@
 import api from "@/api";
-import Button from "@/components/fragments/Button";
-import Input from "@/components/fragments/Input";
-import Label from "@/components/fragments/Label";
-import Textarea from "@/components/fragments/Textarea";
-import TextInput from "@/components/fragments/TextInput";
 import ImageInput from "@/components/svg/ImageInput";
 import SvgCalendar from "@/components/svg/SvgCalendar";
 import TextAllEditor from "@/components/svg/TextAllEditor";
 import TextEditor from "@/components/svg/TextEditor";
 import TextViewer from "@/components/svg/TextViewer";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import Label from "@/components/ui/Label";
+import Textarea from "@/components/ui/Textarea";
+import TextInput from "@/components/ui/TextInput";
 import {
   ComposerDefault,
   FragmentDefault,
