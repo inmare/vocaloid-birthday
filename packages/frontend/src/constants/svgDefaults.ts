@@ -11,6 +11,8 @@ const SvgDefault = {
   imageX: 0,
   imageY: 0,
   imageScale: 0.1,
+  imageId: "svg-thumbnail-image",
+  guideId: "svg-guide",
 } as const;
 
 export default SvgDefault;

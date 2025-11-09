@@ -59,7 +59,7 @@ export default function Thumbnail() {
       </clipPath>
 
       <g clipPath={`url(#${clipPathId})`}>
-        {/* 배경용 placeholder */}
+        {/* 배경 placeholder */}
         <rect
           x={rectX}
           y={rectY}
@@ -68,7 +68,12 @@ export default function Thumbnail() {
           opacity={0.5}
         />
         {/* 이미지 */}
-        <image ref={imageRef} href={imageLink} transform={transformStr} />
+        <image
+          id={SvgDefault.imageId}
+          ref={imageRef}
+          href={imageLink}
+          transform={transformStr}
+        />
         {/* 그림자 */}
         <rect
           x={rectX}
