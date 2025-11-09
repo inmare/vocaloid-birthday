@@ -19,7 +19,10 @@ import type { SvgConfig, VisibilityState } from "@components/type";
 import { Button, Input, Label, Textarea, TextInput } from "@components/ui";
 import { getTextFromItems, imageToBase64 } from "@components/utils";
 import Colorful from "@uiw/react-color-colorful";
-import type { CalendarAttributes } from "@vocaloid-birthday/common";
+import type {
+  CalendarAttributes,
+  CalendarPostAttributes,
+} from "@vocaloid-birthday/common";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -117,30 +120,38 @@ export default function SvgViewer({
     const guideElement = svgClone.getElementById(SvgDefault.guideId);
     guideElement?.remove();
 
+    // FormData에 svg 파일 추가
     const svgString = new XMLSerializer().serializeToString(svgClone);
-
-    const data = {
-      songId: songId,
-      title: getTextFromItems(title.items),
-      composer: getTextFromItems(composer.items),
-      titleKor: fragment.titleKor,
-      composerKor: fragment.composerKor,
-      calendarDate: dayjs.utc(`2026-${month}-${date}`).toDate(),
-      lyrics: fragment.lyrics,
-      svgConfig: {
-        title,
-        composer,
-        fragment: filteredFragment,
-      },
-    };
     const blob = new Blob([svgString], {
       type: "image/svg+xml",
     });
     const svgFile = new File([blob], `${fileId}-svg.svg`, {
       type: "image/svg+xml",
     });
-
     formData.append("svgFile", svgFile);
+
+    // 데이터베이스에 보낼 객체 설정
+    const data = {
+      songId: songId,
+      calendarDate: dayjs.utc(`2026-${month}-${date}`).toDate(),
+      svgConfig: {
+        title,
+        composer,
+        fragment: filteredFragment,
+      } as object,
+    } as CalendarPostAttributes;
+
+    // 제목, 작곡가, 한국어 제목/작곡가, 가사 데이터 설정
+    const titleText = getTextFromItems(title.items);
+    const composerText = getTextFromItems(composer.items);
+
+    // 데이터가 존재할 때만 설정
+    if (titleText) data.title = titleText;
+    if (composerText) data.composer = composerText;
+    if (fragment.titleKor !== "") data.titleKor = fragment.titleKor;
+    if (fragment.composerKor !== "") data.composerKor = fragment.composerKor;
+    if (fragment.lyrics !== "") data.lyrics = fragment.lyrics;
+
     formData.append("data", JSON.stringify(data));
 
     try {
@@ -149,8 +160,14 @@ export default function SvgViewer({
           "Content-Type": "multipart/form-data",
         },
       });
+      // 데이터를 보낸 다음에 한번 fetchProgress를 호출해서 진행 상황을 갱신
       await fetchProgress();
-      console.log(res.status, res.data);
+      if (res.status === 200) {
+        alert("SVG 데이터가 성공적으로 저장되었습니다.");
+      } else {
+        alert("SVG 데이터 저장에 실패했습니다.");
+        console.error(res.status, res.data);
+      }
     } catch (error) {
       console.error("SVG 데이터 전송 중 오류 발생:", error);
     }
@@ -172,7 +189,6 @@ export default function SvgViewer({
           updateTitle(svgConfig.title);
           updateComposer(svgConfig.composer);
           const fragment = svgConfig.fragment;
-          console.log(data.imageFileName);
           fragment.imageLink = data.imageFileName
             ? `${DEV_API_ENDPOINT}/static/${data.imageFileName}`
             : null;
