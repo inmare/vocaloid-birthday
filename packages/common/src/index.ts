@@ -26,15 +26,26 @@ export interface SongWithPVs extends SongAttributes {
 
 export interface CalendarAttributes {
   id?: number;
-  title: string;
-  composer: string;
-  titleKor: string;
-  composerKor: string;
+  title?: string;
+  composer?: string;
+  titleKor?: string;
+  composerKor?: string;
   publishDate: Date;
   calendarDate: Date;
-  lyrics: string;
+  lyrics?: string;
   svgConfig: object;
   svgFileName: string;
   imageFileName?: string;
   songId: number;
+}
+
+export interface CalendarPostAttributes {
+  songId: number;
+  title?: string;
+  composer?: string;
+  titleKor?: string;
+  composerKor?: string;
+  calendarDate: Date;
+  lyrics?: string;
+  svgConfig: object;
 }
