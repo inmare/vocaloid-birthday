@@ -24,6 +24,8 @@ export default function MainSvg({
       ref={svgRef}
       viewBox={`0 0 ${sizeX} ${sizeY}`}
       xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      version="1.1"
       width={`${SvgDefault.sizeX}mm`}
       height={`${SvgDefault.sizeY}mm`}
       className="shadow-[0_0_10px] shadow-zinc-400"
