@@ -76,7 +76,7 @@ export function createEmptyItem(): TextItem {
  * @param itemMatrix TextItem의 2차원 배열
  * @returns 배열의 텍스트만 전부 합친 문자열
  */
-export function getTextFromItems(itemMatrix: TextItem[][]): string {
+export function getTextFromItems(itemMatrix: TextItem[][]): string | null {
   let result = "";
   itemMatrix.forEach((line) => {
     line.forEach((item) => {
@@ -84,5 +84,5 @@ export function getTextFromItems(itemMatrix: TextItem[][]): string {
     });
     result += "\n";
   });
-  return result;
+  return result !== "" ? result : null;
 }
