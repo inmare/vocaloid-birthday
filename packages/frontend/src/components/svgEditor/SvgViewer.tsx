@@ -4,6 +4,7 @@ import {
   FragmentDefault,
   TitleDefault,
 } from "@/constants/configDefaults";
+import SvgDefault from "@/constants/svgDefaults";
 import { MainSvg } from "@components/svg";
 import { SvgContext } from "@components/SvgContext";
 import {
@@ -80,22 +81,45 @@ export default function SvgViewer({
 
     const formData = new FormData();
 
-    const filteredFragment = { ...fragment };
-    if (
-      filteredFragment.imageLink &&
-      filteredFragment.imageLink.startsWith("blob:")
-    ) {
-      const imageLink = filteredFragment.imageLink;
-      const res = await fetch(imageLink);
-      const blob = await res.blob();
-      const ext = blob.type.split("/")[1] || "png";
-      const imageFile = new File([blob], `${uuidv4()}.${ext}`, {
-        type: blob.type,
-      });
+    // 현재 svg 요소를 복사해서 불필요한 속성 제거
+    const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
+    // 클래스 속성 제거
+    svgClone.removeAttribute("class");
 
-      formData.append("imageFile", imageFile);
+    const filteredFragment = { ...fragment };
+    let localImageLink: string = "#";
+
+    // 이미지가 null이 아니면 링크 localImageLink 설정
+    if (filteredFragment.imageLink) {
+      if (filteredFragment.imageLink.startsWith("blob:")) {
+        // 이미지가 붙여넣은 blob 형식이면 파일로 변환해서 전송
+        const imageLink = filteredFragment.imageLink;
+        const res = await fetch(imageLink);
+        const blob = await res.blob();
+        const ext = blob.type.split("/")[1] || "png";
+        // 파일명은 임의로 지정
+        const fileName = `${uuidv4()}.${ext}`;
+        const imageFile = new File([blob], fileName, {
+          type: blob.type,
+        });
+
+        formData.append("imageFile", imageFile);
+        localImageLink = fileName;
+      } else if (filteredFragment.imageLink.startsWith("/static/")) {
+        // 기존에 업로드된 이미지면 파일명만 추출
+        localImageLink = filteredFragment.imageLink.split("/static/")[1];
+      }
+
       filteredFragment.imageLink = null;
     }
+
+    // svg의 이미지를 로컬 링크로 설정
+    const imageElement = svgClone.getElementById(SvgDefault.imageId);
+    imageElement?.setAttribute("href", localImageLink || "");
+
+    // 가이드라인 요소 제거
+    const guideElement = svgClone.getElementById(SvgDefault.guideId);
+    guideElement?.remove();
 
     const data = {
       title: getTextFromItems(title.items),
@@ -113,9 +137,6 @@ export default function SvgViewer({
       songId: songId,
     };
 
-    // 현재 svg 요소를 복사해서 불필요한 속성 제거
-    const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
-    svgClone.classList = "";
     const svgString = svgClone.outerHTML;
 
     const blob = new Blob([svgString], {
