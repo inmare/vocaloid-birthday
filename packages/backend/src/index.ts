@@ -13,7 +13,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
-import { staticFolder } from "./constants";
+import { frontendFolder, staticFolder } from "./constants";
 import { existsSync } from "fs";
 import { mkdir } from "fs/promises";
 import helmet from "helmet";
@@ -38,6 +38,15 @@ app.use(
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "script-src": ["'self'"],
+        "img-src": ["'self'", "blob:", "data:", "https:"],
+        "base-uri": ["/", "http:"],
+      },
+    },
   })
 );
 app.use(express.json());
@@ -60,6 +69,14 @@ app.post(
   upload.fields([{ name: "svgFile" }, { name: "imageFile" }]),
   saveSvg
 );
+
+app.use(express.static(frontendFolder));
+app.get(/.*/, (req, res, next) => {
+  if (req.originalUrl.startsWith("/api/")) {
+    return next();
+  }
+  res.sendFile("index.html", { root: frontendFolder });
+});
 
 const startServer = async () => {
   await connectDatabase({ debug: false });
