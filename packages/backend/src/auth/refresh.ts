@@ -10,7 +10,7 @@ export default async function refresh(req: Request, res: Response) {
   if (!refreshToken) return res.status(401).send("Refresh Token이 없습니다.");
   refreshTokenDB.read();
   const tokenList = refreshTokenDB.data.refreshTokens;
-  if (refreshToken in tokenList)
+  if (!tokenList.includes(refreshToken))
     return res.status(403).send("유효하지 않은 refresh token입니다.");
 
   jwt.verify(
