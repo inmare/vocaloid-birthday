@@ -1,4 +1,7 @@
 # 빌드 스테이지
+# 특정 와이파이 환경에서는 -alpine접두사가 제대로 작동을 안함
+# 그 경우에는 제거하고 실행하기
+# FROM node:25 as builder
 FROM node:25-alpine as builder
 # 컨테이너 안에서 작업실로 사용할 폴더
 WORKDIR /app
@@ -22,8 +25,9 @@ RUN pnpm build
 # 프로덕션용 의존성 설치 (devDependencies 제외)
 # RUN pnpm install --prod --frozen-lockfile
 
-
 # 새로운 nodejs 컨테이너 생성
+# 특정 와이파이 환경에서는 -alpine접두사가 제대로 작동을 안함
+# FROM node:25 as backend
 FROM node:25-alpine as backend
 WORKDIR /app
 
