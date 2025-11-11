@@ -1,4 +1,6 @@
 import { join } from "path";
 
-export const staticFolder = join(process.cwd(), "..", "database", "uploads");
-export const frontendFolder = join(process.cwd(), "..", "frontend", "dist");
+export const staticFolder =
+  process.env.NODE_ENV === "production"
+    ? (process.env.UPLOADS_PATH as string)
+    : join(process.cwd(), "..", "database", "uploads");
