@@ -30,12 +30,18 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 403 && !originalRequest._retry) {
+    // 기존의 요청이 /api/auth/refresh가 아니고, 403 에러가 났을 때만 실행
+    // 무한 루프 방지
+    if (
+      error.response.status === 403 &&
+      !originalRequest._retry &&
+      originalRequest.url !== "/api/auth/refresh"
+    ) {
       originalRequest._retry = true;
 
       try {
         const { data } = await api.post(
-          "/refresh",
+          "/api/auth/refresh",
           {},
           { withCredentials: true },
         );
