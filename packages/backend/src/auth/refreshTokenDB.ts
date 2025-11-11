@@ -4,7 +4,11 @@ import path from "path";
 import type { RefreshTokenData } from "../types";
 
 const defaultData: RefreshTokenData = { refreshTokens: [] };
-const file = path.join(process.cwd(), "db.json");
+const tokenDBPath =
+  process.env.NODE_ENV === "production"
+    ? path.join(process.env.TOKEN_DB_PATH as string)
+    : path.join(process.cwd(), "..", "database", "refresh_token_db.json");
+const file = tokenDBPath;
 
 let refreshTokenDB: Low<RefreshTokenData>;
 
