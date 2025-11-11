@@ -6,7 +6,10 @@ import { InitSongModel } from "./song.model";
 import { InitPVModel } from "./pv.model";
 import { InitCalendarModel } from "./calendar.model";
 
-export const DB_PATH = path.join(__dirname, "..", DB_FILE_NAME);
+export const DB_PATH =
+  process.env.NODE_ENV === "production"
+    ? (process.env.DB_PATH as string)
+    : path.join(__dirname, "..", DB_FILE_NAME);
 
 // sqlite 데이터베이스 인스턴스 생성
 export const sequelize = new Sequelize({
