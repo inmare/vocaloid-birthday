@@ -1,0 +1,22 @@
+# Node modules
+node_modules
+**/node_modules
+
+# 빌드 결과물 (Docker 내에서 새로 빌드)
+**/dist
+**/build
+
+# 개발 관련
+.git
+.gitignore
+
+# IDE
+.vscode
+
+# Documentation
+README.md
+
+# Docker 관련
+Dockerfile
+docker-compose.yml
+.dockerignore

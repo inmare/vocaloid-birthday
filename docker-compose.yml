@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  # 백엔드 서비스
+  backend:
+    build:
+      context: .
+      target: backend
+    container_name: app-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      # 데이터 저장 경로 등록
+      - type: bind
+        source: ./packages/database
+        target: /app/data
+    environment:
+      NODE_ENV: production
+      DB_PATH: /app/data/${DB_FILE_NAME}
+      UPLOADS_PATH: /app/data/${UPLOADS_PATH}
+      TOKEN_DB_PATH: /app/data/${TOKEN_DB_FILE_NAME}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      HASHED_PASSWORD: ${HASHED_PASSWORD}
+      REFRESH_COOKIE_KEY: ${REFRESH_COOKIE_KEY}
+    # 디버깅용 명령어
+    # command: ["tail", "-f", "/dev/null"]
+    restart: unless-stopped
+
+  # 프론트엔드 서비스
+  frontend:
+    build:
+      context: .
+      target: frontend
+    container_name: app-frontend
+    ports:
+      - "8080:80"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      - backend
+    restart: unless-stopped
