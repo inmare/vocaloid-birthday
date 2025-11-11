@@ -1,4 +1,4 @@
-*.sqlite
-*.sqlite-journal
+/*.sqlite
+/*.sqlite-journal
 uploads
-**.json
+/*.json
