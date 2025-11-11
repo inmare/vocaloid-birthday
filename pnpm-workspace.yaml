@@ -2,10 +2,11 @@ packages:
   - packages/*
 
 ignoredBuiltDependencies:
-  - '@parcel/watcher'
-  - '@swc/core'
+  - "@parcel/watcher"
+  - "@swc/core"
   - esbuild
 
 onlyBuiltDependencies:
   - puppeteer
   - sqlite3
+  - bcrypt
