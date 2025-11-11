@@ -13,7 +13,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
-import { frontendFolder, staticFolder } from "./constants";
+import { staticFolder } from "./constants";
 import { existsSync } from "fs";
 import { mkdir } from "fs/promises";
 import helmet from "helmet";
@@ -23,11 +23,14 @@ dotenv.config();
 const app: Express = express();
 const port = 3000;
 
+app.set("trust proxy", 1);
+
 // cors 설정
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:8080",
       "https://vocalendar.moe",
       "https://www.vocalendar.moe",
     ],
@@ -70,14 +73,6 @@ app.post(
   saveSvg
 );
 
-app.use(express.static(frontendFolder));
-app.get(/.*/, (req, res, next) => {
-  if (req.originalUrl.startsWith("/api/")) {
-    return next();
-  }
-  res.sendFile("index.html", { root: frontendFolder });
-});
-
 const startServer = async () => {
   await connectDatabase({ debug: false });
   await initTokenDB();
@@ -85,6 +80,7 @@ const startServer = async () => {
   if (!existsSync(staticFolder)) {
     await mkdir(staticFolder);
   }
+  console.log(`정적 파일 경로: ${staticFolder}`);
   app.listen(app.get("port"), () => {
     console.log(app.get("port"), "번 포트에서 대기 중!");
   });
