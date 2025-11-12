@@ -22,12 +22,12 @@ export default function TextAllEditor() {
       <Label>FontSize</Label>
       <Label>LineHeight</Label>
       <Input
-        defaultValue={textContext.data.fontSize}
+        value={textContext.data.fontSize}
         onChange={updateFontSize}
         step={0.5}
       />
       <Input
-        defaultValue={textContext.data.lineHeight}
+        value={textContext.data.lineHeight}
         onChange={updateLineHeight}
         step={0.1}
       />
