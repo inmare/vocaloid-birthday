@@ -57,6 +57,7 @@ export default function Thumbnail() {
         <feGaussianBlur stdDeviation={2} />
       </filter>
       <g clipPath={`url(#${clipPathId})`}>
+        {/* 배경용 placeholder */}
         <rect
           x={rectX}
           y={rectY}
@@ -79,8 +80,8 @@ export default function Thumbnail() {
           height={rectHeight}
           fill="none"
           stroke="#000000"
-          strokeWidth={2}
-          opacity={0.75}
+          strokeWidth={1}
+          opacity={0.5}
           filter={`url(#${blurEffectId})`}
         />
       </g>
