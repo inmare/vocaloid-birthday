@@ -1,9 +1,11 @@
 import { useAuth } from "@components/AuthContext";
 import { type PVAttributes, type SongWithPVs } from "@vocaloid-birthday/common";
-import type {
-  AnchorHTMLAttributes,
-  TdHTMLAttributes,
-  ThHTMLAttributes,
+import clsx from "clsx";
+import { Copy } from "lucide-react";
+import {
+  type AnchorHTMLAttributes,
+  type TdHTMLAttributes,
+  type ThHTMLAttributes,
 } from "react";
 
 function TableA({
@@ -18,29 +20,49 @@ function TableA({
 }
 
 function TableTh({
+  className,
   children,
-  ...props
+  ...rest
 }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className="m-1 w-30 truncate bg-cyan-700 px-2 py-1 text-ellipsis"
-      {...props}
+      className={clsx(
+        "m-1 w-30 truncate border border-zinc-700 bg-zinc-800 px-2 py-1 text-ellipsis",
+        className,
+      )}
+      {...rest}
     >
       {children}
     </th>
   );
 }
 
-function TableTd({
-  children,
-  ...props
-}: TdHTMLAttributes<HTMLTableCellElement>) {
+interface TdAttributes extends TdHTMLAttributes<HTMLTableCellElement> {
+  isAdmin: boolean;
+}
+
+function TableTd({ isAdmin, className, children, ...rest }: TdAttributes) {
   return (
     <th
-      className="m-1 truncate bg-cyan-100 px-2 py-1 text-start font-medium text-ellipsis text-zinc-950"
-      {...props}
+      className={clsx(
+        "m-1 border border-zinc-700 px-2 py-1 text-start font-medium",
+        className,
+      )}
+      {...rest}
     >
-      {children}
+      <div className="flex flex-row justify-between overflow-auto">
+        <div className="truncate text-ellipsis">{children}</div>
+        {isAdmin && (
+          <button
+            className="cursor-pointer"
+            onClick={() => {
+              window.navigator.clipboard.writeText(children?.toString() ?? "");
+            }}
+          >
+            <Copy stroke="#666" />
+          </button>
+        )}
+      </div>
     </th>
   );
 }
@@ -75,6 +97,7 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
     );
   };
   const vocaDBLink = `https://vocadb.net/s/${song.vocaDBId}`;
+
   return (
     <>
       <table className="mx-auto w-full max-w-xl table-fixed border-collapse">
@@ -82,38 +105,38 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
           {isAdmin && (
             <tr>
               <TableTh>곡 ID</TableTh>
-              <TableTd>{song.id}</TableTd>
+              <TableTd isAdmin={isAdmin}>{song.id}</TableTd>
             </tr>
           )}
           <tr>
             <TableTh>제목</TableTh>
-            <TableTd>{song.title}</TableTd>
+            <TableTd isAdmin={isAdmin}>{song.title}</TableTd>
           </tr>
           <tr>
             <TableTh>제목(한국어)</TableTh>
-            <TableTd>{song.titleKr ?? ""}</TableTd>
+            <TableTd isAdmin={isAdmin}>{song.titleKr ?? ""}</TableTd>
           </tr>
           <tr>
             <TableTh>작곡가</TableTh>
-            <TableTd>{song.composer}</TableTd>
+            <TableTd isAdmin={isAdmin}>{song.composer}</TableTd>
           </tr>
           <tr>
             <TableTh>작곡가(한국어)</TableTh>
-            <TableTd>{song.composerKr ?? ""}</TableTd>
+            <TableTd isAdmin={isAdmin}>{song.composerKr ?? ""}</TableTd>
           </tr>
           <tr>
             <TableTh>업로드 날짜</TableTh>
-            <TableTd>{song.publishDate.toString()}</TableTd>
+            <TableTd isAdmin={isAdmin}>{song.publishDate.toString()}</TableTd>
           </tr>
           <tr>
             <TableTh>VocaDB</TableTh>
-            <TableTd>
+            <TableTd isAdmin={isAdmin}>
               <TableA href={vocaDBLink}>{song.vocaDBId}</TableA>
             </TableTd>
           </tr>
           <tr>
             <TableTh>PV</TableTh>
-            <TableTd>{createPVLink(song.PVs)}</TableTd>
+            <TableTd isAdmin={isAdmin}>{createPVLink(song.PVs)}</TableTd>
           </tr>
         </tbody>
       </table>
