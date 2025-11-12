@@ -8,7 +8,7 @@ export default function Title() {
   const { title, composer } = useContext(SvgContext);
 
   const defaultX = SvgDefault.sizeX / 2;
-  const defaultY = 117.5;
+  const defaultY = 117.2;
   const groupRef = useRef<SVGGElement | null>(null);
   const composerRef = useRef<SVGGElement | null>(null);
   const titleRef = useRef<SVGGElement | null>(null);
