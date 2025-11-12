@@ -86,7 +86,9 @@ export default function SvgViewer({
     if (songId === null) return alert("곡 ID를 입력해주세요.");
 
     const formData = new FormData();
-    const fileId = uuidv4();
+    const monthStr = month.toString().padStart(2, "0");
+    const dateStr = date.toString().padStart(2, "0");
+    const fileId = `26${monthStr}${dateStr}-${uuidv4()}`;
 
     // 현재 svg 요소를 복사해서 불필요한 속성 제거
     const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
@@ -106,7 +108,7 @@ export default function SvgViewer({
       const res = await fetch(fragment.imageLink);
       const blob = await res.blob();
       const ext = blob.type.split("/")[1];
-      const file = new File([blob], `${fileId}-image.${ext}`, {
+      const file = new File([blob], `${fileId}.${ext}`, {
         type: blob.type,
       });
       formData.append("imageFile", file);
@@ -125,7 +127,7 @@ export default function SvgViewer({
     const blob = new Blob([svgString], {
       type: "image/svg+xml",
     });
-    const svgFile = new File([blob], `${fileId}-svg.svg`, {
+    const svgFile = new File([blob], `${fileId}.svg`, {
       type: "image/svg+xml",
     });
     formData.append("svgFile", svgFile);
