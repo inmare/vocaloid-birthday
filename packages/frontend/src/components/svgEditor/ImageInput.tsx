@@ -33,8 +33,29 @@ export default function ImageInput({
         if (item.type.startsWith("image/")) {
           const file = item.getAsFile();
           if (!file) continue;
-          const url = URL.createObjectURL(file);
-          setImageLink(url);
+          // 이미지가 webp면 png로 변환
+          if (file.type === "image/webp") {
+            console.log("webp를 png로 변환합니다.");
+            const img = document.createElement("img");
+            const imgUrl = URL.createObjectURL(file);
+            img.src = imgUrl;
+            await img.decode();
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+              if (!blob) return;
+              const url = URL.createObjectURL(blob);
+              setImageLink(url);
+              URL.revokeObjectURL(imgUrl);
+            }, "image/png");
+          } else {
+            const url = URL.createObjectURL(file);
+            setImageLink(url);
+          }
         }
       }
       setSelected(false);
