@@ -171,6 +171,7 @@ export default function SvgViewer({
         console.error(res.status, res.data);
       }
     } catch (error) {
+      alert("클라이언트에서 SVG 데이터 저장에 실패했습니다.");
       console.error("SVG 데이터 전송 중 오류 발생:", error);
     }
   };
@@ -186,6 +187,7 @@ export default function SvgViewer({
           updateTitle(TitleDefault);
           updateComposer(ComposerDefault);
           updateFragment(FragmentDefault);
+          setSongId(null);
         } else {
           const svgConfig = data.svgConfig as SvgConfig;
           updateTitle(svgConfig.title);
@@ -216,14 +218,10 @@ export default function SvgViewer({
             <div className="flex flex-col gap-1">
               <label htmlFor="">곡 id</label>
               <TextInput
-                value={songId === null ? "" : songId}
+                value={typeof songId === "number" ? songId : ""}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                  const intValue = parseInt(event.target.value);
-                  if (isNaN(intValue)) {
-                    setSongId(null);
-                  } else {
-                    setSongId(intValue);
-                  }
+                  const value = parseInt(event.target.value);
+                  isNaN(value) ? setSongId(null) : setSongId(value);
                 }}
               />
               <label htmlFor="">테마 색</label>
@@ -294,7 +292,7 @@ export default function SvgViewer({
                 />
                 <Input
                   type="number"
-                  step={0.01}
+                  step={0.001}
                   value={fragment.imageScale}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     updateFragment((draft) => {
