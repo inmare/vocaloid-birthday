@@ -63,16 +63,19 @@ export default function TextEditor() {
         <Input
           onChange={(event) => handleValueChange(event, "offsetX")}
           step={0.1}
+          value={item?.typo.offsetX || undefined}
         />
         <Label>OffsetY</Label>
         <Input
           onChange={(event) => handleValueChange(event, "offsetY")}
           step={0.1}
+          value={item?.typo.offsetY || undefined}
         />
         <Label>Leading</Label>
         <Input
           onChange={(event) => handleValueChange(event, "leading")}
           step={0.1}
+          value={item?.typo.leading || undefined}
         />
       </div>
     </div>
