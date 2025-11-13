@@ -50,6 +50,7 @@ export default function ImageInput({
               if (!blob) return;
               const url = URL.createObjectURL(blob);
               setImageLink(url);
+              console.log("revoke:", imgUrl);
               URL.revokeObjectURL(imgUrl);
             }, "image/png");
           } else {

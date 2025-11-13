@@ -351,6 +351,7 @@ export default function SvgViewer({
                     const prevLink = draft.imageLink;
                     // 이전에 blob 형식의 링크였으면 해제
                     if (prevLink?.startsWith("blob:") && prevLink !== link) {
+                      console.log("revoke:", prevLink);
                       URL.revokeObjectURL(prevLink);
                     }
                     draft.imageLink = link;
