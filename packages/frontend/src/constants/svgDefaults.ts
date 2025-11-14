@@ -4,7 +4,7 @@ const SvgDefault = {
   dateFont: "Abril Fatface",
   captionFont: "Pretendard JP Variable",
   titleFont: "Paperlogy",
-  composerFont: "Paperlogy",
+  titleSubFont: "Pretendard JP Variable",
   serifFont: "Bookk Myungjo",
   titleFontSize: 11,
   composerFontSize: 5,
