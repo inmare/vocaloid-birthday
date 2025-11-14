@@ -32,7 +32,7 @@ services:
     build:
       context: .
       target: frontend
-    image: inmare0837/vocaloid-birthday-frontend:v1.1
+    image: inmare0837/vocaloid-birthday-frontend:v1.2
     container_name: app-frontend
     ports:
       - "9000:80"
