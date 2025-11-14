@@ -1,5 +1,6 @@
+import { DefaultTextTypo, type TextItem } from "@components/type";
 import dayjs from "dayjs";
-import { DefaultTextTypo, type TextItem } from "./type";
+import nihongo from "nihongo";
 
 export function rgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -86,4 +87,25 @@ export function getTextFromItems(itemMatrix: TextItem[][]): string | null {
     result += "\n";
   });
   return result !== "" ? result : null;
+}
+
+/**
+ * TextConfig 객체에서 상용한자가 아닌 일본어가 있는지 확인합니다.
+ * @param config TextConfig 객체
+ * @returns 상용한자가 아닌 일본어가 있는지의 여부
+ */
+export function hasOnlyJouyouKanji(text: string): boolean {
+  for (const char of text) {
+    // 글자에 상용한자가 아닌 한자가 포함되어 있는지 확인
+    // 일본어이지만, 히라가나/가타카나가 아니면서 상용한자가 아닌 경우
+    const condition =
+      nihongo.isJapanese(char) &&
+      !nihongo.isKana(char) &&
+      !nihongo.isJouyouKanji(char);
+    if (condition) {
+      console.log("상용한자가 아닌 한자가 있습니다:", char);
+      return false;
+    }
+  }
+  return true;
 }
