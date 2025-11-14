@@ -13,7 +13,7 @@ function TableA({
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return (
-    <a {...props} className="text-cyan-700 underline">
+    <a {...props} className="text-cyan-700 underline" target="_blank">
       {children}
     </a>
   );
