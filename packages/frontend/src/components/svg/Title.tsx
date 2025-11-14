@@ -1,7 +1,7 @@
 import SvgDefault from "@/constants/svgDefaults";
 import { SvgContext } from "@components/SvgContext";
 import type { TextItem } from "@components/type";
-import { Vec2 } from "@components/utils";
+import { hasOnlyJouyouKanji, Vec2 } from "@components/utils";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 
 export default function Title() {
@@ -48,8 +48,12 @@ export default function Title() {
 
   const createTextItems = (line: TextItem[]) => {
     return line.map((item) => {
+      const font = hasOnlyJouyouKanji(item.text)
+        ? SvgDefault.titleFont
+        : SvgDefault.titleSubFont;
       return (
         <tspan
+          fontFamily={font}
           dx={item.typo.offsetX}
           dy={item.typo.offsetY}
           key={item.id}
@@ -81,12 +85,7 @@ export default function Title() {
       textAnchor="middle"
       transform={`${Vec2.toStyle([new Vec2(...groupPos)])}`}
     >
-      <g
-        fontFamily={SvgDefault.composerFont}
-        fontSize={composer.fontSize}
-        fontWeight={300}
-        ref={composerRef}
-      >
+      <g fontSize={composer.fontSize} fontWeight={300} ref={composerRef}>
         {createTextLines(
           composer.items,
           composer.fontSize,
@@ -94,7 +93,6 @@ export default function Title() {
         )}
       </g>
       <g
-        fontFamily={SvgDefault.titleFont}
         fontSize={title.fontSize}
         transform={`${Vec2.toStyle([new Vec2(...titlePos)])}`}
         fontWeight={700}
