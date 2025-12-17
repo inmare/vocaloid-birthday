@@ -67,7 +67,13 @@ function TableTd({ isAdmin, className, children, ...rest }: TdAttributes) {
   );
 }
 
-export default function SongTable({ song }: { song: SongWithPVs }) {
+export default function SongTable({
+  className,
+  song,
+}: {
+  className?: string;
+  song: SongWithPVs;
+}) {
   const { accessToken } = useAuth();
   const isAdmin = !!accessToken;
 
@@ -99,47 +105,50 @@ export default function SongTable({ song }: { song: SongWithPVs }) {
   const vocaDBLink = `https://vocadb.net/s/${song.vocaDBId}`;
 
   return (
-    <>
-      <table className="mx-auto w-full max-w-xl table-fixed border-collapse">
-        <tbody>
-          {isAdmin && (
-            <tr>
-              <TableTh>곡 ID</TableTh>
-              <TableTd isAdmin={isAdmin}>{song.id}</TableTd>
-            </tr>
-          )}
+    <table
+      className={clsx(
+        "mx-auto w-full max-w-xl table-fixed border-collapse",
+        className,
+      )}
+    >
+      <tbody>
+        {isAdmin && (
           <tr>
-            <TableTh>제목</TableTh>
-            <TableTd isAdmin={isAdmin}>{song.title}</TableTd>
+            <TableTh>곡 ID</TableTh>
+            <TableTd isAdmin={isAdmin}>{song.id}</TableTd>
           </tr>
-          <tr>
-            <TableTh>제목(한국어)</TableTh>
-            <TableTd isAdmin={isAdmin}>{song.titleKr ?? ""}</TableTd>
-          </tr>
-          <tr>
-            <TableTh>작곡가</TableTh>
-            <TableTd isAdmin={isAdmin}>{song.composer}</TableTd>
-          </tr>
-          <tr>
-            <TableTh>작곡가(한국어)</TableTh>
-            <TableTd isAdmin={isAdmin}>{song.composerKr ?? ""}</TableTd>
-          </tr>
-          <tr>
-            <TableTh>업로드 날짜</TableTh>
-            <TableTd isAdmin={isAdmin}>{song.publishDate.toString()}</TableTd>
-          </tr>
-          <tr>
-            <TableTh>VocaDB</TableTh>
-            <TableTd isAdmin={isAdmin}>
-              <TableA href={vocaDBLink}>{song.vocaDBId}</TableA>
-            </TableTd>
-          </tr>
-          <tr>
-            <TableTh>PV</TableTh>
-            <TableTd isAdmin={isAdmin}>{createPVLink(song.PVs)}</TableTd>
-          </tr>
-        </tbody>
-      </table>
-    </>
+        )}
+        <tr>
+          <TableTh>제목</TableTh>
+          <TableTd isAdmin={isAdmin}>{song.title}</TableTd>
+        </tr>
+        <tr>
+          <TableTh>제목(한국어)</TableTh>
+          <TableTd isAdmin={isAdmin}>{song.titleKr ?? ""}</TableTd>
+        </tr>
+        <tr>
+          <TableTh>작곡가</TableTh>
+          <TableTd isAdmin={isAdmin}>{song.composer}</TableTd>
+        </tr>
+        <tr>
+          <TableTh>작곡가(한국어)</TableTh>
+          <TableTd isAdmin={isAdmin}>{song.composerKr ?? ""}</TableTd>
+        </tr>
+        <tr>
+          <TableTh>업로드 날짜</TableTh>
+          <TableTd isAdmin={isAdmin}>{song.publishDate.toString()}</TableTd>
+        </tr>
+        <tr>
+          <TableTh>VocaDB</TableTh>
+          <TableTd isAdmin={isAdmin}>
+            <TableA href={vocaDBLink}>{song.vocaDBId}</TableA>
+          </TableTd>
+        </tr>
+        <tr>
+          <TableTh>PV</TableTh>
+          <TableTd isAdmin={isAdmin}>{createPVLink(song.PVs)}</TableTd>
+        </tr>
+      </tbody>
+    </table>
   );
 }
