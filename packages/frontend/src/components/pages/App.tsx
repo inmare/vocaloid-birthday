@@ -1,12 +1,14 @@
 import api from "@/api";
-import DatePicker from "@/components/datePicker/DatePicker";
-import DateString from "@/components/fragments/DateString";
-import SongListDisplayer from "@/components/fragments/SongListDisplayer";
-import SongTable from "@/components/fragments/SongTable";
-import StyledNavLink from "@/components/ui/StyledNavLink";
+import DatePicker from "@components/datePicker/DatePicker";
+import DateString from "@components/fragments/DateString";
+import SongListDisplayer from "@components/fragments/SongListDisplayer";
+import StyledNavLink from "@components/ui/StyledNavLink";
 import { type SongWithPVs } from "@vocaloid-birthday/common";
+import clsx from "clsx";
 import dayjs from "dayjs";
+import { ChevronsDown, ChevronsUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { SongTable } from "../fragments";
 
 function App() {
   const initMonth = dayjs().month() + 1;
@@ -16,6 +18,7 @@ function App() {
   const [date, setDate] = useState<number>(initDate);
   const [songList, setSongList] = useState<SongWithPVs[]>([]);
   const [currentSong, setCurrentSong] = useState<SongWithPVs | null>(null);
+  const [showTable, setShowTable] = useState(true);
 
   // 초기값을 ref에 저장 (DatePicker가 리렌더링 될 때마다 initMonth, initDate가 바뀌는 것을 방지)
   const initMonthRef = useRef<number>(initMonth);
@@ -58,6 +61,10 @@ function App() {
     setDate(initDateRef.current);
   }, []);
 
+  const handleTable = () => {
+    setShowTable(!showTable);
+  };
+
   return (
     <>
       <div className="grid h-dvh w-full grid-rows-[auto_1fr_auto]">
@@ -74,6 +81,7 @@ function App() {
         <main className="flex min-h-0 flex-col">
           <DateString month={month} date={date} />
           <hr className="mx-[20%] my-3 max-w-full" />
+          {/* 메인 곡 목록 */}
           <div className="relative min-h-0 flex-1 bg-zinc-800">
             <div className="h-full w-full content-center justify-center overflow-y-auto">
               <SongListDisplayer
@@ -86,16 +94,34 @@ function App() {
             <div className="pointer-events-none absolute top-0 right-0 left-0 h-16 bg-linear-to-b from-zinc-900 to-transparent"></div>
             <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-16 bg-linear-to-t from-zinc-900 to-transparent"></div>
           </div>
-          <hr className="mx-[20%] my-3 max-w-full" />
-        </main>
-
-        <div className="m-auto flex max-w-[500px] content-center justify-center p-5">
-          {currentSong ? (
-            <SongTable song={currentSong} />
-          ) : (
-            <p>곡을 선택해주세요.</p>
+          {/* 곡 테이블 및 정보 */}
+          {currentSong && (
+            <button
+              className="mx-auto cursor-pointer transition-all duration-100 hover:scale-120 active:scale-120"
+              onClick={handleTable}
+            >
+              {showTable ? (
+                <ChevronsDown strokeWidth={4} />
+              ) : (
+                <ChevronsUp strokeWidth={4} />
+              )}
+            </button>
           )}
-        </div>
+          <hr className="mx-[20%] my-3 max-w-full" />
+          <div
+            className={clsx(
+              "overflow-hidden transition-all duration-150 ease-in-out",
+              {
+                "max-h-100 opacity-100": showTable,
+                "max-h-10 opacity-0": !showTable,
+              },
+            )}
+          >
+            <div className="mx-auto max-w-[500px] justify-center p-5">
+              {currentSong && <SongTable song={currentSong} />}
+            </div>
+          </div>
+        </main>
       </div>
     </>
   );
