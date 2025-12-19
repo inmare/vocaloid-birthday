@@ -18,7 +18,7 @@ function App() {
   const [date, setDate] = useState<number>(initDate);
   const [songList, setSongList] = useState<SongWithPVs[]>([]);
   const [currentSong, setCurrentSong] = useState<SongWithPVs | null>(null);
-  const [showTable, setShowTable] = useState(true);
+  const [showTable, setShowTable] = useState(false);
 
   // 초기값을 ref에 저장 (DatePicker가 리렌더링 될 때마다 initMonth, initDate가 바뀌는 것을 방지)
   const initMonthRef = useRef<number>(initMonth);
@@ -112,13 +112,13 @@ function App() {
             className={clsx(
               "overflow-hidden transition-all duration-150 ease-in-out",
               {
-                "max-h-100 opacity-100": showTable,
-                "max-h-10 opacity-0": !showTable,
+                "max-h-100 opacity-100": currentSong || showTable,
+                "max-h-10 opacity-0": !currentSong || !showTable,
               },
             )}
           >
             <div className="mx-auto max-w-[500px] justify-center p-5">
-              {currentSong && <SongTable song={currentSong} />}
+              <SongTable song={currentSong} />
             </div>
           </div>
         </main>

@@ -72,7 +72,7 @@ export default function SongTable({
   song,
 }: {
   className?: string;
-  song: SongWithPVs;
+  song: SongWithPVs | null;
 }) {
   const { accessToken } = useAuth();
   const isAdmin = !!accessToken;
@@ -102,7 +102,7 @@ export default function SongTable({
       </>
     );
   };
-  const vocaDBLink = `https://vocadb.net/s/${song.vocaDBId}`;
+  const vocaDBLink = song ? `https://vocadb.net/s/${song.vocaDBId}` : "#";
 
   return (
     <table
@@ -115,38 +115,46 @@ export default function SongTable({
         {isAdmin && (
           <tr>
             <TableTh>곡 ID</TableTh>
-            <TableTd isAdmin={isAdmin}>{song.id}</TableTd>
+            <TableTd isAdmin={isAdmin}>{song ? song.id : ""}</TableTd>
           </tr>
         )}
         <tr>
           <TableTh>제목</TableTh>
-          <TableTd isAdmin={isAdmin}>{song.title}</TableTd>
+          <TableTd isAdmin={isAdmin}>{song ? song.title : ""}</TableTd>
         </tr>
         <tr>
           <TableTh>제목(한국어)</TableTh>
-          <TableTd isAdmin={isAdmin}>{song.titleKr ?? ""}</TableTd>
+          <TableTd isAdmin={isAdmin}>
+            {song && song?.titleKr ? song.titleKr : ""}
+          </TableTd>
         </tr>
         <tr>
           <TableTh>작곡가</TableTh>
-          <TableTd isAdmin={isAdmin}>{song.composer}</TableTd>
+          <TableTd isAdmin={isAdmin}>{song ? song.composer : ""}</TableTd>
         </tr>
         <tr>
           <TableTh>작곡가(한국어)</TableTh>
-          <TableTd isAdmin={isAdmin}>{song.composerKr ?? ""}</TableTd>
+          <TableTd isAdmin={isAdmin}>
+            {song && song?.composerKr ? song.composerKr : ""}
+          </TableTd>
         </tr>
         <tr>
           <TableTh>업로드 날짜</TableTh>
-          <TableTd isAdmin={isAdmin}>{song.publishDate.toString()}</TableTd>
+          <TableTd isAdmin={isAdmin}>
+            {song ? song.publishDate.toString() : ""}
+          </TableTd>
         </tr>
         <tr>
           <TableTh>VocaDB</TableTh>
           <TableTd isAdmin={isAdmin}>
-            <TableA href={vocaDBLink}>{song.vocaDBId}</TableA>
+            <TableA href={vocaDBLink}>{song ? song.vocaDBId : ""}</TableA>
           </TableTd>
         </tr>
         <tr>
           <TableTh>PV</TableTh>
-          <TableTd isAdmin={isAdmin}>{createPVLink(song.PVs)}</TableTd>
+          <TableTd isAdmin={isAdmin}>
+            {song ? createPVLink(song.PVs) : ""}
+          </TableTd>
         </tr>
       </tbody>
     </table>
