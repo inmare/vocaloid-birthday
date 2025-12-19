@@ -62,7 +62,7 @@ function App() {
   }, []);
 
   const handleTable = () => {
-    setShowTable(!showTable);
+    if (currentSong) setShowTable(!showTable);
   };
 
   return (
@@ -95,25 +95,27 @@ function App() {
             <div className="pointer-events-none absolute right-0 bottom-0 left-0 h-16 bg-linear-to-t from-zinc-900 to-transparent"></div>
           </div>
           {/* 곡 테이블 및 정보 */}
-          {currentSong && (
-            <button
-              className="mx-auto cursor-pointer transition-all duration-100 hover:scale-120 active:scale-120"
-              onClick={handleTable}
-            >
-              {showTable ? (
-                <ChevronsDown strokeWidth={4} />
-              ) : (
-                <ChevronsUp strokeWidth={4} />
-              )}
-            </button>
-          )}
+          <button
+            className={clsx("mx-auto transition-all duration-100", {
+              "cursor-pointer opacity-100 hover:scale-120 active:scale-120":
+                currentSong,
+              "opacity-50": !currentSong,
+            })}
+            onClick={handleTable}
+          >
+            {showTable ? (
+              <ChevronsDown strokeWidth={4} />
+            ) : (
+              <ChevronsUp strokeWidth={4} />
+            )}
+          </button>
           <hr className="mx-[20%] my-3 max-w-full" />
           <div
             className={clsx(
               "overflow-hidden transition-all duration-150 ease-in-out",
               {
-                "max-h-100 opacity-100": currentSong || showTable,
-                "max-h-10 opacity-0": !currentSong || !showTable,
+                "max-h-100 opacity-100": showTable,
+                "max-h-10 opacity-0": !showTable,
               },
             )}
           >
