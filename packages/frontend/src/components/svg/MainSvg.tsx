@@ -7,14 +7,19 @@ import {
   Thumbnail,
   Title,
 } from "@components/svg";
+import clsx from "clsx";
 
 export default function MainSvg({
   month,
   date,
+  className,
+  mode,
   svgRef,
 }: {
   month: number;
   date: number;
+  className?: string;
+  mode?: "dev" | "prod";
   svgRef: React.RefObject<SVGSVGElement | null>;
 }) {
   const { sizeX, sizeY } = SvgDefault;
@@ -26,9 +31,9 @@ export default function MainSvg({
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       version="1.1"
-      width={`${SvgDefault.sizeX}mm`}
-      height={`${SvgDefault.sizeY}mm`}
-      className="shadow-[0_0_10px] shadow-zinc-400"
+      width={mode === "dev" ? `${SvgDefault.sizeX}mm` : ""}
+      height={mode === "dev" ? `${SvgDefault.sizeY}mm` : ""}
+      className={clsx("drop-shadow-[0_0_4px] drop-shadow-zinc-600", className)}
     >
       <rect width={sizeX} height={sizeY} fill="#ffffff" />
       <DateText {...{ month, date }} />
