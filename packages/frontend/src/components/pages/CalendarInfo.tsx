@@ -82,7 +82,7 @@ export default function CalendarInfo() {
 
   return (
     <>
-      <h1 className="m-5 text-center text-2xl font-extrabold lg:text-4xl">
+      <h1 className="m-5 text-center text-2xl font-extrabold md:text-4xl">
         2026년 보컬로이드 달력
       </h1>
       <svg
@@ -188,7 +188,7 @@ export default function CalendarInfo() {
         <button className="cursor-pointer" onClick={() => handleMonth("down")}>
           <ChevronLeft size={30} />
         </button>
-        <p className="text-xl font-bold lg:text-3xl">{currentMonth}월</p>
+        <p className="text-xl font-bold md:text-3xl">{currentMonth}월</p>
         <button className="cursor-pointer" onClick={() => handleMonth("up")}>
           <ChevronRight size={30} />
         </button>
