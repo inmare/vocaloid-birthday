@@ -74,7 +74,7 @@ function App() {
           </div>
           <div className="flex content-center justify-center gap-4 p-3">
             <StyledNavLink to="/about">About</StyledNavLink>
-            <StyledNavLink to="/progress">Progress</StyledNavLink>
+            <StyledNavLink to="/2026">2026 Calendar</StyledNavLink>
           </div>
         </header>
 

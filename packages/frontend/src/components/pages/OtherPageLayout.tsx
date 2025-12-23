@@ -8,7 +8,7 @@ export default function OtherPageLayout() {
         <header className="flex flex-row content-center justify-center gap-4 p-3">
           <StyledNavLink to="/">Home</StyledNavLink>
           <StyledNavLink to="/about">About</StyledNavLink>
-          <StyledNavLink to="/progress">Progress</StyledNavLink>
+          <StyledNavLink to="/2026">2026 Calendar</StyledNavLink>
         </header>
         <div className="h-full min-h-0">
           <Outlet />
