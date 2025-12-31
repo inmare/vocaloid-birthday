@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, redirect } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import MainCalendar from "./pages/MainCalendar";
 
@@ -62,6 +62,18 @@ const router = createBrowserRouter([
             throw new Response("Not Found", { status: 404 });
           }
           return { year: 2026, month, date };
+        },
+      },
+      {
+        path: "/2026/today",
+        loader: () => {
+          const today = dayjs();
+          if (today.year() === 2026) {
+            // 2026년이면 해당 날짜로 리다이렉트
+            return redirect(`/2026/${today.month() + 1}/${today.date()}`);
+          }
+          // 2026년이 아니면 NotFound로
+          throw new Response("Not Found", { status: 404 });
         },
       },
     ],
