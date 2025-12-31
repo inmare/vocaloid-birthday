@@ -39,6 +39,10 @@ export interface CalendarAttributes {
   songId: number;
 }
 
+export interface CalendarWithSong extends CalendarAttributes {
+  Song: SongWithPVs;
+}
+
 export interface CalendarPostAttributes {
   songId: number;
   title?: string;
