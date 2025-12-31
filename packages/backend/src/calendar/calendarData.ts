@@ -1,4 +1,4 @@
-import { Calendar, PV } from "@vocaloid-birthday/database";
+import { Calendar, PV, Song } from "@vocaloid-birthday/database";
 import { Request, Response } from "express";
 import { col, fn, Op, where } from "sequelize";
 
@@ -13,6 +13,16 @@ export default async function calendarData(req: Request, res: Response) {
         fn("strftime", "%m-%d", col("calendarDate")),
         `${monthString}-${dateString}`
       ),
+      include: [
+        {
+          model: Song,
+          include: [
+            {
+              model: PV,
+            },
+          ],
+        },
+      ],
     });
 
     if (dbResult === null) res.status(200).json(null);
