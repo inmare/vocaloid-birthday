@@ -49,6 +49,10 @@ export default function CalendarInfo() {
 
   useEffect(() => {
     document.title = `${year}년의 달력`;
+    const saved = sessionStorage.getItem("selectedMonth");
+    if (saved) {
+      setCurrentMonth(Number(saved));
+    }
   }, []);
 
   const svgWidth = 400;
@@ -71,13 +75,14 @@ export default function CalendarInfo() {
     "prose prose-zinc prose-invert prose-a:text-cyan-600 prose-h1:mb-2 prose-p:mt-1 mx-auto max-w-4xl p-10";
 
   const handleMonth = (mode: "up" | "down") => {
+    let nextMonth = currentMonth;
     if (mode === "up") {
-      if (currentMonth === 12) setCurrentMonth(1);
-      else setCurrentMonth(currentMonth + 1);
+      nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     } else {
-      if (currentMonth === 1) setCurrentMonth(12);
-      else setCurrentMonth(currentMonth - 1);
+      nextMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     }
+    setCurrentMonth(nextMonth);
+    sessionStorage.setItem("selectedMonth", String(nextMonth));
   };
 
   return (
@@ -146,10 +151,11 @@ export default function CalendarInfo() {
               {weekdays.map((weekday, index) => (
                 <div
                   className={clsx(
-                    "flex aspect-4/1 items-center justify-center font-bold text-[#000000]",
+                    "flex aspect-4/1 items-center justify-center font-bold",
                     {
                       "text-[#c22828]": index === 0,
                       "text-[#1567b4]": index === 6,
+                      "text-[#000000]": index > 0 && index < 6,
                     },
                   )}
                   key={index}
@@ -170,7 +176,15 @@ export default function CalendarInfo() {
                     >
                       {day !== null && (
                         <NavLink
-                          className="flex h-full w-full items-center justify-center"
+                          className={clsx(
+                            "flex h-full w-full items-center justify-center",
+                            {
+                              "text-[#c75a5a]": dayIndex === 0,
+                              "text-[#5892c9]": dayIndex === 6,
+                              "text-[#ffffff]": dayIndex > 0 && dayIndex < 6,
+                            },
+                          )}
+                          key={dayIndex}
                           to={`${currentMonth}/${day}`}
                         >
                           {day}
