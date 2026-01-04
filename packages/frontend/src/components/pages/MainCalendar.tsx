@@ -57,10 +57,10 @@ function CalendarCompoenent({
           : null;
         updateFragment(fragment);
 
-        console.log(data);
-
         setTitle(data?.titleKor ?? "");
         setComposer(data?.composerKor ?? "");
+
+        document.title = `${month}월 ${date}일 - ${data?.titleKor ?? ""}`;
 
         const pvs = data.Song.PVs;
         const infoArray = [];
